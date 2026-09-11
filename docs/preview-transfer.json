@@ -1,12 +1,12 @@
 {
-  "measuredAt": "2026-09-11T11:46:44.302Z",
+  "measuredAt": "2026-09-11T11:51:27.273Z",
   "browser": "153.0.8010.12",
   "viewport": {
     "width": 1440,
     "height": 900
   },
   "origin": "http://127.0.0.1:4173",
-  "totalTransferBytes": 239918,
+  "totalTransferBytes": 239920,
   "measurements": [
     {
       "url": "http://127.0.0.1:4173/",
@@ -15,16 +15,16 @@
       "decodedBodyBytes": 780
     },
     {
-      "url": "http://127.0.0.1:4173/assets/index-DoF_kA9Z.js",
-      "transferBytes": 232561,
-      "encodedBodyBytes": 232261,
-      "decodedBodyBytes": 847661
-    },
-    {
       "url": "http://127.0.0.1:4173/assets/index-DkquoXTT.css",
       "transferBytes": 6277,
       "encodedBodyBytes": 5977,
       "decodedBodyBytes": 23866
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-BRpnDmvw.js",
+      "transferBytes": 232563,
+      "encodedBodyBytes": 232263,
+      "decodedBodyBytes": 847665
     }
   ],
   "failures": [],

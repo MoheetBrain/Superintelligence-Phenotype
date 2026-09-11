@@ -66,7 +66,7 @@ export function ProfilePreview({ dispatch }: { dispatch: (a: Action) => void }) 
         <MoveUpRight size={20} />
       </div>
       <h2>
-        What might
+        What might{' '}
         <br />
         it be capable of?
       </h2>

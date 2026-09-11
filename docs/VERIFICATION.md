@@ -72,17 +72,17 @@ Final local gzip measurement (`node:zlib` default compression):
 
 | Asset / total | Uncompressed bytes | Gzip bytes |
 | --- | ---: | ---: |
-| JavaScript | 847,661 | 232,261 |
+| JavaScript | 847,665 | 232,263 |
 | CSS | 23,866 | 5,977 |
-| HTML | 780 | 465 |
+| HTML | 780 | 464 |
 | Original SVG favicon | 209 | 178 |
 | Optional third-party notices | 21,084 | 5,535 |
-| **Initial JavaScript + CSS** | **871,527** | **238,238** |
-| **Entire dist directory, including optional notices** | **893,600** | — |
+| **Initial JavaScript + CSS** | **871,531** | **238,240** |
+| **Entire dist directory, including optional notices** | **893,604** | — |
 
 Vite emits a non-blocking warning because the raw single JS chunk exceeds its configured 800 kB warning threshold; the project’s measured gzip and transfer budgets both pass. Vite's console uses its own gzip settings and reported 234.23 kB JS and 6.02 kB CSS; the values above consistently use the checked-in measurement script. The whole uncompressed output is a conservative upper bound for asset bodies, not a claim that the browser requests the notices on startup.
 
-The browser resource test observed only successful same-origin requests, no failed network requests and no page errors; its initial-transfer assertion passed below 2 MB. The cold-context browser reported **239,918 transferred bytes**, including navigation and resource timing overhead. The exact transfer and browser version are recorded separately in [preview-transfer.json](preview-transfer.json). No external fonts, model files, images, analytics or model APIs are requested. Latency, battery life and physical-device frame performance remain unmeasured.
+The browser resource test observed only successful same-origin requests, no failed network requests and no page errors; its initial-transfer assertion passed below 2 MB. The cold-context browser reported **239,920 transferred bytes**, including navigation and resource timing overhead. The exact transfer and browser version are recorded separately in [preview-transfer.json](preview-transfer.json). No external fonts, model files, images, analytics or model APIs are requested. Latency, battery life and physical-device frame performance remain unmeasured.
 
 ## Failures found and repaired
 
@@ -107,3 +107,5 @@ Original geometry was substantially redesigned with smooth lofted housings, beve
 The first refinement browser run passed 14 tests and failed three assertions because the newly added Substrate Mobility spec heading made the original global heading locator ambiguous. Scoping inspector assertions repaired those tests without removing coverage. Raycast target points were updated to the redesigned geometry. The new eighteenth test opens Persistence with the keyboard, checks its limits and evidence qualifier, scans the expanded profile for accessibility, opens its linked dossier, checks the null measurement, restores focus on close, and follows the migration explanation.
 
 The existing 33 unit/component tests still pass. Production and development runs retain all prior interaction coverage. Dedicated screenshots capture the desktop overview, mobile first screen, specification sheet and future forms. The in-app preview was also opened and visually inspected. Public deployment, a participant pilot and empirical ASI measurement remain outside this completed refinement.
+
+A final copy-spacing correction preserves the space across the snapshot heading’s responsive line break. The TypeScript check/build and size measurement were rerun; a focused browser smoke check verified the heading in all four layouts and refreshed those screenshots.

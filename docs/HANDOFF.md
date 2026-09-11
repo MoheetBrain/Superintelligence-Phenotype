@@ -27,7 +27,7 @@ The visual design uses charcoal and ivory surfaces, warm metal accents, larger e
 - **18 production browser tests passed.** Development: **17 passed, 1 production-only budget test intentionally skipped.**
 - Chromium 153.0.8010.12 through Playwright 1.63.0; desktop 1440×900, mobile 390×844, small mobile 320×568 and landscape 844×390. Actual canvas picking, touch/pinch emulation, keyboard, 200% text enlargement, reduced motion, WebGL failure/context loss, sharing and lifecycle were exercised. No physical-device testing is claimed.
 - All four viewport axe scans and an expanded-profile scan returned zero violations. This does not replace manual screen-reader or conformance testing.
-- Final JS/CSS: **238,238 gzip bytes** using the measurement script. Entire uncompressed dist: **893,600 bytes**. Cold browser transfer: **239,918 bytes**. Both 1 MB gzip and 2 MB transfer targets passed. Detailed measured values are in `build-size.json` and `preview-transfer.json`.
+- Final JS/CSS: **238,240 gzip bytes** using the measurement script. Entire uncompressed dist: **893,604 bytes**. Cold browser transfer: **239,920 bytes**. Both 1 MB gzip and 2 MB transfer targets passed. Detailed measured values are in `build-size.json` and `preview-transfer.json`.
 - `npm audit`: zero reported vulnerabilities. The initial Vite advisory was resolved; reference dependencies were left untouched.
 
 See [VERIFICATION.md](VERIFICATION.md) for actual commands, intermediate failures and repairs, complete test coverage and methodological limits.
