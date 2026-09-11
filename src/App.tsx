@@ -23,6 +23,12 @@ import { RoadmapView } from './components/RoadmapView';
 import { Button } from './components/ui/Button';
 import type { Action } from './state/explorerReducer';
 import { registerAtlasTools, type ModelContext } from './state/agentTools';
+import {
+  CapabilityProfile,
+  FutureForms,
+  PhenotypeOverview,
+  ProfilePreview,
+} from './components/PhenotypeProfile';
 export default function App() {
   const { state, dispatch: send } = useExplorer();
   const [mode, setMode] = useState<'concepts' | 'layers'>('concepts');
@@ -44,13 +50,28 @@ export default function App() {
       trigger.current =
         document.activeElement instanceof HTMLElement ? document.activeElement : null;
     send(a);
+    if (a.type === 'select') {
+      requestAnimationFrame(() => {
+        const stage = document.querySelector('.explorer-grid');
+        if (stage && stage.getBoundingClientRect().bottom < 160)
+          stage.scrollIntoView({ block: 'start' });
+      });
+    }
     if (a.type === 'isolate' && window.matchMedia('(max-width: 900px)').matches) {
       requestAnimationFrame(() =>
         document.querySelector('.scene-panel')?.scrollIntoView({ block: 'start' }),
       );
     }
     if (a.type === 'clear' || a.type === 'reset') {
-      requestAnimationFrame(() => trigger.current?.isConnected && trigger.current.focus());
+      requestAnimationFrame(() => {
+        const original = trigger.current;
+        const target = original?.isConnected
+          ? original
+          : original?.id
+            ? document.getElementById(original.id)
+            : null;
+        target?.focus();
+      });
     }
   };
   const selected = state.selected ? capabilityById[state.selected] : null;
@@ -97,7 +118,7 @@ export default function App() {
             A<span>·</span>
           </span>
           <span>
-            SUPER INTELLIGENCE INC.<small>Research interfaces</small>
+            SUPER INTELLIGENCE INC.<small>Field notes from a possible future</small>
           </span>
         </a>
         <nav className="view-tabs" aria-label="Atlas views">
@@ -131,96 +152,95 @@ export default function App() {
       </header>
       <div className="title-row">
         <div>
-          <div className="eyebrow">AN EXPLORER OF POSSIBLE INTELLIGENCE</div>
+          <div className="eyebrow">THE SUPERINTELLIGENCE PHENOTYPE</div>
           <h1>
             ASI Atlas
-            <span className="edition">{state.view === 'body' ? 'BODY / 01' : 'ROADMAP'}</span>
+            <span className="edition">
+              {state.view === 'body' ? 'CONCEPT DOSSIER / 01' : 'ROADMAP'}
+            </span>
           </h1>
         </div>
         <p>
-          Explore the possible anatomy
-          <br />
-          of superintelligence.
+          A visual profile of what superintelligence <br />
+          could become. Its powers, limits, and possible forms.
         </p>
       </div>
       {state.view === 'body' ? (
-        <main className="explorer-grid">
-          <aside className="index-panel">
-            <div className="index-tabs" role="group" aria-label="Catalogue controls">
-              <button aria-pressed={mode === 'concepts'} onClick={() => setMode('concepts')}>
-                <BookOpen size={16} /> Concepts
-              </button>
-              <button aria-pressed={mode === 'layers'} onClick={() => setMode('layers')}>
-                <Layers size={16} /> Layers
-              </button>
-            </div>
-            <CapabilityCatalogue state={state} dispatch={dispatch} mode={mode} />
-          </aside>
-          <section className="scene-panel" aria-label="Body explorer">
-            <div className="scene-heading">
-              <span>BODY EXPLORER</span>
-              <span>
-                {state.isolate
-                  ? 'ISOLATED CONTEXT'
-                  : state.explode > 0
-                    ? 'CONCEPTUAL SEPARATION'
-                    : 'PROCEDURAL MODEL'}
-              </span>
-            </div>
-            <RobotScene
-              state={state}
-              dispatch={send}
-              onChoose={(ids) => {
-                if (ids.length === 1) dispatch({ type: 'select', id: ids[0] });
-                else if (ids.length) setChoices(ids);
-              }}
-            />
-            <div className="scene-bottom">
+        <main>
+          <div className="explorer-grid">
+            <PhenotypeOverview dispatch={dispatch} />
+            <section className="scene-panel" aria-label="Body explorer">
+              <div className="scene-heading">
+                <span>ONE POSSIBLE EMBODIMENT</span>
+                <span>
+                  {state.isolate
+                    ? 'ISOLATED CONTEXT'
+                    : state.explode > 0
+                      ? 'CONCEPTUAL SEPARATION'
+                      : 'INTERACTIVE 3D'}
+                </span>
+              </div>
+              <RobotScene
+                state={state}
+                dispatch={send}
+                onChoose={(ids) => {
+                  if (ids.length === 1) dispatch({ type: 'select', id: ids[0] });
+                  else if (ids.length) setChoices(ids);
+                }}
+              />
+              <div className="scene-bottom">
+                <p className="scene-invitation">
+                  Select the robot to inspect its possible phenotype.
+                </p>
+                <p>
+                  Drag to rotate <span>·</span> Scroll or pinch to zoom <span>·</span> Select to
+                  explore
+                </p>
+                <SceneToolbar state={state} dispatch={dispatch} />
+              </div>
+            </section>
+            {selected ? (
+              <CapabilityInspector
+                capability={selected}
+                isolate={state.isolate}
+                dispatch={dispatch}
+              />
+            ) : (
+              <ProfilePreview dispatch={dispatch} />
+            )}
+          </div>
+          <section
+            className="phenotype-index publication-section"
+            aria-labelledby="phenotype-index"
+          >
+            <div className="section-intro">
+              <div>
+                <span className="section-caption">01 / THE PHENOTYPE MAP</span>
+                <h2 id="phenotype-index">
+                  Twelve dimensions.
+                  <br />
+                  <em>One possible intelligence.</em>
+                </h2>
+              </div>
               <p>
-                Drag to rotate <span>·</span> Scroll or pinch to zoom <span>·</span> Select to
-                explore
+                From reasoning to resources, a profile of ASI needs more than raw intelligence.
+                Choose a dimension to open its dossier.
               </p>
-              <SceneToolbar state={state} dispatch={dispatch} />
+            </div>
+            <div className="index-panel">
+              <div className="index-tabs" role="group" aria-label="Catalogue controls">
+                <button aria-pressed={mode === 'concepts'} onClick={() => setMode('concepts')}>
+                  <BookOpen size={16} /> Concepts
+                </button>
+                <button aria-pressed={mode === 'layers'} onClick={() => setMode('layers')}>
+                  <Layers size={16} /> Layers
+                </button>
+              </div>
+              <CapabilityCatalogue state={state} dispatch={dispatch} mode={mode} />
             </div>
           </section>
-          {selected ? (
-            <CapabilityInspector
-              capability={selected}
-              isolate={state.isolate}
-              dispatch={dispatch}
-            />
-          ) : (
-            <aside className="welcome-panel">
-              <span className="section-caption">TWELVE DIMENSIONS. OPEN QUESTIONS.</span>
-              <h2>
-                A map for <br />
-                asking better <br />
-                <em>questions.</em>
-              </h2>
-              <p>
-                What might advanced machine intelligence be able to do—and what would count as
-                evidence?
-              </p>
-              <p>
-                Select a component or a concept to explore its meaning, limits and possible
-                measurement.
-              </p>
-              <Button
-                variant="default"
-                onClick={() => dispatch({ type: 'select', id: 'metacognition' })}
-              >
-                Explore Metacognition <ArrowUpRight size={17} />
-              </Button>
-              <div className="welcome-note">
-                <span className="bracket">[ &nbsp; ]</span>
-                <p>
-                  A conceptual map,
-                  <br />
-                  not a capability score.
-                </p>
-              </div>
-            </aside>
-          )}
+          <CapabilityProfile dispatch={dispatch} onMethodology={() => setAbout(true)} />
+          <FutureForms dispatch={dispatch} />
         </main>
       ) : (
         <main>

@@ -45,6 +45,8 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
     renderer.setClearColor('#111615', 0);
     renderer.outputColorSpace = T.SRGBColorSpace;
     renderer.toneMapping = T.ACESFilmicToneMapping;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = T.PCFSoftShadowMap;
     el.appendChild(renderer.domElement);
     const canvas = renderer.domElement;
     canvas.setAttribute(
@@ -66,34 +68,50 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
     const room = new RoomEnvironment();
     const env = pmrem.fromScene(room, 0.04);
     scene.environment = env.texture;
+    scene.environmentIntensity = 0.75;
     room.dispose();
     pmrem.dispose();
-    scene.add(new T.HemisphereLight('#e7fff2', '#38423b', 2));
-    const key = new T.DirectionalLight('#ffffff', 3);
-    key.position.set(-3, 7, 5);
+    scene.add(new T.HemisphereLight('#edf5ff', '#6c756c', 1.1));
+    const key = new T.DirectionalLight('#fff4df', 2.3);
+    key.position.set(-3, 12, 5);
+    key.target.position.set(0, 3, 0);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    Object.assign(key.shadow.camera, {
+      left: -4,
+      right: 4,
+      top: 4,
+      bottom: -4,
+      near: 0.5,
+      far: 20,
+    });
+    key.shadow.normalBias = 0.025;
+    scene.add(key.target);
     scene.add(key);
-    const rim = new T.DirectionalLight('#bfe7dd', 3);
+    const rim = new T.DirectionalLight('#d0e9ff', 2.1);
     rim.position.set(4, 4, -4);
     scene.add(rim);
     const stage = new T.Group();
     scene.add(stage);
-    for (const radius of [1.8, 2.3]) {
+    const floor = new T.Mesh(new T.PlaneGeometry(30, 30), new T.ShadowMaterial({ opacity: 0.1 }));
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = 0.069;
+    floor.receiveShadow = true;
+    stage.add(floor);
+    for (const radius of [1.5, 1.65]) {
       const ring = new T.Mesh(
         new T.RingGeometry(radius, radius + 0.013, 96),
         new T.MeshBasicMaterial({
-          color: '#5e7764',
+          color: '#85978c',
           side: T.DoubleSide,
           transparent: true,
-          opacity: 0.5,
+          opacity: 0.4,
         }),
       );
       ring.rotation.x = -Math.PI / 2;
-      ring.position.y = 0.04;
+      ring.position.y = 0.071;
       stage.add(ring);
     }
-    const grid = new T.GridHelper(12, 24, '#314137', '#26352d');
-    grid.position.y = 0.025;
-    stage.add(grid);
     const tooltip = document.createElement('div');
     tooltip.className = 'part-tooltip';
     tooltip.hidden = true;
@@ -282,6 +300,7 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
           for (const m of Array.isArray(o.material) ? o.material : [o.material]) m.dispose();
         }
       });
+      key.shadow.dispose();
       env.dispose();
       renderer.dispose();
       canvas.remove();

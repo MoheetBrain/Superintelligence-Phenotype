@@ -26,10 +26,25 @@ export function fitCamera(
     .fromArray(state.camera.position)
     .sub(new Vector3().fromArray(state.camera.target))
     .normalize();
-  const radius = Math.max(0.25, size.length() / 2);
   const fov = MathUtils.degToRad(camera.fov / 2);
-  const limitingFov = Math.min(fov, Math.atan(Math.tan(fov) * camera.aspect));
-  const distance = (radius / Math.sin(limitingFov)) * 1.15;
+  const right = new Vector3().crossVectors(new Vector3(0, 1, 0), direction).normalize();
+  if (right.lengthSq() < 0.001) right.set(1, 0, 0);
+  const up = new Vector3().crossVectors(direction, right).normalize();
+  // Fit the eight bounds corners in camera space. A sphere wastes substantial
+  // screen space for a tall silhouette, especially on portrait displays.
+  let distance = 0.5;
+  for (const x of [-1, 1])
+    for (const y of [-1, 1])
+      for (const z of [-1, 1]) {
+        const corner = new Vector3((x * size.x) / 2, (y * size.y) / 2, (z * size.z) / 2);
+        const depth = corner.dot(direction);
+        distance = Math.max(
+          distance,
+          Math.abs(corner.dot(right)) / (Math.tan(fov) * camera.aspect) + depth,
+          Math.abs(corner.dot(up)) / Math.tan(fov) + depth,
+        );
+      }
+  distance *= 1.12;
   controls.target.copy(center);
   camera.position.copy(center).addScaledVector(direction, distance);
   controls.update();

@@ -23,8 +23,8 @@ This report separates a reproducible engineering release from research validatio
 | `npm run build` | Exit 0; independently usable static `dist` output. |
 | `npm run preview` | Started successfully at `http://127.0.0.1:4173`; production browser tests use this server. |
 | `npx playwright install chromium` | Exit 0; installed the test browser. |
-| `npm run test:e2e` | Exit 0; **17 production tests passed**, final full run 44.8 seconds. No retries. |
-| `E2E_DEV=1 npm run test:e2e` | Exit 0; **16 passed, 1 intentionally skipped** (production transfer-budget test), including Strict Mode lifecycle and focus checks. Full run approximately 1.1 minutes. |
+| `npm run test:e2e` | Exit 0; **18 production tests passed**, final refinement run 56.1 seconds. No retries. |
+| `E2E_DEV=1 npm run test:e2e` | Exit 0; **17 passed, 1 intentionally skipped** (production transfer-budget test), including Strict Mode lifecycle and focus checks. Refinement run approximately 1.3 minutes. |
 | `npm run size` | Exit 0; both provisional size targets met. Machine-readable output in `build-size.json`. |
 | `node scripts/measure-preview.mjs` | Cold-context browser transfer measurement saved to `preview-transfer.json`. |
 | `npm audit` / `npm audit --omit=dev` | Exit 0; **0 reported vulnerabilities** after updating Vite. |
@@ -60,7 +60,7 @@ This report separates a reproducible engineering release from research validatio
 
 Orientation change from 390 × 844 to 844 × 390 retains a separated selection and refits its geometry. Keyboard selection/close focus restoration and 200% root text enlargement were tested. Reduced-motion media was emulated in all four viewport checks; the application has no automatic rotation or nonessential animation.
 
-All four automated axe scans returned **zero violations** for the configured WCAG 2 A/AA and 2.1 AA rules. This is limited automated evidence, not a complete accessibility conformance audit. Screen-reader use on physical devices has not been tested.
+All four viewport axe scans and the expanded profile-card scan returned **zero violations** for the configured WCAG 2 A/AA and 2.1 AA rules. This is limited automated evidence, not a complete accessibility conformance audit. Screen-reader use on physical devices has not been tested.
 
 Screenshots in `docs/screenshots/` are captures of the real app. The four viewport screenshots were also visually inspected. The production Body and Metacognition captures are separate from device emulation images. No screenshot is presented as a physical-device test.
 
@@ -72,17 +72,17 @@ Final local gzip measurement (`node:zlib` default compression):
 
 | Asset / total | Uncompressed bytes | Gzip bytes |
 | --- | ---: | ---: |
-| JavaScript | 797,524 | 216,347 |
-| CSS | 16,494 | 4,351 |
-| HTML | 747 | 440 |
+| JavaScript | 847,661 | 232,261 |
+| CSS | 23,866 | 5,977 |
+| HTML | 780 | 465 |
 | Original SVG favicon | 209 | 178 |
 | Optional third-party notices | 21,084 | 5,535 |
-| **Initial JavaScript + CSS** | **814,018** | **220,698** |
-| **Entire dist directory, including optional notices** | **836,058** | — |
+| **Initial JavaScript + CSS** | **871,527** | **238,238** |
+| **Entire dist directory, including optional notices** | **893,600** | — |
 
-Vite's console uses its own gzip settings and reported 218.13 kB JS and 4.38 kB CSS; the values above consistently use the checked-in measurement script. The whole uncompressed output is a conservative upper bound for asset bodies, not a claim that the browser requests the notices on startup.
+Vite emits a non-blocking warning because the raw single JS chunk exceeds its configured 800 kB warning threshold; the project’s measured gzip and transfer budgets both pass. Vite's console uses its own gzip settings and reported 234.23 kB JS and 6.02 kB CSS; the values above consistently use the checked-in measurement script. The whole uncompressed output is a conservative upper bound for asset bodies, not a claim that the browser requests the notices on startup.
 
-The browser resource test observed only successful same-origin requests, no failed network requests and no page errors; its initial-transfer assertion passed below 2 MB. The cold-context browser reported **222,345 transferred bytes**, including navigation and resource timing overhead. The exact transfer and browser version are recorded separately in [preview-transfer.json](preview-transfer.json). No external fonts, model files, images, analytics or model APIs are requested. Latency, battery life and physical-device frame performance remain unmeasured.
+The browser resource test observed only successful same-origin requests, no failed network requests and no page errors; its initial-transfer assertion passed below 2 MB. The cold-context browser reported **239,918 transferred bytes**, including navigation and resource timing overhead. The exact transfer and browser version are recorded separately in [preview-transfer.json](preview-transfer.json). No external fonts, model files, images, analytics or model APIs are requested. Latency, battery life and physical-device frame performance remain unmeasured.
 
 ## Failures found and repaired
 
@@ -90,10 +90,20 @@ Initial test-source type errors were corrected before tests ran. The first brows
 
 ## Release boundaries
 
-- **Implemented and verified:** working Body explorer, original procedural geometry, twelve cards, state transitions, HTML alternative, query/evidence/layers, separation, sharing, static production build and the engineering checks above.
+- **Implemented and verified:** phenotype overview, twelve qualitative specification cards, future forms, working Body explorer, original redesigned procedural geometry, twelve rich dossiers, state transitions, HTML alternative, query/evidence/layers, separation, sharing, static production build and the engineering checks above.
 - **Implemented but not verified in this environment:** physical mobile/browser behaviour, Safari/Firefox rendering, manual screen-reader workflows, hosting-specific cache/headers. These are not implied by Chromium emulation.
-- **Deferred:** Network and Evolution implementations; broader literature synthesis; replacement high-detail robot assets; empirical capability measurements.
+- **Deferred:** Network and Evolution implementations; broader literature synthesis; further high-detail asset work beyond the redesigned original body; empirical capability measurements.
 - **Blocked by external access or authorisation:** public deployment (no destination project/account or publication authorisation established).
 - **Human usability pilot: not run.** A ten-participant protocol is delivered; no participants were available during implementation.
 
 The repository root has the requested static Vite hosting settings. Publishing code to GitHub does not publish the running site. Vercel's official Hobby and fair-use pages were checked on 2026-09-11 and retain the personal/non-commercial restriction; a later publisher must recheck suitability and obtain destination authorisation.
+
+## Focused phenotype refinement
+
+The course correction preserves the reducer, stable capability/part IDs, URL format, measurements and source-review model. It replaces the anatomy-first presentation with an ASI overview, a capability snapshot, twelve qualitative specification cards, a phenotype index and three future-form mechanisms. The inspector now explains contribution to the overall profile, possible uses and conditional scaling. No new empirical claims or measured physical capabilities were introduced.
+
+Original geometry was substantially redesigned with smooth lofted housings, beveled fitted panels, a sensor face, crown/temple interface, articulated fingers, tapered limbs and cylindrical bearings. A studio floor and subtle shadow replace the grid. Camera fitting now uses projected bounds corners for more useful framing; the shadow target is explicitly disposed. The twelve IDs and independent picking groups remain intact.
+
+The first refinement browser run passed 14 tests and failed three assertions because the newly added Substrate Mobility spec heading made the original global heading locator ambiguous. Scoping inspector assertions repaired those tests without removing coverage. Raycast target points were updated to the redesigned geometry. The new eighteenth test opens Persistence with the keyboard, checks its limits and evidence qualifier, scans the expanded profile for accessibility, opens its linked dossier, checks the null measurement, restores focus on close, and follows the migration explanation.
+
+The existing 33 unit/component tests still pass. Production and development runs retain all prior interaction coverage. Dedicated screenshots capture the desktop overview, mobile first screen, specification sheet and future forms. The in-app preview was also opened and visually inspected. Public deployment, a participant pilot and empirical ASI measurement remain outside this completed refinement.

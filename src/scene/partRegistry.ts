@@ -25,13 +25,13 @@ export function highlightParts(
       const material = mesh.material as MeshStandardMaterial;
       material.color.set(
         ids.includes(part.id)
-          ? '#d9fc8c'
+          ? '#e8c191'
           : part.id === hovered
-            ? '#eefbd5'
+            ? '#f6e6cc'
             : (mesh.userData.baseColor as string),
       );
       material.emissive.set(
-        ids.includes(part.id) ? '#9dbb47' : part.id === hovered ? '#6b8862' : '#000000',
+        ids.includes(part.id) ? '#b2844b' : part.id === hovered ? '#9a815f' : '#000000',
       );
       material.emissiveIntensity = ids.includes(part.id) ? 0.23 : 0.1;
     }

@@ -6,17 +6,17 @@ import { capabilities } from '../../src/data/capabilities';
 
 const localPickPoints: readonly (readonly [number, number, number])[] = [
   [0, 0.2, 0.25],
-  [0.73, 0, 0],
-  [0, 0.69, 0],
-  [-0.21, 0, 0.1],
-  [0.5, 0.12, 0.43],
-  [-1.03, 0, 0],
+  [0, -0.012, 0.27],
+  [0, 0.66, -0.1],
+  [0, 0, 0.1],
+  [0.4, 0.12, 0.4],
+  [-1.02, -0.06, 0.3],
   [0, 0, 0.2],
   [-0.4, 0.56, 0.1],
-  [-1.37, -0.1, 0.05],
+  [-1.25, -0.01, 0.14],
   [0, 0, 0.05],
-  [0.31, 0, 0],
-  [-1.28, 0.3, 0],
+  [0, 0.27, 0.3],
+  [-1.12, 0.37, 0.17],
 ];
 async function ready(page: Page) {
   await expect(page.locator('canvas')).toHaveCount(1);
@@ -39,7 +39,7 @@ test('real canvas Metacognition journey, evidence, isolate, reset, orbit', async
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
   await ready(page);
-  const point = await canvasPoint(page, [0.73, 6.08, 0]);
+  const point = await canvasPoint(page, [0.43, 5.95, 0.2]);
   await page.mouse.click(point.x, point.y);
   await expect(page.getByRole('heading', { name: 'Metacognition', exact: true })).toBeVisible();
   await expect(page.getByText('Hypothetical example · not an observed result')).toBeVisible();
@@ -89,7 +89,9 @@ test('all twelve separated visual groups are independently raycast-selectable', 
     ]);
     await page.mouse.click(point.x, point.y);
     await expect(
-      page.getByRole('heading', { name: capabilities[i].name, exact: true }),
+      page
+        .getByTestId('inspector')
+        .getByRole('heading', { name: capabilities[i].name, exact: true }),
     ).toBeVisible();
     await page.waitForTimeout(230);
   }
@@ -200,7 +202,7 @@ test('context loss and repeated scene remounts have a functioning catalogue', as
   await expect(page.getByText(/The device paused this 3D session/)).toBeVisible();
   await page.getByRole('button', { name: 'Explore Substrate Mobility', exact: true }).click();
   await expect(
-    page.getByRole('heading', { name: 'Substrate Mobility', exact: true }),
+    page.getByTestId('inspector').getByRole('heading', { name: 'Substrate Mobility', exact: true }),
   ).toBeVisible();
 });
 test('malformed shared links recover without broken controls', async ({ page }) => {
@@ -213,7 +215,7 @@ test('malformed shared links recover without broken controls', async ({ page }) 
 test('multitouch pinching does not select on either finger lift', async ({ page, context }) => {
   await page.goto('/');
   await ready(page);
-  const p = await canvasPoint(page, [0.73, 6.08, 0]);
+  const p = await canvasPoint(page, [0.43, 5.95, 0.2]);
   const cdp = await context.newCDPSession(page);
   await cdp.send('Input.dispatchTouchEvent', {
     type: 'touchStart',
@@ -242,7 +244,7 @@ test('multitouch pinching does not select on either finger lift', async ({ page,
   await ready(page);
   await page.getByRole('button', { name: 'Reset explorer' }).click();
   await ready(page);
-  const tap = await canvasPoint(page, [0.73, 6.08, 0]);
+  const tap = await canvasPoint(page, [0.43, 5.95, 0.2]);
   await cdp.send('Input.dispatchTouchEvent', {
     type: 'touchStart',
     touchPoints: [{ x: tap.x, y: tap.y, id: 3 }],
@@ -280,7 +282,7 @@ test('keyboard selection and enlarged text remain usable', async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.getByRole('button', { name: 'Explore Substrate Mobility', exact: true }).click();
   await expect(
-    page.getByRole('heading', { name: 'Substrate Mobility', exact: true }),
+    page.getByTestId('inspector').getByRole('heading', { name: 'Substrate Mobility', exact: true }),
   ).toBeVisible();
 });
 test('production entry requests only successful local assets', async ({ page }, testInfo) => {
@@ -349,3 +351,44 @@ for (const viewport of [
     expect(results.violations).toEqual([]);
   });
 }
+
+test('capability profile explains conditional persistence and opens its phenotype dossier', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await ready(page);
+  await page.getByRole('button', { name: 'Read the capability profile' }).click();
+  await expect(page.locator('#capability-profile')).toBeFocused();
+  await expect(page.locator('.profile-card')).toHaveCount(12);
+  const persistence = page
+    .locator('.profile-card')
+    .filter({ has: page.getByRole('heading', { name: 'Persistence', exact: true }) });
+  await persistence.locator('summary').focus();
+  await page.keyboard.press('Enter');
+  await expect(persistence.getByText('This is not immortality.', { exact: false })).toBeVisible();
+  await expect(persistence.getByRole('heading', { name: 'How it might scale' })).toBeVisible();
+  await expect(
+    persistence.getByText('Scenario, not an empirical result.', { exact: false }),
+  ).toBeVisible();
+  const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(axe.violations).toEqual([]);
+  await persistence
+    .getByRole('button', { name: 'Open Memory and Operational Continuity dossier' })
+    .click();
+  await expect(
+    page
+      .getByTestId('inspector')
+      .getByRole('heading', { name: 'Memory and Operational Continuity' }),
+  ).toBeFocused();
+  await expect(page.getByTestId('inspector')).toBeInViewport();
+  await page.getByRole('button', { name: 'Measure', exact: true }).click();
+  await expect(page.getByText('Not measured for this project.')).toBeVisible();
+  await page.getByRole('button', { name: 'Close inspector' }).click();
+  await expect(
+    persistence.getByRole('button', { name: 'Open Memory and Operational Continuity dossier' }),
+  ).toBeFocused();
+  await page.getByRole('button', { name: 'Substrate migration', exact: true }).click();
+  await expect(
+    page.getByTestId('inspector').getByText('Migration is not remote control:', { exact: false }),
+  ).toBeVisible();
+});

@@ -1,12 +1,18 @@
 # ASI Atlas — release handoff
 
-**Implemented and verified:** a functioning Body explorer with twelve substantive capability cards, original selectable Three.js robot geometry, HTML catalogue and inspector, isolation/reset, layers, local search, future-hypothesis filters, conceptual separation and camera-preserving share URLs.
+**Implemented and verified:** an editorial ASI phenotype overview, twelve qualitative specification cards, a future-forms explainer and a functioning Body explorer with twelve substantive capability cards, original selectable Three.js robot geometry, HTML catalogue and inspector, isolation/reset, layers, local search, future-hypothesis filters, conceptual separation and camera-preserving share URLs.
 
 Local development: **http://127.0.0.1:3016**. Static production preview: **http://127.0.0.1:4173** while `npm run preview` is running. These are local URLs, not public deployments.
 
+## Product direction after refinement
+
+ASI Atlas is a profile of possible superintelligence. The robot is an interactive navigation anchor. The landing screen pairs an ASI definition and three phenotype clusters with a capability snapshot. Below it, the twelve-domain index leads into rich dossiers, while the twelve-card specification sheet explains physical, cognitive and distributed possibilities qualitatively. Future forms distinguish remote control, execution migration and independent instances; persistence is conditional.
+
+The visual design uses charcoal and ivory surfaces, warm metal accents, larger editorial typography, generous spacing and a light studio around the robot. Mobile visitors see the robot immediately after the ASI framing. Source-backed observations remain in their scoped evidence cards; no scenario is passed off as an observed capability.
+
 ## Substantive implementation
 
-- Replaced the reference's anatomy asset/loading architecture with a fresh procedural renderer. Named boxes, spheres, capsules, cylinders and rings compose twelve independently selectable groups; decorative geometry stays outside the picking registry.
+- Replaced the reference's anatomy asset/loading architecture with a fresh procedural renderer. The refinement uses original smooth lofted housings, beveled panels, a fitted crown, sensor face, articulated hands and tapered limbs in twelve independently selectable groups. A studio stage replaces the grid; decorative geometry stays outside the picking registry.
 - Added the full required capability schema, editable domain names/aliases/mappings, conditional examples, subtraits, scientific distinctions, proposed protocols, null results, claim scope and source verification.
 - Added one deterministic reducer for selection, visibility, isolation, separation, camera and filters. Canvas picking, catalogue search, related links, shared URLs and optional browser tools converge on the same action.
 - Separated geometry creation, picking, gesture discrimination, camera fitting, layout and resource lifecycle. Bounds fitting operates within a canvas that is physically separate from the panels. Camera movement is debounced while gestures are active and committed on gesture completion; fitted views commit before sharing.
@@ -18,10 +24,10 @@ Local development: **http://127.0.0.1:3016**. Static production preview: **http:
 
 - Fresh `npm ci`, `npm run check`, `npm run test`, `npm run build`, `npm run size`: successful.
 - **33 unit/component tests passed.**
-- **17 production browser tests passed.** Development: **16 passed, 1 production-only budget test intentionally skipped.**
+- **18 production browser tests passed.** Development: **17 passed, 1 production-only budget test intentionally skipped.**
 - Chromium 153.0.8010.12 through Playwright 1.63.0; desktop 1440×900, mobile 390×844, small mobile 320×568 and landscape 844×390. Actual canvas picking, touch/pinch emulation, keyboard, 200% text enlargement, reduced motion, WebGL failure/context loss, sharing and lifecycle were exercised. No physical-device testing is claimed.
-- All four configured axe scans returned zero violations. This does not replace manual screen-reader or conformance testing.
-- Final JS/CSS: **220,698 gzip bytes** using the measurement script. Entire uncompressed dist: **836,058 bytes**. Cold browser transfer: **222,345 bytes**. Both 1 MB gzip and 2 MB transfer targets passed. Detailed measured values are in `build-size.json` and `preview-transfer.json`.
+- All four viewport axe scans and an expanded-profile scan returned zero violations. This does not replace manual screen-reader or conformance testing.
+- Final JS/CSS: **238,238 gzip bytes** using the measurement script. Entire uncompressed dist: **893,600 bytes**. Cold browser transfer: **239,918 bytes**. Both 1 MB gzip and 2 MB transfer targets passed. Detailed measured values are in `build-size.json` and `preview-transfer.json`.
 - `npm audit`: zero reported vulnerabilities. The initial Vite advisory was resolved; reference dependencies were left untouched.
 
 See [VERIFICATION.md](VERIFICATION.md) for actual commands, intermediate failures and repairs, complete test coverage and methodological limits.
@@ -32,7 +38,7 @@ Original project geometry and code are MIT. Human Atlas commit `1c38bf35c254a891
 
 Three narrow paper-reported observations are supported by reviewed abstracts. No benchmark replication, present-model capability measurement, ASI score or human testing is claimed. Other cards omit unsupported empirical statements and visibly mark the synthesis gap. Memory and Control and Governance remain explicitly provisional navigation groupings.
 
-**Deferred:** Network and Evolution implementations, broader evidence synthesis, empirical evaluations and higher-detail replacement assets.
+**Deferred:** Network and Evolution implementations, broader evidence synthesis, empirical evaluations and further high-detail asset work. The original body was substantially redesigned in this pass; no additional view implementation or backend was added.
 
 **Implemented but not verified on physical hardware:** phone touch performance, Safari/Firefox, manual screen readers, battery and GPU-memory behaviour. No fps or battery numbers are invented.
 
@@ -52,6 +58,10 @@ repository-root/
 │   │   ├── body-320x568.png
 │   │   ├── body-390x844.png
 │   │   ├── body-844x390.png
+│   │   ├── capability-profile.png
+│   │   ├── future-forms.png
+│   │   ├── phenotype-mobile.png
+│   │   ├── phenotype-overview.png
 │   │   ├── production-body.png
 │   │   └── production-metacognition.png
 │   ├── CONTENT_GUIDE.md
@@ -79,6 +89,7 @@ repository-root/
 │   │   ├── EvidenceBadge.tsx
 │   │   ├── Methodology.tsx
 │   │   ├── Modal.tsx
+│   │   ├── PhenotypeProfile.tsx
 │   │   ├── RoadmapView.tsx
 │   │   └── SceneToolbar.tsx
 │   ├── content/
@@ -86,6 +97,7 @@ repository-root/
 │   ├── data/
 │   │   ├── capabilities.ts
 │   │   ├── domains.ts
+│   │   ├── profile.ts
 │   │   ├── schema.ts
 │   │   ├── sources.ts
 │   │   ├── validateCatalogue.ts

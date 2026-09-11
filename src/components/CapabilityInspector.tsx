@@ -5,6 +5,7 @@ import type { Action } from '../state/explorerReducer';
 import { domainById, domainIds, shortNames } from '../data/domains';
 import { Button } from './ui/Button';
 import { EvidenceBadge } from './EvidenceBadge';
+import { phenotypeContext } from '../data/profile';
 export function CapabilityInspector({
   capability: c,
   isolate,
@@ -24,7 +25,7 @@ export function CapabilityInspector({
     <aside className="inspector" aria-label="Capability inspector" data-testid="inspector">
       <div className="inspector-top">
         <span className="section-caption">
-          CONCEPT {String(domainIds.indexOf(c.domain) + 1).padStart(2, '0')} / 12
+          PHENOTYPE {String(domainIds.indexOf(c.domain) + 1).padStart(2, '0')} / 12
         </span>
         <Button
           size="icon"
@@ -53,11 +54,19 @@ export function CapabilityInspector({
         {tab === 'overview' && (
           <>
             <p className="meaning">{c.meaning}</p>
+            <div className="profile-contribution">
+              <span className="section-caption">IN THE ASI PROFILE</span>
+              <p>{phenotypeContext[c.domain].role}</p>
+            </div>
+            <h3>What it could enable</h3>
+            <p>{phenotypeContext[c.domain].enables}</p>
             <div className="hypothesis">
               <span className="section-caption">A POSSIBLE FUTURE</span>
               <p>{c.hypotheticalExample}</p>
               <span className="muted">Hypothetical example · not an observed result</span>
             </div>
+            <h3>How it might scale</h3>
+            <p>{phenotypeContext[c.domain].scaling}</p>
             <h3>What to distinguish</h3>
             {c.importantDistinctions.map((d) => (
               <p className="distinction" key={d}>

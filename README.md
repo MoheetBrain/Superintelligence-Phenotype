@@ -1,12 +1,12 @@
 # ASI Atlas
 
-**Super Intelligence Inc. — explore the possible anatomy of superintelligence.**
+**Super Intelligence Inc. — a visual profile of possible superintelligence.**
 
-A working educational explorer built with React, TypeScript, Vite and direct Three.js. Rotate an original procedural robot, select one of twelve conceptual components, read its real capability card, isolate its context and share the view.
+An interactive concept dossier about the phenotype, powers, limits and possible forms of ASI. A high-level overview leads into twelve phenotype dimensions, twelve qualitative capability profiles and a guide to remote control, migration and independent instances. The original interactive robot anchors the experience; React, TypeScript, Vite and direct Three.js power it.
 
 The robot is a navigation aid. AI need not be humanoid, and abstract capabilities do not occupy physical organs. The atlas separates future hypotheses, scoped paper-reported observations and uncollected project measurements. It does not score ASI progress.
 
-![Working Body explorer](docs/screenshots/production-body.png)
+![ASI phenotype overview](docs/screenshots/phenotype-overview.png)
 
 ## Run
 
@@ -41,8 +41,11 @@ The package lockfile is committed. `npm ci` was actually run successfully; see [
 
 ## Explore
 
+- Start with the phenotype overview and capability snapshot. Open a specification card for its meaning, possible use, limits and scaling conditions; its dossier link uses the existing selection and sharing system.
+- Read the future-forms section: remote control, migration and copying are different mechanisms. Continuity is conditional, not guaranteed immortality.
+
 - Drag to orbit; scroll or pinch to zoom. Explicit front, side, back and zoom controls are available.
-- Select the halo for **Metacognition**, or use the HTML catalogue. All twelve groups are selectable, including in the separated arrangement.
+- Select the fitted crown for **Metacognition**, or use the HTML catalogue. All twelve groups are selectable, including in the separated arrangement.
 - Read **Overview**, **Evidence**, and **Measure**. Use **Isolate context** and **Exit isolation**; **Reset explorer** restores all layers and clears filters.
 - Search names, IDs, aliases, meanings and subtraits. Try “resource layers.” Search stays independent of layer visibility.
 - Filter by **future-hypothesis evidence**, which is separate from source review. No future hypothesis is labelled Observed in this release; that filter correctly returns no cards.
@@ -68,13 +71,13 @@ tests/
 └── e2e/         # real canvas, sharing, mobile, fallback, keyboard and accessibility
 ```
 
-The renderer is mounted once per Body session, including under React Strict Mode. State transitions request bounds-based fitting in a dedicated, unobstructed canvas area. Authored transforms are preserved; separation always interpolates from those transforms. Rendering is event-driven, without an idle animation loop or automatic rotation. Camera changes are debounced. Cleanup releases scene geometry, materials, environment textures, controls, observers, handlers and frames.
+The renderer is mounted once per Body session, including under React Strict Mode. State transitions request bounds-based fitting in a dedicated, unobstructed canvas area. Authored transforms are preserved; separation always interpolates from those transforms. Rendering is event-driven, without an idle animation loop or automatic rotation. Camera changes are debounced. Cleanup releases scene geometry, materials, environment textures, shadow targets, controls, observers, handlers and frames.
 
 Optional `find_capabilities` and `inspect_capability` WebMCP tools are feature-detected; they use the same catalogue and selection action as the visible interface. Ordinary browsers do not depend on them.
 
 ## Content and provenance
 
-There are twelve substantive cards, each with definitions, conditional examples, subtraits, distinctions, proposed measurement and evidence context. Memory and Control and Governance are marked **Provisional navigation grouping.** All project measurements are `null`: **Not measured for this project.**
+There are twelve substantive phenotype dossiers, each with definitions, its role in the wider ASI profile, possible uses, scaling conditions, conditional examples, subtraits, distinctions, proposed measurement and evidence context. A separate specification layer in `src/data/profile.ts` adds twelve qualitative scenarios without changing the twelve stable domain IDs. Its framing modes are Observed today, Near-term extrapolation, Long-term ASI hypothesis and Speculative upper-bound concept; no profile scenario is labelled Observed today and no physical performance values are invented. Memory and Control and Governance are marked **Provisional navigation grouping.** All project measurements are `null`: **Not measured for this project.**
 
 Only three narrow observations are published, based on reviewed paper abstracts. They are explicitly attributed and scoped; no experiments have been reproduced. Other cards omit unsupported empirical claims and identify the review gap. See the [content guide](docs/CONTENT_GUIDE.md).
 

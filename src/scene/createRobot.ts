@@ -1,29 +1,36 @@
 import * as T from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { visualMappings } from '../data/visualMappings';
 import type { PartRegistry } from './partRegistry';
+
+/** Original, dimensionless concept body. Geometry is an interface, never a capability model. */
 export function createRobot() {
   const robot = new T.Group();
-  robot.name = 'ASI Atlas — original procedural robot';
-  const registry: PartRegistry = new Map();
+  robot.name = 'Original ASI concept body';
   const decoration = new T.Group();
-  decoration.name = 'nonselectable-structure';
+  decoration.name = 'Non-interactive structural details';
   robot.add(decoration);
-  const metal = '#43534e',
-    shell = '#c9d4cf';
+  const registry: PartRegistry = new Map();
+  const shell = '#dce0da',
+    dark = '#202d31',
+    joint = '#52636a',
+    accent = '#cda973';
   const add = (
     group: T.Group,
     geometry: T.BufferGeometry,
-    pos: readonly number[],
-    color: string,
-    scale?: readonly number[],
+    position: readonly number[],
+    color = shell,
   ) => {
-    const mesh = new T.Mesh(
-      geometry,
-      new T.MeshStandardMaterial({ color, metalness: 0.52, roughness: 0.32 }),
-    );
-    mesh.position.fromArray(pos);
-    if (scale) mesh.scale.fromArray(scale);
+    const material = new T.MeshStandardMaterial({
+      color,
+      metalness: color === dark ? 0.68 : 0.46,
+      roughness: color === dark ? 0.24 : 0.31,
+    });
+    const mesh = new T.Mesh(geometry, material);
+    mesh.position.fromArray(position);
     mesh.userData.baseColor = color;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
     group.add(mesh);
     return mesh;
   };
@@ -36,31 +43,111 @@ export function createRobot() {
     h: number,
     d: number,
     c = shell,
-  ) => add(g, new T.BoxGeometry(w, h, d), [x, y, z], c);
-  const ball = (
+    r = 0.055,
+  ) => add(g, new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 3, h / 3, d / 3)), [x, y, z], c);
+  const plate = (
     g: T.Group,
+    points: readonly (readonly [number, number])[],
     x: number,
     y: number,
     z: number,
-    r: number,
-    c = metal,
-    scale?: readonly number[],
-  ) => add(g, new T.SphereGeometry(r, 24, 16), [x, y, z], c, scale);
-  const capsule = (g: T.Group, x: number, y: number, z: number, r: number, h: number, c = shell) =>
-    add(g, new T.CapsuleGeometry(r, h, 6, 16), [x, y, z], c);
-  const ring = (
-    g: T.Group,
-    x: number,
-    y: number,
-    z: number,
-    r: number,
-    tube: number,
-    c: string,
+    depth: number,
+    c = shell,
+    bevel = 0.035,
   ) => {
-    const m = add(g, new T.TorusGeometry(r, tube, 10, 64), [x, y, z], c);
-    m.rotation.x = Math.PI / 2;
-    return m;
+    const shape = new T.Shape();
+    points.forEach(([px, py], i) => (i ? shape.lineTo(px, py) : shape.moveTo(px, py)));
+    shape.closePath();
+    return add(
+      g,
+      new T.ExtrudeGeometry(shape, {
+        depth,
+        bevelEnabled: true,
+        bevelSegments: 3,
+        steps: 1,
+        bevelSize: bevel,
+        bevelThickness: bevel,
+      }),
+      [x, y, z - depth / 2],
+      c,
+    );
   };
+  const bearing = (
+    g: T.Group,
+    x: number,
+    y: number,
+    z: number,
+    r: number,
+    depth: number,
+    c = joint,
+  ) => {
+    const mesh = add(g, new T.CylinderGeometry(r, r, depth, 32), [x, y, z], c);
+    mesh.rotation.x = Math.PI / 2;
+    return mesh;
+  };
+  const loft = (
+    g: T.Group,
+    x: number,
+    y: number,
+    z: number,
+    stations: readonly (readonly [number, number, number])[],
+    c = shell,
+  ) => {
+    const positions: number[] = [],
+      indices: number[] = [],
+      sides = 40;
+    // Smooth rounded-rectangle sections create curved industrial housings.
+    for (const [sy, width, depth] of stations)
+      for (let j = 0; j <= sides; j++) {
+        const theta = (j / sides) * Math.PI * 2,
+          cos = Math.cos(theta),
+          sin = Math.sin(theta);
+        positions.push(
+          (Math.sign(cos) * Math.abs(cos) ** 0.7 * width) / 2,
+          sy,
+          (Math.sign(sin) * Math.abs(sin) ** 0.7 * depth) / 2,
+        );
+      }
+    for (let i = 0; i < stations.length - 1; i++)
+      for (let j = 0; j < sides; j++) {
+        const a = i * (sides + 1) + j,
+          b = a + sides + 1;
+        indices.push(a, b, a + 1, b, b + 1, a + 1);
+      }
+    const geometry = new T.BufferGeometry();
+    geometry.setAttribute('position', new T.Float32BufferAttribute(positions, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return add(g, geometry, [x, y, z], c);
+  };
+  const taper = (
+    g: T.Group,
+    x: number,
+    y: number,
+    z: number,
+    top: number,
+    bottom: number,
+    height: number,
+    depth: number,
+    c = shell,
+  ) =>
+    loft(
+      g,
+      x,
+      y,
+      z,
+      [
+        [-height / 2, 0, 0],
+        [-height / 2, bottom * 0.65, depth * 0.65],
+        [-height / 2 + 0.06, bottom + 0.07, depth],
+        [-height * 0.12, (top + bottom) / 2 + 0.1, depth * 1.1],
+        [height / 2 - 0.09, top + 0.05, depth],
+        [height / 2, top * 0.8, depth * 0.78],
+        [height / 2, 0, 0],
+      ],
+      c,
+    );
+
   for (const v of visualMappings) {
     const group = new T.Group();
     group.name = v.partId;
@@ -68,70 +155,197 @@ export function createRobot() {
     robot.add(group);
     switch (v.shape) {
       case 'head':
-        ball(group, 0, 0, 0, 0.59, v.color, [0.88, 1, 0.85]);
-        box(group, 0, -0.25, -0.06, 0.79, 0.38, 0.68);
+        loft(group, 0, 0, -0.025, [
+          [-0.44, 0, 0],
+          [-0.43, 0.32, 0.36],
+          [-0.32, 0.57, 0.54],
+          [0.1, 0.76, 0.64],
+          [0.32, 0.7, 0.6],
+          [0.41, 0.5, 0.46],
+          [0.43, 0, 0],
+        ]);
+        box(group, 0, -0.38, 0.235, 0.37, 0.075, 0.09, dark);
+        box(group, 0, 0.05, -0.35, 0.24, 0.54, 0.06, joint);
         break;
       case 'halo':
-        ring(group, 0, 0, 0, 0.73, 0.065, v.color);
-        for (const x of [-0.57, 0.57]) capsule(group, x, -0.14, 0, 0.046, 0.22, v.color);
+        // A fitted crown and temple interface, not a floating halo. Stable part ID retained.
+        box(group, 0, -0.012, 0.01, 0.62, 0.065, 0.49, accent, 0.02);
+        for (const s of [-1, 1]) {
+          box(group, s * 0.408, -0.2, 0.01, 0.075, 0.34, 0.34, joint, 0.03);
+          box(group, s * 0.43, -0.17, 0.195, 0.027, 0.19, 0.025, accent, 0.008);
+        }
         break;
       case 'eyes':
-        box(group, 0, 0, 0, 0.72, 0.15, 0.11, metal);
-        for (const x of [-0.21, 0.21]) ball(group, x, 0, 0.075, 0.074, '#b2ead7', [1, 0.5, 0.6]);
+        plate(
+          group,
+          [
+            [-0.28, 0.23],
+            [0.28, 0.23],
+            [0.31, 0.11],
+            [0.24, -0.23],
+            [-0.24, -0.23],
+            [-0.31, 0.11],
+          ],
+          0,
+          0,
+          0,
+          0.12,
+          dark,
+          0.045,
+        );
+        box(group, 0, 0.075, 0.102, 0.43, 0.022, 0.018, '#b6d6d3', 0.005);
         break;
       case 'spine':
-        for (let i = 0; i < 6; i++) box(group, 0, 0.69 - i * 0.25, 0, 0.4, 0.18, 0.22, v.color);
-        capsule(group, 0, 0, -0.12, 0.09, 1.4, metal);
+        box(group, 0, 0, -0.02, 0.19, 1.52, 0.16, dark);
+        for (let i = 0; i < 6; i++)
+          box(group, 0, 0.66 - i * 0.245, -0.1, 0.35, 0.15, 0.11, i === 0 ? accent : joint, 0.025);
         break;
       case 'chest':
-        ball(group, 0, 0, -0.05, 0.8, v.color, [1.15, 0.72, 0.62]);
-        box(group, 0, -0.33, 0, 1.25, 0.44, 0.65);
-        for (const x of [-0.42, 0.42]) box(group, x, 0.12, 0.44, 0.25, 0.23, 0.08, metal);
+        taper(group, 0, -0.03, -0.03, 1.35, 0.93, 0.93, 0.58, dark);
+        for (const s of [-1, 1]) {
+          const panel = plate(
+            group,
+            [
+              [-0.03, 0.44],
+              [0.56, 0.36],
+              [0.7, 0.14],
+              [0.53, -0.32],
+              [0.13, -0.4],
+              [-0.02, -0.2],
+            ],
+            0,
+            0,
+            0.25,
+            0.2,
+            shell,
+            0.06,
+          );
+          panel.scale.x = s;
+          box(group, s * 0.39, 0.37, 0.405, 0.34, 0.035, 0.035, joint, 0.008);
+          for (let i = 0; i < 3; i++)
+            box(
+              group,
+              s * (0.53 - i * 0.012),
+              -0.13 - i * 0.07,
+              0.388,
+              0.13,
+              0.018,
+              0.035,
+              dark,
+              0.005,
+            );
+        }
         break;
       case 'shoulders':
-        for (const x of [-1.03, 1.03]) {
-          ball(group, x, 0, 0, 0.29, metal);
-          ball(group, x, -0.08, 0.02, 0.34, v.color, [1.15, 0.8, 1]);
+        for (const s of [-1, 1]) {
+          bearing(group, s * 0.89, -0.05, 0, 0.24, 0.38, dark);
+          const cap = box(group, s * 0.98, 0.035, 0.025, 0.39, 0.42, 0.5, shell, 0.12);
+          cap.rotation.z = s * 0.18;
+          bearing(group, s * 1.02, -0.06, 0.285, 0.105, 0.045, joint);
+          bearing(group, s * 1.02, -0.06, 0.312, 0.047, 0.025, dark);
         }
         break;
       case 'hips':
-        box(group, 0, 0, 0, 1.09, 0.44, 0.63, v.color);
-        for (const x of [-0.39, 0.39]) ball(group, x, -0.18, 0, 0.26, metal);
-        box(group, 0, 0.05, 0.34, 0.22, 0.2, 0.08, metal);
+        taper(group, 0, 0.03, -0.02, 0.87, 0.65, 0.36, 0.5, dark);
+        for (const s of [-1, 1]) {
+          plate(
+            group,
+            [
+              [-0.19, 0.22],
+              [0.2, 0.16],
+              [0.19, -0.22],
+              [-0.09, -0.2],
+            ],
+            s * 0.28,
+            0,
+            0.2,
+            0.16,
+            shell,
+            0.04,
+          );
+          bearing(group, s * 0.43, -0.17, 0, 0.2, 0.32, joint);
+        }
+        box(group, 0, 0.19, 0.32, 0.38, 0.038, 0.035, accent, 0.01);
         break;
       case 'legs':
-        for (const x of [-0.4, 0.4]) {
-          capsule(group, x, 0.56, 0, 0.22, 0.65, v.color);
-          ball(group, x, -0.02, 0.02, 0.23, metal);
-          capsule(group, x, -0.56, 0, 0.19, 0.63, v.color);
-          box(group, x, -1.12, 0.13, 0.47, 0.23, 0.8, v.color);
-          box(group, x, 0.56, 0.2, 0.12, 0.52, 0.05, metal);
+        for (const s of [-1, 1]) {
+          const x = s * 0.44;
+          taper(group, x, 0.72, 0, 0.34, 0.25, 0.98, 0.36);
+          box(group, x, 0.7, 0.26, 0.095, 0.6, 0.025, joint, 0.01);
+          bearing(group, x, 0.08, 0.02, 0.185, 0.36, dark);
+          box(group, x, 0.085, 0.24, 0.24, 0.21, 0.1, shell, 0.07);
+          taper(group, x, -0.56, -0.025, 0.3, 0.16, 0.96, 0.29);
+          box(group, x, -0.51, 0.19, 0.07, 0.65, 0.035, joint, 0.012);
+          bearing(group, x, -1.14, 0.0, 0.13, 0.23, dark);
+          box(group, x, -1.27, 0.15, 0.37, 0.2, 0.72, shell, 0.075);
+          box(group, x, -1.365, 0.15, 0.38, 0.065, 0.74, dark, 0.025);
         }
         break;
       case 'hands':
-        for (const x of [-1.37, 1.37]) {
-          ball(group, x, 0.1, 0, 0.17, metal);
-          box(group, x, -0.1, 0.04, 0.25, 0.31, 0.21, v.color);
-          for (let i = 0; i < 3; i++)
-            capsule(group, x - 0.08 + i * 0.08, -0.33, 0.06, 0.034, 0.16, v.color);
-          capsule(group, x + Math.sign(x) * 0.17, -0.08, 0.1, 0.045, 0.12, v.color);
+        for (const s of [-1, 1]) {
+          const x = s * 1.25;
+          bearing(group, x, 0.12, 0, 0.105, 0.18, dark);
+          box(group, x, -0.025, 0.03, 0.23, 0.26, 0.17, joint, 0.045);
+          box(group, x, -0.01, 0.133, 0.19, 0.2, 0.04, shell, 0.025);
+          for (let i = 0; i < 4; i++) {
+            const px = x + (i - 1.5) * 0.06,
+              length = i === 0 || i === 3 ? 0.19 : 0.24;
+            box(group, px, -0.2, 0.052, 0.046, 0.12, 0.067, shell, 0.016);
+            bearing(group, px, -0.255, 0.07, 0.025, 0.063, dark);
+            box(group, px, -0.255 - length / 3, 0.085, 0.044, length * 0.6, 0.063, shell, 0.016);
+          }
+          const thumb = box(group, x - s * 0.15, -0.08, 0.09, 0.066, 0.19, 0.075, shell, 0.024);
+          thumb.rotation.z = -s * 0.38;
         }
         break;
-      case 'shield': {
-        const m = add(group, new T.CylinderGeometry(0.24, 0.24, 0.095, 6), [0, 0, 0], v.color);
-        m.rotation.x = Math.PI / 2;
-        box(group, 0, 0, 0.07, 0.035, 0.17, 0.03, metal);
+      case 'shield':
+        plate(
+          group,
+          [
+            [-0.08, 0.15],
+            [0.08, 0.15],
+            [0.075, -0.08],
+            [0, -0.15],
+            [-0.075, -0.08],
+          ],
+          0,
+          0,
+          0,
+          0.055,
+          accent,
+          0.018,
+        );
+        box(group, 0, 0.025, 0.048, 0.016, 0.13, 0.015, dark, 0.004);
         break;
-      }
       case 'core':
-        capsule(group, 0, 0, 0, 0.31, 0.53, metal);
-        for (const y of [-0.34, -0.14, 0.06, 0.26]) ring(group, 0, y, 0, 0.34, 0.053, v.color);
+        taper(group, 0, 0.02, -0.06, 0.78, 0.62, 0.81, 0.42, dark);
+        for (let i = 0; i < 3; i++) {
+          const width = 0.65 - i * 0.035;
+          plate(
+            group,
+            [
+              [-width / 2, 0.1],
+              [width / 2, 0.1],
+              [width / 2 - 0.06, -0.085],
+              [-width / 2 + 0.06, -0.085],
+            ],
+            0,
+            0.27 - i * 0.245,
+            0.225,
+            0.09,
+            i === 1 ? joint : shell,
+            0.028,
+          );
+        }
         break;
       case 'arm':
-        for (const x of [-1.28, 1.28]) {
-          capsule(group, x, 0.3, 0, 0.19, 0.38, v.color);
-          ball(group, x, -0.08, 0, 0.2, metal);
-          capsule(group, x + Math.sign(x) * 0.045, -0.41, 0.03, 0.17, 0.34, v.color);
+        for (const s of [-1, 1]) {
+          const upper = taper(group, s * 1.12, 0.37, -0.005, 0.26, 0.18, 0.57, 0.3);
+          upper.rotation.z = s * 0.1;
+          bearing(group, s * 1.18, -0.045, 0, 0.15, 0.29, dark);
+          const forearm = taper(group, s * 1.225, -0.45, 0.015, 0.23, 0.13, 0.52, 0.26);
+          forearm.rotation.z = s * 0.04;
+          box(group, s * 1.23, -0.4, 0.195, 0.065, 0.33, 0.035, joint, 0.01);
         }
         break;
     }
@@ -153,7 +367,7 @@ export function createRobot() {
       color: v.color,
     });
   }
-  capsule(decoration, 0, 4.98, 0, 0.17, 0.3, metal);
-  for (const y of [3.03, 3.84]) ring(decoration, 0, y, 0, 0.4, 0.055, metal);
+  add(decoration, new T.CylinderGeometry(0.15, 0.21, 0.32, 32), [0, 5.12, -0.025], dark);
+  box(decoration, 0, 3.08, -0.03, 0.5, 0.22, 0.35, joint);
   return { robot, registry, decoration };
 }

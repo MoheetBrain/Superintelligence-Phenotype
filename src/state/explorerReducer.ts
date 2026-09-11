@@ -19,7 +19,7 @@ export interface ExplorerState {
   cameraIntent: 'fit' | 'restore';
   cameraRevision: number;
 }
-export const defaultCamera: CameraState = { position: [8, 5.1, 14], target: [0, 3.1, 0] };
+export const defaultCamera: CameraState = { position: [5, 4.5, 15], target: [0, 3.1, 0] };
 export const initialState = (): ExplorerState => ({
   view: 'body',
   selected: null,
