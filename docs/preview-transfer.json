@@ -1,0 +1,32 @@
+{
+  "measuredAt": "2026-09-11T11:14:16.039Z",
+  "browser": "153.0.8010.12",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "origin": "http://127.0.0.1:4173",
+  "totalTransferBytes": 222345,
+  "measurements": [
+    {
+      "url": "http://127.0.0.1:4173/",
+      "transferBytes": 1047,
+      "encodedBodyBytes": 747,
+      "decodedBodyBytes": 747
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DfDSqRMG.js",
+      "transferBytes": 216647,
+      "encodedBodyBytes": 216347,
+      "decodedBodyBytes": 797524
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DknxObrE.css",
+      "transferBytes": 4651,
+      "encodedBodyBytes": 4351,
+      "decodedBodyBytes": 16494
+    }
+  ],
+  "failures": [],
+  "note": "Cold browser context against local Vite static preview. Includes navigation and resource transfer sizes reported by Resource Timing. No cache reuse or throttling; this is not a real-device performance result."
+}

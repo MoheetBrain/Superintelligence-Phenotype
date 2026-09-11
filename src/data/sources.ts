@@ -1,0 +1,43 @@
+import type { Source } from './schema';
+export const sources: Record<string, Source> = {
+  calibration: {
+    id: 'calibration',
+    title: 'Language Models (Mostly) Know What They Know',
+    url: 'https://arxiv.org/abs/2207.05221',
+    publisher: 'Kadavath et al. / arXiv',
+    publishedAt: '2022-07-11',
+    verifiedAt: '2026-09-11',
+    locator: 'Abstract, v4: self-evaluation and transfer calibration',
+    verification: 'verified',
+  },
+  react: {
+    id: 'react',
+    title: 'ReAct: Synergizing Reasoning and Acting in Language Models',
+    url: 'https://arxiv.org/abs/2210.03629',
+    publisher: 'Yao et al. / arXiv',
+    publishedAt: '2022-10-06',
+    verifiedAt: '2026-09-11',
+    locator: 'Abstract, v3: interleaved reasoning and actions; named evaluation tasks',
+    verification: 'verified',
+  },
+  reflexion: {
+    id: 'reflexion',
+    title: 'Reflexion: Language Agents with Verbal Reinforcement Learning',
+    url: 'https://arxiv.org/abs/2303.11366',
+    publisher: 'Shinn et al. / arXiv',
+    publishedAt: '2023-03-20',
+    verifiedAt: '2026-09-11',
+    locator: 'Abstract, v4: episodic text buffer; weights not updated by the method',
+    verification: 'verified',
+  },
+  nist: {
+    id: 'nist',
+    title: 'AI Risk Management Framework',
+    url: 'https://www.nist.gov/itl/ai-risk-management-framework',
+    publisher: 'NIST',
+    publishedAt: null,
+    verifiedAt: '2026-09-11',
+    locator: 'Framework overview; contextual reading, not an empirical capability result',
+    verification: 'verified',
+  },
+};
