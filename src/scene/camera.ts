@@ -2,7 +2,6 @@ import { Box3, MathUtils, PerspectiveCamera, Vector3 } from 'three';
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { PartRegistry } from './partRegistry';
 import type { ExplorerState, CameraState } from '../state/explorerReducer';
-import { capabilityById } from '../data/capabilities';
 export function fitCamera(
   camera: PerspectiveCamera,
   controls: OrbitControls,
@@ -10,13 +9,13 @@ export function fitCamera(
   state: ExplorerState,
 ) {
   const box = new Box3();
-  const selected = state.selected
-    ? capabilityById[state.selected]?.viewCoordinates.body.partIds
-    : [];
   for (const p of registry.values())
-    if (p.group.visible && (!state.selected || state.explode > 0 || selected?.includes(p.id)))
-      box.union(new Box3().setFromObject(p.group));
+    if (p.group.visible) box.union(new Box3().setFromObject(p.group));
   if (box.isEmpty()) box.set(new Vector3(-1.6, 0, -0.6), new Vector3(1.6, 6.2, 0.6));
+  if (state.illustration === 'execution') {
+    box.expandByPoint(new Vector3(-3.2, 0.1, -0.4));
+    box.expandByPoint(new Vector3(3.2, 6.8, 0.6));
+  }
   const center = box.getCenter(new Vector3());
   const size = box.getSize(new Vector3());
   if (state.selected && !state.isolate && state.explode === 0) {
@@ -44,7 +43,7 @@ export function fitCamera(
           Math.abs(corner.dot(up)) / Math.tan(fov) + depth,
         );
       }
-  distance *= 1.12;
+  distance *= 1.18;
   controls.target.copy(center);
   camera.position.copy(center).addScaledVector(direction, distance);
   controls.update();

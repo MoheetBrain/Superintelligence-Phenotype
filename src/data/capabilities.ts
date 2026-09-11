@@ -2,6 +2,7 @@ import type { Capability, DomainId, EvidenceLevel, Claim } from './schema';
 import { domains } from './domains';
 import { visualMappings } from './visualMappings';
 import { sources } from './sources';
+import { dossiers } from './dossiers';
 interface EditorialRecord {
   id: DomainId;
   meaning: string;
@@ -386,7 +387,11 @@ export const capabilities: readonly Capability[] = records.map((r) => {
     aliases: domain.aliases,
     meaning: r.meaning,
     hypotheticalExample: r.example,
-    subtraits: r.traits.map(([name, meaning], i) => ({ id: `${r.id}-${i + 1}`, name, meaning })),
+    subtraits: dossiers[r.id].topics.map((t, i) => ({
+      id: `${r.id}-${i + 1}`,
+      name: r.traits[i]?.[0] ?? t.name!,
+      meaning: t.explanation,
+    })),
     importantDistinctions: r.distinctions,
     measurement: {
       name: 'Proposed evaluation',

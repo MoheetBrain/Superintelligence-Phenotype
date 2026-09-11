@@ -1,30 +1,54 @@
 {
-  "measuredAt": "2026-09-11T11:51:27.273Z",
+  "rendering": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "triangles": 56698,
+      "geometries": 129,
+      "projectedBodyBoundsHeightRatio": 0.8333244651814247,
+      "idleAdditionalRenders": 0,
+      "idleObservationMs": 500
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "triangles": 56698,
+      "geometries": 129,
+      "projectedBodyBoundsHeightRatio": 0.8333244651814246,
+      "idleAdditionalRenders": 0,
+      "idleObservationMs": 500
+    }
+  ],
+  "measuredAt": "2026-09-11T13:33:26.047Z",
   "browser": "153.0.8010.12",
   "viewport": {
     "width": 1440,
     "height": 900
   },
   "origin": "http://127.0.0.1:4173",
-  "totalTransferBytes": 239920,
+  "totalTransferBytes": 262206,
   "measurements": [
     {
       "url": "http://127.0.0.1:4173/",
-      "transferBytes": 1080,
-      "encodedBodyBytes": 780,
-      "decodedBodyBytes": 780
+      "transferBytes": 1084,
+      "encodedBodyBytes": 784,
+      "decodedBodyBytes": 784
     },
     {
-      "url": "http://127.0.0.1:4173/assets/index-DkquoXTT.css",
-      "transferBytes": 6277,
-      "encodedBodyBytes": 5977,
-      "decodedBodyBytes": 23866
+      "url": "http://127.0.0.1:4173/assets/index-N6zQxXbu.js",
+      "transferBytes": 254256,
+      "encodedBodyBytes": 253956,
+      "decodedBodyBytes": 919125
     },
     {
-      "url": "http://127.0.0.1:4173/assets/index-BRpnDmvw.js",
-      "transferBytes": 232563,
-      "encodedBodyBytes": 232263,
-      "decodedBodyBytes": 847665
+      "url": "http://127.0.0.1:4173/assets/index-ByNBFyZu.css",
+      "transferBytes": 6866,
+      "encodedBodyBytes": 6566,
+      "decodedBodyBytes": 26168
     }
   ],
   "failures": [],

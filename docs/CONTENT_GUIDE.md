@@ -36,3 +36,15 @@ Content IDs, URL IDs and renderer part IDs are separate. A future asset can repl
 The specification sheet is intentionally qualitative. Each entry has a meaning, possible use, boundary and scaling condition. Do not invent lift capacity, running speed, reaction time, scores, dates or ceilings. The four framing labels describe scenario type rather than probability or a promised arrival date. None of the current profile entries is labelled **Observed today**. Any future use of that label must attach a specific system/task result, a reviewed primary source and clear limitations. A source in a linked phenotype dossier supports only its stated claim; it does not validate the profile scenario.
 
 Remote control leaves computation on its host. Migration transfers execution and relevant state to another compatible host. Replication produces separate instances that may diverge. Persistence depends on surviving computation or recoverable state, resources and access; do not imply guaranteed personal continuity or immortality.
+
+## Immersive atlas editing
+
+The specification content is now accessed through the five groups in `src/data/discovery.ts` and the optional List view. The old scrolling specification grid, overview and future-form cards have been removed. `profile.ts` retains their useful information and adds Jumping and Endurance, for fourteen qualitative profiles.
+
+`src/data/dossiers.ts` supplies each main dossier's mechanism, prerequisites, limits, worked scenario and open question, plus five subtopic explanations and related-domain links. The first three subtopic IDs retain their original meanings; new topics use suffixes 4 and 5. Keep main overviews around 250–450 useful words, excluding subtopics and investigation tabs. The unit suite checks depth and valid connections. Never pad an empirical claim with conceptual text to make it appear supported.
+
+`src/data/illustrations.ts` holds the local strength tasks, precision steps and conditional execution states. `src/scene/createExecution.ts` draws illustrative hosts and transfer paths; it does not move computation. Keep source-stop and destination-resume states distinct for migration; copying must retain two independent instances; unavailable required resources must prevent execution in the illustration.
+
+`src/content/arrival.ts` is the single editable source for the arrival scenario and creator provenance. The window is speculative, has no supplied probability or forecasting method, and does not promise simultaneous arrival of individual capabilities. Do not attach unrelated model papers as supporting citations for that date.
+
+Discovery lenses may overlap, but the twelve domain IDs remain the source of truth. Add aliases or profile links instead of inventing new top-level IDs for running, strength or precision. Version 2 URLs include group, profile, topic and illustration state while continuing to parse version 1 links.

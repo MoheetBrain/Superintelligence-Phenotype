@@ -1,0 +1,83 @@
+{
+  "previousOverviewWords": 1893,
+  "netAdditionalOverviewAndTopicWords": 3982,
+  "measuredAt": "2026-09-11T13:25:56.670Z",
+  "method": "Whitespace-delimited words. Main dossier includes meaning, immediate hypothetical example, enables, mechanisms, prerequisites, limits, distinctions, worked scenario and open question. Excludes headings, evidence/measurement tabs, subtopics, duplicated navigation and profile text.",
+  "records": [
+    {
+      "id": "cognition",
+      "mainWords": 279,
+      "subtopics": 5,
+      "subtopicWords": 206
+    },
+    {
+      "id": "metacognition",
+      "mainWords": 291,
+      "subtopics": 5,
+      "subtopicWords": 206
+    },
+    {
+      "id": "memory",
+      "mainWords": 270,
+      "subtopics": 5,
+      "subtopicWords": 199
+    },
+    {
+      "id": "theory-of-mind",
+      "mainWords": 289,
+      "subtopics": 5,
+      "subtopicWords": 199
+    },
+    {
+      "id": "agency",
+      "mainWords": 292,
+      "subtopics": 5,
+      "subtopicWords": 203
+    },
+    {
+      "id": "coordination",
+      "mainWords": 277,
+      "subtopics": 5,
+      "subtopicWords": 196
+    },
+    {
+      "id": "replication",
+      "mainWords": 281,
+      "subtopics": 5,
+      "subtopicWords": 198
+    },
+    {
+      "id": "substrate-mobility",
+      "mainWords": 293,
+      "subtopics": 5,
+      "subtopicWords": 203
+    },
+    {
+      "id": "embodiment",
+      "mainWords": 288,
+      "subtopics": 5,
+      "subtopicWords": 206
+    },
+    {
+      "id": "control-governance",
+      "mainWords": 293,
+      "subtopics": 5,
+      "subtopicWords": 207
+    },
+    {
+      "id": "ecology",
+      "mainWords": 285,
+      "subtopics": 5,
+      "subtopicWords": 203
+    },
+    {
+      "id": "self-improvement",
+      "mainWords": 306,
+      "subtopics": 5,
+      "subtopicWords": 205
+    }
+  ],
+  "mainTotal": 3444,
+  "subtopicTotal": 2431,
+  "baseline": "Previous committed inspector overview, including meaning, example, role, enables, scaling, distinctions and its three subtrait explanations; excludes evidence and measurement tabs."
+}

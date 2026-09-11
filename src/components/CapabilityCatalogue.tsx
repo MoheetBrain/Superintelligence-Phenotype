@@ -64,6 +64,7 @@ export function CapabilityCatalogue({
             {results.map((c) => (
               <button
                 key={c.id}
+                id={`list-cap-${c.id}`}
                 className={`concept-button ${state.selected === c.id ? 'selected' : ''}`}
                 aria-pressed={state.selected === c.id}
                 aria-label={`Explore ${c.name}`}

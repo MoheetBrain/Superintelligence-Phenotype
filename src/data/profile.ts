@@ -205,6 +205,36 @@ export const profileTraits: readonly ProfileTrait[] = [
     scaling:
       'Improvement would have to survive independent evaluation across repeated cycles. No rate or ceiling is measured here.',
   },
+  {
+    id: 'jumping',
+    name: 'Jumping',
+    group: 'Physical',
+    value: 'Impulse, reach and landing',
+    frame: 'Near-term extrapolation',
+    domain: 'embodiment',
+    meaning: 'Generating enough controlled impulse to leave the ground and land stably.',
+    enables:
+      'A suitable platform might clear an obstacle or combine reach and ball control in a basketball task.',
+    limit:
+      'Planning does not create actuator power. Take-off, traction, centre of mass, impact loads and landing conditions constrain the feat.',
+    scaling:
+      'Stronger actuators, lighter structure and better control could change the envelope; every configuration needs its own tests.',
+  },
+  {
+    id: 'endurance',
+    name: 'Endurance',
+    group: 'Physical',
+    value: 'Peak is not sustained',
+    frame: 'Near-term extrapolation',
+    domain: 'embodiment',
+    meaning: 'Maintaining useful performance over a stated duration and duty cycle.',
+    enables:
+      'A body with suitable energy and thermal management might perform repeated inspection or handling tasks.',
+    limit:
+      'A brief peak performance is not a continuous operating rating. Batteries, cooling, wear and maintenance limit duration.',
+    scaling:
+      'Energy storage, efficient motion and maintenance support could extend operation. An intelligence model alone cannot remove those dependencies.',
+  },
 ];
 
 export const phenotypeContext: Record<

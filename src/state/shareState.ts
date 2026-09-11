@@ -1,3 +1,6 @@
+import { groupIds, primaryGroup } from '../data/discovery';
+import { profileTraits } from '../data/profile';
+import { illustrationIds, executionModes } from '../data/illustrations';
 import { initialState, type ExplorerState, type CameraState } from './explorerReducer';
 import { domainIds } from '../data/domains';
 import { capabilityById } from '../data/capabilities';
@@ -5,7 +8,7 @@ import { evidenceLevels } from '../content/methodology';
 import type { Vec3 } from '../data/schema';
 export function serializeState(s: ExplorerState): string {
   const p = new URLSearchParams({
-    v: '1',
+    v: '2',
     view: s.view,
     layers: s.visible.length === 12 ? 'all' : s.visible.length ? s.visible.join(',') : 'none',
     isolate: s.isolate ? '1' : '0',
@@ -14,6 +17,18 @@ export function serializeState(s: ExplorerState): string {
     target: s.camera.target.map((n) => n.toFixed(5)).join(','),
   });
   if (s.selected) p.set('cap', s.selected);
+  if (s.group) p.set('group', s.group);
+  if (s.topic) p.set('topic', s.topic);
+  if (s.profile) p.set('profile', s.profile);
+  if (s.illustration) {
+    p.set('demo', s.illustration);
+    p.set('step', String(s.step));
+    p.set('example', s.example);
+    p.set('execution', s.execution);
+    p.set('body', s.bodyAvailable ? '1' : '0');
+    p.set('recovery', s.recoveryAvailable ? '1' : '0');
+  }
+  p.set('finish', s.finish);
   if (s.query) p.set('q', s.query);
   if (s.evidence !== 'all') p.set('evidence', s.evidence);
   if (s.previousCamera) {
@@ -27,20 +42,20 @@ function vector(raw: string | null): Vec3 | null {
   const chunks = raw.split(',');
   if (chunks.length !== 3 || chunks.some((x) => !x.trim())) return null;
   const a = chunks.map(Number);
-  return a.every((n) => Number.isFinite(n) && Math.abs(n) <= 100) ? (a as unknown as Vec3) : null;
+  return a.every((n) => Number.isFinite(n) && Math.abs(n) <= 1000) ? (a as unknown as Vec3) : null;
 }
 function camera(pos: string | null, target: string | null): CameraState | null {
   const p = vector(pos),
     t = vector(target);
   if (!p || !t) return null;
   const distance = Math.hypot(...p.map((v, i) => v - t[i]));
-  return distance >= 0.2 && distance <= 150 ? { position: p, target: t } : null;
+  return distance >= 0.2 && distance <= 150.0001 ? { position: p, target: t } : null;
 }
 export function parseState(hash: string): ExplorerState {
   const s = initialState();
   if (hash.length > 5000) return s;
   const p = new URLSearchParams(hash.replace(/^#/, ''));
-  if (p.get('v') !== '1') return s;
+  if (!['1', '2'].includes(p.get('v') ?? '')) return s;
   const view = p.get('view');
   if (view === 'network' || view === 'evolution') s.view = view;
   const layers = p.get('layers');
@@ -52,6 +67,24 @@ export function parseState(hash: string): ExplorerState {
     const domain = capabilityById[cap]!.domain;
     if (!s.visible.includes(domain)) s.visible.push(domain);
   }
+  s.group =
+    groupIds.find((g) => g === p.get('group')) ??
+    (s.selected ? primaryGroup[capabilityById[s.selected]!.domain] : null);
+  const c = s.selected ? capabilityById[s.selected] : null;
+  s.topic = c?.subtraits.find((t) => t.id === p.get('topic'))?.id ?? null;
+  s.profile =
+    profileTraits.find((t) => t.id === p.get('profile') && t.domain === c?.domain)?.id ?? null;
+  s.illustration = c ? (illustrationIds.find((id) => id === p.get('demo')) ?? null) : null;
+  if (s.illustration) s.topic = null;
+  const step = Number(p.get('step'));
+  s.step = Number.isFinite(step)
+    ? Math.max(0, Math.min(s.illustration === 'precision' ? 4 : 2, Math.round(step)))
+    : 0;
+  s.example = ['shelf', 'carry', 'basketball'].find((x) => x === p.get('example')) ?? 'shelf';
+  s.execution = executionModes.find((x) => x === p.get('execution')) ?? 'remote';
+  s.bodyAvailable = p.get('body') !== '0';
+  s.recoveryAvailable = p.get('recovery') !== '0';
+  s.finish = (['Coral', 'Cobalt', 'Pearl'] as const).find((x) => x === p.get('finish')) ?? 'Coral';
   s.isolate = p.get('isolate') === '1' && !!s.selected;
   const n = Number(p.get('explode'));
   s.explode = s.isolate ? 0 : Number.isFinite(n) ? Math.max(0, Math.min(1, n)) : 0;

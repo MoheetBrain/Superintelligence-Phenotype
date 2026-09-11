@@ -18,20 +18,30 @@ export function highlightParts(
   registry: PartRegistry,
   selected: string | null,
   hovered: string | null,
+  finish: 'Coral' | 'Cobalt' | 'Pearl' = 'Coral',
+  context: DomainId[] = [],
 ) {
-  const ids = capabilities.find((c) => c.id === selected)?.viewCoordinates.body.partIds ?? [];
+  const ids = context.length
+    ? [...registry.values()].filter((p) => context.includes(p.domain)).map((p) => p.id)
+    : (capabilities.find((c) => c.id === selected)?.viewCoordinates.body.partIds ?? []);
   for (const part of registry.values())
     for (const mesh of part.meshes) {
       const material = mesh.material as MeshStandardMaterial;
       material.color.set(
         ids.includes(part.id)
-          ? '#e8c191'
+          ? '#8de6ec'
           : part.id === hovered
-            ? '#f6e6cc'
-            : (mesh.userData.baseColor as string),
+            ? '#d4fbff'
+            : mesh.userData.finishPanel
+              ? { Coral: '#d94435', Cobalt: '#3167ce', Pearl: '#d5e3e9' }[finish]
+              : (mesh.userData.baseColor as string),
       );
       material.emissive.set(
-        ids.includes(part.id) ? '#b2844b' : part.id === hovered ? '#9a815f' : '#000000',
+        ids.includes(part.id)
+          ? '#2cabb9'
+          : part.id === hovered
+            ? '#719ba0'
+            : ((mesh.userData.baseEmissive as string) ?? '#000000'),
       );
       material.emissiveIntensity = ids.includes(part.id) ? 0.23 : 0.1;
     }

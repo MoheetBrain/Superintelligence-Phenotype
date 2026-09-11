@@ -97,7 +97,7 @@ describe('shared views', () => {
     expect(back.previousCamera).toEqual(s.previousCamera);
   });
   it('rejects unknown versions, IDs and invalid vectors', () => {
-    expect(parseState('#v=2&cap=memory')).toEqual(initialState());
+    expect(parseState('#v=99&cap=memory')).toEqual(initialState());
     const s = parseState(
       '#v=1&view=hack&cap=bad&layers=hack&isolate=1&explode=Infinity&pos=NaN,2,4',
     );
@@ -134,4 +134,15 @@ describe('search parity', () => {
     expect(searchCapabilities('metacognition', 'Observed')).toEqual([]);
     expect(searchCapabilities('nonsense')).toEqual([]);
   });
+});
+
+it('keeps toolbar zoom within the shared camera range', () => {
+  const far = reduce(initialState(), { type: 'zoom', factor: 100 });
+  expect(Math.hypot(...far.camera.position.map((v, i) => v - far.camera.target[i]))).toBeCloseTo(
+    150,
+  );
+  const restored = parseState(serializeState(far));
+  expect(restored.cameraIntent).toBe('restore');
+  expect(restored.camera.position[2]).toBeCloseTo(far.camera.position[2], 4);
+  expect(reduce(far, { type: 'zoom', factor: Infinity })).toBe(far);
 });

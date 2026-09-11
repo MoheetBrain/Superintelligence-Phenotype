@@ -103,6 +103,7 @@ test('idle rendering stops and unmounted scenes release observers and canvas lis
     await expect
       .poll(probe)
       .toEqual({ pendingFrames: 0, activeObservers: 1, detachedCanvasListeners: 0 });
+    await page.getByRole('button', { name: 'Scene settings', exact: true }).click();
     await page.getByRole('button', { name: /Network/ }).click();
     await expect(page.locator('canvas')).toHaveCount(0);
     await expect

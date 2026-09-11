@@ -18,7 +18,27 @@ try {
     }));
   });
   const totalTransferBytes = measurements.reduce((n, r) => n + r.transferBytes, 0);
+  const rendering = [];
+  for (const viewport of [
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.waitForTimeout(400);
+    const before = await page.locator('canvas').evaluate((c) => ({ ...c.dataset }));
+    await page.waitForTimeout(500);
+    const after = await page.locator('canvas').evaluate((c) => ({ ...c.dataset }));
+    rendering.push({
+      viewport,
+      triangles: Number(after.triangles),
+      geometries: Number(after.geometries),
+      projectedBodyBoundsHeightRatio: Number(after.bodyHeightRatio),
+      idleAdditionalRenders: Number(after.renderCount) - Number(before.renderCount),
+      idleObservationMs: 500,
+    });
+  }
   const report = {
+    rendering,
     measuredAt: new Date().toISOString(),
     browser: browser.version(),
     viewport: { width: 1440, height: 900 },

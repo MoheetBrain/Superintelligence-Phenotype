@@ -1,94 +1,73 @@
-# ASI Atlas
+# Artificial Superintelligence · ASI Atlas
 
-**Super Intelligence Inc. — a visual profile of possible superintelligence.**
+An explorable portrait of possible superintelligence: its capabilities, limits and forms. Five spatial discovery groups surround an original interactive robot. Choose a capability, follow a subtopic, try an illustrative scenario or inspect the evidence behind a claim.
 
-An interactive concept dossier about the phenotype, powers, limits and possible forms of ASI. A high-level overview leads into twelve phenotype dimensions, twelve qualitative capability profiles and a guide to remote control, migration and independent instances. The original interactive robot anchors the experience; React, TypeScript, Vite and direct Three.js power it.
+![Immersive ASI Atlas](docs/screenshots/after-immersive/1440x900.png)
 
-The robot is a navigation aid. AI need not be humanoid, and abstract capabilities do not occupy physical organs. The atlas separates future hypotheses, scoped paper-reported observations and uncollected project measurements. It does not score ASI progress.
-
-![ASI phenotype overview](docs/screenshots/phenotype-overview.png)
+The **2030–2035** arrival window is the creator's speculative project scenario, not a confirmed timeline or a promise about this robot. All project measurements remain **Not measured for this project.** AI need not be humanoid, and abstract capabilities do not occupy physical organs.
 
 ## Run
 
-Tested with Node **24.18.0**, npm **11.16.0**. Node must be at least **22.13.0** and compatible with the locked dependencies.
+Node **22.13.0+**; tested with Node 24.18.0 and npm 11.16.0. React, TypeScript, Vite and direct Three.js; no backend, keys, model calls or external visual assets.
 
 ```sh
 npm ci
 npm run dev
-```
-
-Open **http://127.0.0.1:3016**. The server uses strict-port behaviour and binds to loopback. No API keys, backend, model calls or external assets are required.
-
-```sh
+# http://127.0.0.1:3016
 npm run check
-npm run test
+npm test
 npm run build
 npm run preview
-# Static production preview: http://127.0.0.1:4173
+# http://127.0.0.1:4173
 ```
 
-Install the test browser once and exercise the production build:
+Both servers bind to loopback and use strict ports. Install Chromium once, then test the built preview:
 
 ```sh
 npx playwright install chromium
 npm run test:e2e
-# The suite starts its own static preview when necessary.
 E2E_DEV=1 npm run test:e2e
 npm run size
+node scripts/measure-preview.mjs
 ```
-
-The package lockfile is committed. `npm ci` was actually run successfully; see [verification](docs/VERIFICATION.md) for commands, outcomes, limitations and browser coverage.
 
 ## Explore
 
-- Start with the phenotype overview and capability snapshot. Open a specification card for its meaning, possible use, limits and scaling conditions; its dossier link uses the existing selection and sharing system.
-- Read the future-forms section: remote control, migration and copying are different mechanisms. Continuity is conditional, not guaranteed immortality.
-
-- Drag to orbit; scroll or pinch to zoom. Explicit front, side, back and zoom controls are available.
-- Select the fitted crown for **Metacognition**, or use the HTML catalogue. All twelve groups are selectable, including in the separated arrangement.
-- Read **Overview**, **Evidence**, and **Measure**. Use **Isolate context** and **Exit isolation**; **Reset explorer** restores all layers and clears filters.
-- Search names, IDs, aliases, meanings and subtraits. Try “resource layers.” Search stays independent of layer visibility.
-- Filter by **future-hypothesis evidence**, which is separate from source review. No future hypothesis is labelled Observed in this release; that filter correctly returns no cards.
-- **Share view** copies a versioned URL containing selection, layers, isolation, separation, filters and camera. A selectable link remains available if clipboard access fails. Back and Forward restore meaningful navigation.
-- Every explanation is reachable through semantic HTML controls without using WebGL. On small screens the scene and inspector are stacked, avoiding canvas/panel overlap. Sharing and methodology use native accessible modal dialogs.
-
-**Network** and **Evolution** are explicitly labelled **Planned—not implemented.** Their intended scopes are described without fake simulations.
+- Choose **Mind**, **Physical capabilities**, **Beyond one body**, **Learning & evolution** or **Resources & control**. The orbs are real Three.js objects; their projected HTML labels are keyboard-operable. Compact screens use a stable scrolling label strip.
+- Select robot geometry, a cloud or a result in **Search / List view**. Every route uses the same reducer. The inspector opens beside the scene on desktop and below it on narrow screens.
+- Each of the twelve dossiers has five explorable subtopics, mechanisms, prerequisites, limits, a worked scenario, open questions, source scope and proposed measurement. The overview resets when another capability opens.
+- Try **Strength depends on the body**, step through **Precision is a feedback loop**, or compare **Remote control / Migration / Copying**. These local illustrations highlight context and execution arrangements; they are not validated simulations or external control tools.
+- Use **Back / Escape** one level at a time, or **Reset** to return home with default layers and camera. **Controls** contains camera presets, zoom, conceptual separation, layers and Coral/Cobalt/Pearl finishes.
+- **Share** includes group, capability, profile, subtopic, illustration conditions, layers, filters, finish and camera. Version 1 capability links migrate into the current hierarchy; version 2 restores the expanded state. Clipboard failure leaves a selectable link.
+- **List view** provides all content without WebGL. Sources and measurements remain HTML. Network and Evolution are explicitly planned future views, available under Controls.
 
 ## Architecture
 
-```text
-src/
-├── main.tsx, App.tsx
-├── data/        # required schema, domains, cards, sources, visual mappings, validation
-├── state/       # pure reducer, selectors, hash format, browser history, optional WebMCP
-├── scene/       # original geometry, part registry, picking, camera, explode, lifecycle
-├── components/  # catalogue, inspector, toolbar, evidence, roadmap, modal, UI button
-├── content/     # shared evidence legend and methodology
-└── styles/      # responsive atlas theme
-tests/
-├── unit/        # content, state, URL safety, geometry, gestures, optional tools
-├── components/  # HTML catalogue and inspector
-└── e2e/         # real canvas, sharing, mobile, fallback, keyboard and accessibility
-```
+| Concern                                                           | Location                                              |
+| ----------------------------------------------------------------- | ----------------------------------------------------- |
+| Twelve stable records, evidence and source scope                  | `src/data/capabilities.ts`, `schema.ts`, `sources.ts` |
+| Discovery groups and profile links                                | `src/data/discovery.ts`, `profile.ts`                 |
+| Main dossier depth and connected subtopics                        | `src/data/dossiers.ts`                                |
+| Illustration steps and conditional execution state                | `src/data/illustrations.ts`                           |
+| Arrival scenario and provenance                                   | `src/content/arrival.ts`                              |
+| Unified selection, navigation, URL migration and history          | `src/state/`                                          |
+| Original body, orbs, hosts, picking, fitting and label placement  | `src/scene/`                                          |
+| Accessible catalogue, inspector, illustrations and modal controls | `src/components/`                                     |
 
-The renderer is mounted once per Body session, including under React Strict Mode. State transitions request bounds-based fitting in a dedicated, unobstructed canvas area. Authored transforms are preserved; separation always interpolates from those transforms. Rendering is event-driven, without an idle animation loop or automatic rotation. Camera changes are debounced. Cleanup releases scene geometry, materials, environment textures, shadow targets, controls, observers, handlers and frames.
-
-Optional `find_capabilities` and `inspect_capability` WebMCP tools are feature-detected; they use the same catalogue and selection action as the visible interface. Ordinary browsers do not depend on them.
+The renderer runs on changes, without automatic orbit or an idle animation loop. Default camera fitting uses visible body bounds, excluding the floor and discovery nodes. Scene and inspector occupy separate layout regions. Geometry, materials, environment textures, shadows, observers, controls and listeners are disposed on unmount. Optional feature-detected WebMCP tools use the same selection reducer.
 
 ## Content and provenance
 
-There are twelve substantive phenotype dossiers, each with definitions, its role in the wider ASI profile, possible uses, scaling conditions, conditional examples, subtraits, distinctions, proposed measurement and evidence context. A separate specification layer in `src/data/profile.ts` adds twelve qualitative scenarios without changing the twelve stable domain IDs. Its framing modes are Observed today, Near-term extrapolation, Long-term ASI hypothesis and Speculative upper-bound concept; no profile scenario is labelled Observed today and no physical performance values are invented. Memory and Control and Governance are marked **Provisional navigation grouping.** All project measurements are `null`: **Not measured for this project.**
+The twelve main dossiers contain **3,444 words**, with **2,431 more across 60 subtopics**: about **3,982 net additional overview/subtopic words** compared with the previous inspector. Main dossiers individually contain 270–306 words; evidence, measurement and fourteen qualitative profiles are additional. See [content-depth.json](docs/content-depth.json) for the counting method.
 
-Only three narrow observations are published, based on reviewed paper abstracts. They are explicitly attributed and scoped; no experiments have been reproduced. Other cards omit unsupported empirical claims and identify the review gap. See the [content guide](docs/CONTENT_GUIDE.md).
+Observed, Extrapolated, Theoretically Plausible and Speculative remain separate. Three narrow observations were rechecked against primary paper abstracts; no experiments or robot records were reproduced. See [source review](docs/SOURCE_REVIEW.md) and the [content guide](docs/CONTENT_GUIDE.md). Memory and Control and Governance remain provisional navigation groupings.
 
-Human Atlas was inspected and run at commit `1c38bf35c254a891200d3cedecfd57abebe83d8d`. Its small MIT PointerTap helper is reused with attribution. The binary anatomy loading/rendering layer was not copied. No BodyParts3D files, upstream anatomy assets or upstream Git history are distributed. See [reference inspection](docs/REFERENCE_INSPECTION.md), [asset ledger](ASSET_LICENSES.md), [MIT licence](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md).
+All robot, cloud and host geometry is original project code. No stock references, watermarks, purchased model files or generated flat robot images are shipped. The small Human Atlas MIT PointerTap helper retains its attribution; no anatomy assets or upstream history are distributed. See [asset ledger](ASSET_LICENSES.md), [reference inspection](docs/REFERENCE_INSPECTION.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
 
-## Release status
+## Handoff
 
-The [verification report](docs/VERIFICATION.md) records the tested engineering release. A complete [handoff](docs/HANDOFF.md) includes the actual file tree and limitations.
+The [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) record implemented behaviour, actual checks and remaining limits. Screenshots compare [before](docs/screenshots/before-immersive/) and [after](docs/screenshots/after-immersive/) at desktop, mobile and landscape sizes.
 
-**Deployment blocked:** no destination hosting project/account or publication authorisation has been established. The static `dist` build and root-level Vite configuration are ready for an authorised destination. **Publishing code on GitHub and publishing the running website are separate steps.** Follow the [deployment runbook](docs/DEPLOYMENT.md); do not assume a commercial project qualifies for Vercel Hobby.
+Public hosting has not been performed: no destination or running-site publication authorisation is established. The local `dist` output and [deployment runbook](docs/DEPLOYMENT.md) are ready for an authorised destination. No purchases or plan changes were made.
 
-**Human usability pilot: not run.** An executable [ten-person protocol](docs/USABILITY_TEST.md) is provided. Automated viewport checks are not physical-device or human testing.
-
-The repository's original research introduction is preserved in [ORIGINAL_README.md](docs/ORIGINAL_README.md).
+Physical-device, Safari/Firefox, manual screen-reader and participant testing remain unperformed. The [ten-person usability protocol](docs/USABILITY_TEST.md) contains no invented results. Network/Evolution views and empirical ASI measurements remain deferred. The original research introduction is preserved in [ORIGINAL_README.md](docs/ORIGINAL_README.md).

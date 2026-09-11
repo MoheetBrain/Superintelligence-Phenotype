@@ -11,24 +11,31 @@ export function createRobot() {
   decoration.name = 'Non-interactive structural details';
   robot.add(decoration);
   const registry: PartRegistry = new Map();
-  const shell = '#dce0da',
+  const enamel = '#d94435',
+    shell = '#e9ebe4',
     dark = '#202d31',
     joint = '#52636a',
-    accent = '#cda973';
+    accent = '#75e5ed';
   const add = (
     group: T.Group,
     geometry: T.BufferGeometry,
     position: readonly number[],
     color = shell,
   ) => {
-    const material = new T.MeshStandardMaterial({
+    const material = new T.MeshPhysicalMaterial({
       color,
-      metalness: color === dark ? 0.68 : 0.46,
-      roughness: color === dark ? 0.24 : 0.31,
+      metalness: color === dark ? 0.72 : color === enamel ? 0.32 : 0.24,
+      clearcoat: color === enamel ? 0.85 : 0.2,
+      clearcoatRoughness: 0.24,
+      roughness: color === dark ? 0.3 : color === enamel ? 0.25 : 0.38,
+      emissive: color === accent ? accent : '#000000',
+      emissiveIntensity: color === accent ? 0.5 : 0,
     });
     const mesh = new T.Mesh(geometry, material);
     mesh.position.fromArray(position);
     mesh.userData.baseColor = color;
+    mesh.userData.finishPanel = color === enamel;
+    mesh.userData.baseEmissive = color === accent ? accent : '#000000';
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     group.add(mesh);
@@ -155,21 +162,28 @@ export function createRobot() {
     robot.add(group);
     switch (v.shape) {
       case 'head':
-        loft(group, 0, 0, -0.025, [
-          [-0.44, 0, 0],
-          [-0.43, 0.32, 0.36],
-          [-0.32, 0.57, 0.54],
-          [0.1, 0.76, 0.64],
-          [0.32, 0.7, 0.6],
-          [0.41, 0.5, 0.46],
-          [0.43, 0, 0],
-        ]);
+        loft(
+          group,
+          0,
+          0,
+          -0.025,
+          [
+            [-0.44, 0, 0],
+            [-0.43, 0.32, 0.36],
+            [-0.32, 0.57, 0.54],
+            [0.1, 0.76, 0.64],
+            [0.32, 0.7, 0.6],
+            [0.41, 0.5, 0.46],
+            [0.43, 0, 0],
+          ],
+          enamel,
+        );
         box(group, 0, -0.38, 0.235, 0.37, 0.075, 0.09, dark);
         box(group, 0, 0.05, -0.35, 0.24, 0.54, 0.06, joint);
         break;
       case 'halo':
         // A fitted crown and temple interface, not a floating halo. Stable part ID retained.
-        box(group, 0, -0.012, 0.01, 0.62, 0.065, 0.49, accent, 0.02);
+        box(group, 0, -0.012, 0.01, 0.62, 0.065, 0.49, shell, 0.02);
         for (const s of [-1, 1]) {
           box(group, s * 0.408, -0.2, 0.01, 0.075, 0.34, 0.34, joint, 0.03);
           box(group, s * 0.43, -0.17, 0.195, 0.027, 0.19, 0.025, accent, 0.008);
@@ -193,7 +207,9 @@ export function createRobot() {
           dark,
           0.045,
         );
-        box(group, 0, 0.075, 0.102, 0.43, 0.022, 0.018, '#b6d6d3', 0.005);
+        for (const x of [-0.135, 0.135])
+          box(group, x, 0.03, 0.105, 0.11, 0.07, 0.025, accent, 0.025);
+        box(group, 0, -0.11, 0.108, 0.16, 0.014, 0.025, joint, 0.004);
         break;
       case 'spine':
         box(group, 0, 0, -0.02, 0.19, 1.52, 0.16, dark);
@@ -217,10 +233,12 @@ export function createRobot() {
             0,
             0.25,
             0.2,
-            shell,
+            enamel,
             0.06,
           );
           panel.scale.x = s;
+          box(group, s * 0.34, 0.21, 0.4, 0.38, 0.16, 0.08, shell, 0.035);
+          box(group, s * 0.14, -0.24, 0.395, 0.1, 0.1, 0.025, joint, 0.015);
           box(group, s * 0.39, 0.37, 0.405, 0.34, 0.035, 0.035, joint, 0.008);
           for (let i = 0; i < 3; i++)
             box(
@@ -239,7 +257,7 @@ export function createRobot() {
       case 'shoulders':
         for (const s of [-1, 1]) {
           bearing(group, s * 0.89, -0.05, 0, 0.24, 0.38, dark);
-          const cap = box(group, s * 0.98, 0.035, 0.025, 0.39, 0.42, 0.5, shell, 0.12);
+          const cap = box(group, s * 0.98, 0.035, 0.025, 0.44, 0.44, 0.52, enamel, 0.12);
           cap.rotation.z = s * 0.18;
           bearing(group, s * 1.02, -0.06, 0.285, 0.105, 0.045, joint);
           bearing(group, s * 1.02, -0.06, 0.312, 0.047, 0.025, dark);
@@ -270,11 +288,11 @@ export function createRobot() {
       case 'legs':
         for (const s of [-1, 1]) {
           const x = s * 0.44;
-          taper(group, x, 0.72, 0, 0.34, 0.25, 0.98, 0.36);
-          box(group, x, 0.7, 0.26, 0.095, 0.6, 0.025, joint, 0.01);
+          taper(group, x, 0.72, 0, 0.43, 0.32, 1.05, 0.43, enamel);
+          box(group, x, 0.7, 0.26, 0.105, 0.6, 0.025, shell, 0.01);
           bearing(group, x, 0.08, 0.02, 0.185, 0.36, dark);
           box(group, x, 0.085, 0.24, 0.24, 0.21, 0.1, shell, 0.07);
-          taper(group, x, -0.56, -0.025, 0.3, 0.16, 0.96, 0.29);
+          taper(group, x, -0.56, -0.025, 0.37, 0.23, 1.04, 0.36);
           box(group, x, -0.51, 0.19, 0.07, 0.65, 0.035, joint, 0.012);
           bearing(group, x, -1.14, 0.0, 0.13, 0.23, dark);
           box(group, x, -1.27, 0.15, 0.37, 0.2, 0.72, shell, 0.075);
@@ -318,32 +336,19 @@ export function createRobot() {
         box(group, 0, 0.025, 0.048, 0.016, 0.13, 0.015, dark, 0.004);
         break;
       case 'core':
-        taper(group, 0, 0.02, -0.06, 0.78, 0.62, 0.81, 0.42, dark);
-        for (let i = 0; i < 3; i++) {
-          const width = 0.65 - i * 0.035;
-          plate(
-            group,
-            [
-              [-width / 2, 0.1],
-              [width / 2, 0.1],
-              [width / 2 - 0.06, -0.085],
-              [-width / 2 + 0.06, -0.085],
-            ],
-            0,
-            0.27 - i * 0.245,
-            0.225,
-            0.09,
-            i === 1 ? joint : shell,
-            0.028,
-          );
+        taper(group, 0, 0.02, -0.03, 0.84, 0.66, 0.91, 0.47, dark);
+        taper(group, 0, 0.015, 0.2, 0.54, 0.4, 0.67, 0.13, shell);
+        for (const x of [-0.35, 0.35]) {
+          box(group, x, 0, 0.22, 0.08, 0.52, 0.1, enamel, 0.025);
+          box(group, x, 0.12, 0.29, 0.018, 0.19, 0.022, accent, 0.006);
         }
         break;
       case 'arm':
         for (const s of [-1, 1]) {
-          const upper = taper(group, s * 1.12, 0.37, -0.005, 0.26, 0.18, 0.57, 0.3);
+          const upper = taper(group, s * 1.12, 0.37, -0.005, 0.34, 0.25, 0.68, 0.36);
           upper.rotation.z = s * 0.1;
           bearing(group, s * 1.18, -0.045, 0, 0.15, 0.29, dark);
-          const forearm = taper(group, s * 1.225, -0.45, 0.015, 0.23, 0.13, 0.52, 0.26);
+          const forearm = taper(group, s * 1.225, -0.45, 0.015, 0.3, 0.2, 0.61, 0.34, enamel);
           forearm.rotation.z = s * 0.04;
           box(group, s * 1.23, -0.4, 0.195, 0.065, 0.33, 0.035, joint, 0.01);
         }

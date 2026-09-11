@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import * as T from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { CloudNavigation, nodeAction } from '../components/CloudNavigation';
+import { discoveryNodes } from '../data/discovery';
+import { mechanicalContext } from '../data/illustrations';
+import { createDiscovery, disposeGroup } from './createDiscovery';
+import { projected, placeCallouts } from './discoveryLayout';
 import { createRobot } from './createRobot';
+import { createExecution } from './createExecution';
 import { applyExplosion } from './explosionLayout';
 import { fitCamera, readCamera } from './camera';
 import { highlightParts, conceptsForPart } from './partRegistry';
@@ -14,11 +20,14 @@ interface Props {
   state: ExplorerState;
   dispatch: (a: Action) => void;
   onChoose: (ids: string[]) => void;
+  onNavigate?: (a: Action) => void;
 }
-export function RobotScene({ state, dispatch, onChoose }: Props) {
+export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }: Props) {
+  const nodeElements = useRef(new Map<string, HTMLButtonElement>());
+  const hoverCloud = useRef<(key: string | null) => void>(() => {});
   const host = useRef<HTMLDivElement>(null);
-  const latest = useRef({ state, dispatch, onChoose });
-  latest.current = { state, dispatch, onChoose };
+  const latest = useRef({ state, dispatch, onChoose, onNavigate });
+  latest.current = { state, dispatch, onChoose, onNavigate };
   const update = useRef<() => void>(() => {});
   const [error, setError] = useState('');
   useEffect(() => {
@@ -32,7 +41,7 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
       });
     } catch {
       setError(
-        '3D is unavailable in this browser. Explore every concept using the catalogue below or beside this scene.',
+        '3D is unavailable in this browser. Choose a discovery group here, or open List view to explore every concept.',
       );
       return;
     }
@@ -64,15 +73,56 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
     controls.maxPolarAngle = Math.PI * 0.97;
     const { robot, registry, decoration } = createRobot();
     scene.add(robot);
+    const execution = createExecution();
+    scene.add(execution.group);
+    const executionLabels = execution.labels.map(() => {
+      const label = document.createElement('span');
+      label.className = 'execution-label';
+      label.hidden = true;
+      label.setAttribute('aria-hidden', 'true');
+      el.appendChild(label);
+      return label;
+    });
+    const visibleBodyBounds = new T.Box3();
+    let nodes = discoveryNodes(latest.current.state.group);
+    let clouds = createDiscovery(nodes, !latest.current.state.group);
+    scene.add(clouds.group);
+    const leader = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    leader.classList.add('callout-leaders');
+    leader.setAttribute('aria-hidden', 'true');
+    el.appendChild(leader);
+    const connector = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    connector.classList.add('selected-connector');
+    leader.appendChild(connector);
+    const nodeLines = new Map<string, SVGLineElement>();
+    const syncLines = () => {
+      for (const line of nodeLines.values()) line.remove();
+      nodeLines.clear();
+      for (const node of nodes) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('stroke', node.color);
+        leader.appendChild(line);
+        nodeLines.set(node.key, line);
+      }
+    };
+    syncLines();
+    hoverCloud.current = (key) => {
+      for (const mesh of clouds.meshes) {
+        const mat = mesh.material as T.MeshStandardMaterial;
+        if (mat.emissive) mat.emissiveIntensity = mesh.userData.cloudKey === key ? 1.3 : 0.65;
+      }
+      invalidate();
+    };
+
     const pmrem = new T.PMREMGenerator(renderer);
     const room = new RoomEnvironment();
     const env = pmrem.fromScene(room, 0.04);
     scene.environment = env.texture;
-    scene.environmentIntensity = 0.75;
+    scene.environmentIntensity = 0.65;
     room.dispose();
     pmrem.dispose();
-    scene.add(new T.HemisphereLight('#edf5ff', '#6c756c', 1.1));
-    const key = new T.DirectionalLight('#fff4df', 2.3);
+    scene.add(new T.HemisphereLight('#cae7ff', '#17212c', 0.65));
+    const key = new T.DirectionalLight('#fff0df', 3.0);
     key.position.set(-3, 12, 5);
     key.target.position.set(0, 3, 0);
     key.castShadow = true;
@@ -88,12 +138,12 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
     key.shadow.normalBias = 0.025;
     scene.add(key.target);
     scene.add(key);
-    const rim = new T.DirectionalLight('#d0e9ff', 2.1);
+    const rim = new T.DirectionalLight('#82daff', 3.0);
     rim.position.set(4, 4, -4);
     scene.add(rim);
     const stage = new T.Group();
     scene.add(stage);
-    const floor = new T.Mesh(new T.PlaneGeometry(30, 30), new T.ShadowMaterial({ opacity: 0.1 }));
+    const floor = new T.Mesh(new T.PlaneGeometry(30, 30), new T.ShadowMaterial({ opacity: 0.28 }));
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = 0.069;
     floor.receiveShadow = true;
@@ -131,7 +181,66 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
       frame = 0;
       if (disposed || failed) return;
       try {
+        for (const mesh of clouds.meshes)
+          if (mesh.geometry instanceof T.TorusGeometry) mesh.quaternion.copy(camera.quaternion);
         renderer.render(scene, camera);
+        canvas.dataset.renderCount = String(Number(canvas.dataset.renderCount ?? 0) + 1);
+        canvas.dataset.triangles = String(renderer.info.render.triangles);
+        canvas.dataset.geometries = String(renderer.info.memory.geometries);
+        const w = el.clientWidth,
+          h = el.clientHeight;
+        if (!visibleBodyBounds.isEmpty()) {
+          const ys: number[] = [];
+          for (const x of [visibleBodyBounds.min.x, visibleBodyBounds.max.x])
+            for (const y of [visibleBodyBounds.min.y, visibleBodyBounds.max.y])
+              for (const z of [visibleBodyBounds.min.z, visibleBodyBounds.max.z])
+                ys.push(projected(new T.Vector3(x, y, z), camera, w, h).y);
+          canvas.dataset.bodyHeightRatio = String((Math.max(...ys) - Math.min(...ys)) / h);
+        }
+        for (const [i, label] of executionLabels.entries()) {
+          const p = projected(execution.labels[i], camera, w, h);
+          label.style.left = `${Math.max(75, Math.min(w - 75, p.x))}px`;
+          label.style.top = `${p.y}px`;
+          label.hidden = !execution.group.visible || !p.visible;
+        }
+        const points = nodes.map((n) => ({
+          key: n.key,
+          ...projected(clouds.anchors.get(n.key)!, camera, w, h),
+        }));
+        const compact =
+          w < 840 ||
+          h < 400 ||
+          parseFloat(getComputedStyle(document.documentElement).fontSize) > 20;
+        el.parentElement?.classList.toggle('compact-clouds', compact);
+        const placements = placeCallouts(points, w, h);
+        for (const p of points) {
+          const button = nodeElements.current.get(p.key),
+            place = placements.get(p.key),
+            line = nodeLines.get(p.key);
+          if (!button || !place || !line) continue;
+          button.style.left = `${place.x}px`;
+          button.style.top = `${place.y}px`;
+          button.style.visibility = compact || place.visible ? 'visible' : 'hidden';
+          button.tabIndex = clouds.group.visible && (compact || place.visible) ? 0 : -1;
+          line.style.display = compact || !place.visible || !clouds.group.visible ? 'none' : '';
+          line.setAttribute('x1', String(p.x));
+          line.setAttribute('y1', String(p.y));
+          line.setAttribute('x2', String(p.x < w / 2 ? place.x + 205 : place.x));
+          line.setAttribute('y2', String(place.y + 24));
+        }
+        const s = latest.current.state;
+        const selected = s.selected
+          ? registry.get(capabilityById[s.selected]!.viewCoordinates.body.partIds[0])
+          : null;
+        const p = selected ? projected(selected.group.position, camera, w, h) : null;
+        connector.style.display =
+          p?.visible && s.selected && s.illustration !== 'execution' ? '' : 'none';
+        if (p?.visible)
+          connector.setAttribute(
+            'd',
+            `M ${p.x} ${p.y} Q ${w - 90} ${p.y} ${w} ${Math.min(h - 35, 170)}`,
+          );
+
         let index = 0;
         for (const p of registry.values()) {
           index++;
@@ -181,14 +290,60 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
       const s = latest.current.state;
       applying = true;
       let fitted = false;
-      const parts = s.selected ? capabilityById[s.selected]?.viewCoordinates.body.partIds : [];
+      if (s.group !== lastState?.group) {
+        disposeGroup(clouds.group);
+        nodes = discoveryNodes(s.group);
+        clouds = createDiscovery(nodes, !s.group);
+        scene.add(clouds.group);
+        syncLines();
+      }
+      clouds.group.visible = s.explode === 0 && !s.isolate && s.illustration !== 'execution';
+      const executionText = execution.update(s);
+      executionLabels.forEach((l, i) => (l.textContent = executionText[i]));
+      for (const mesh of clouds.meshes) {
+        const node = nodes.find((n) => n.key === mesh.userData.cloudKey);
+        const selected = node?.profile
+          ? s.profile === node.profile
+          : !s.profile && node?.capability === s.selected;
+        const mat = mesh.material as T.MeshStandardMaterial;
+        mat.emissiveIntensity = selected ? 1.4 : 0.65;
+      }
+      for (const p of registry.values())
+        for (const mesh of p.meshes) {
+          const mat = mesh.material as T.MeshStandardMaterial;
+          const dim = s.illustration === 'execution' && !s.bodyAvailable;
+          if (mat.transparent !== dim) {
+            mat.transparent = dim;
+            mat.needsUpdate = true;
+          }
+          mat.depthWrite = !dim;
+          mesh.castShadow = !dim;
+          mat.opacity = dim ? 0.2 : 1;
+        }
+      canvas.dataset.context = mechanicalContext(s.profile, s.illustration, s.example, s.step).join(
+        ',',
+      );
+      for (const button of nodeElements.current.values()) button.hidden = !clouds.group.visible;
+      const context = mechanicalContext(s.profile, s.illustration, s.example, s.step);
+      const parts = context.length
+        ? [...registry.values()].filter((p) => context.includes(p.domain)).map((p) => p.id)
+        : s.selected
+          ? capabilityById[s.selected]?.viewCoordinates.body.partIds
+          : [];
       for (const p of registry.values())
         p.group.visible = s.isolate ? !!parts?.includes(p.id) : s.visible.includes(p.domain);
-      decoration.visible = !s.isolate && s.explode === 0 && s.visible.length === 12;
+      decoration.visible =
+        !s.isolate &&
+        s.explode === 0 &&
+        s.visible.length === 12 &&
+        !(s.illustration === 'execution' && !s.bodyAvailable);
       stage.visible = !s.isolate && s.explode < 0.25 && s.visible.length > 0;
       applyExplosion(registry, s.explode, camera.aspect);
       robot.updateMatrixWorld(true);
-      highlightParts(registry, s.selected, null);
+      visibleBodyBounds.makeEmpty();
+      for (const p of registry.values())
+        if (p.group.visible) visibleBodyBounds.union(new T.Box3().setFromObject(p.group));
+      highlightParts(registry, s.selected, null, s.finish, context);
       if (revision !== s.cameraRevision || !lastState) {
         clearTimeout(cameraTimer);
         revision = s.cameraRevision;
@@ -235,9 +390,32 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
         tooltip.hidden = true;
         return;
       }
+      const cloudKey = cloudAt(e);
+      if (cloudKey) {
+        const node = nodes.find((n) => n.key === cloudKey);
+        tooltip.hidden = false;
+        tooltip.textContent = node?.preview ?? '';
+        const r = canvas.getBoundingClientRect();
+        tooltip.style.left = `${Math.max(8, Math.min(e.clientX - r.left + 12, r.width - 235))}px`;
+        tooltip.style.top = `${Math.max(8, e.clientY - r.top - 55)}px`;
+        canvas.style.cursor = 'pointer';
+        hoverCloud.current(cloudKey);
+        return;
+      }
       const rect = canvas.getBoundingClientRect(),
         id = pickPart(e.clientX, e.clientY, rect, camera, registry);
-      highlightParts(registry, latest.current.state.selected, id);
+      highlightParts(
+        registry,
+        latest.current.state.selected,
+        id,
+        latest.current.state.finish,
+        mechanicalContext(
+          latest.current.state.profile,
+          latest.current.state.illustration,
+          latest.current.state.example,
+          latest.current.state.step,
+        ),
+      );
       canvas.style.cursor = id ? 'pointer' : 'grab';
       tooltip.hidden = !id;
       if (id) {
@@ -249,8 +427,30 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
       }
       invalidate();
     };
+    const cloudAt = (e: PointerEvent) => {
+      if (!clouds.group.visible) return null;
+      const r = canvas.getBoundingClientRect(),
+        ray = new T.Raycaster();
+      ray.setFromCamera(
+        new T.Vector2(
+          ((e.clientX - r.left) / r.width) * 2 - 1,
+          (-(e.clientY - r.top) / r.height) * 2 + 1,
+        ),
+        camera,
+      );
+      return ray.intersectObjects([
+        ...clouds.meshes,
+        ...[...registry.values()].filter((p) => p.group.visible).flatMap((p) => p.meshes),
+      ])[0]?.object.userData.cloudKey as string | undefined;
+    };
     const up = (e: PointerEvent) => {
       if (!tap.up(e.pointerId, e.clientX, e.clientY)) return;
+      const cloud = cloudAt(e);
+      if (cloud) {
+        const node = nodes.find((n) => n.key === cloud);
+        if (node) latest.current.onNavigate(nodeAction(node));
+        return;
+      }
       const id = pickPart(e.clientX, e.clientY, canvas.getBoundingClientRect(), camera, registry);
       if (id) {
         tooltip.hidden = true;
@@ -260,7 +460,18 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
     const cancel = (e: PointerEvent) => tap.cancel(e.pointerId);
     const leave = () => {
       tooltip.hidden = true;
-      highlightParts(registry, latest.current.state.selected, null);
+      highlightParts(
+        registry,
+        latest.current.state.selected,
+        null,
+        latest.current.state.finish,
+        mechanicalContext(
+          latest.current.state.profile,
+          latest.current.state.illustration,
+          latest.current.state.example,
+          latest.current.state.step,
+        ),
+      );
       invalidate();
     };
     canvas.addEventListener('pointerdown', down);
@@ -295,7 +506,7 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
       canvas.removeEventListener('pointerleave', leave);
       canvas.removeEventListener('webglcontextlost', lost);
       scene.traverse((o) => {
-        if (o instanceof T.Mesh || o instanceof T.LineSegments) {
+        if (o instanceof T.Mesh || o instanceof T.Line) {
           o.geometry.dispose();
           for (const m of Array.isArray(o.material) ? o.material : [o.material]) m.dispose();
         }
@@ -303,20 +514,30 @@ export function RobotScene({ state, dispatch, onChoose }: Props) {
       key.shadow.dispose();
       env.dispose();
       renderer.dispose();
+      leader.remove();
       canvas.remove();
       tooltip.remove();
       for (const l of labels.values()) l.remove();
+      for (const l of executionLabels) l.remove();
     };
   }, []);
   useEffect(() => update.current(), [state]);
   return (
-    <div className="robot-scene" ref={host} data-testid="robot-scene">
-      {error && (
-        <div className="scene-error" role="status">
-          <strong>Explore through the catalogue</strong>
-          <p>{error}</p>
-        </div>
-      )}
+    <div className={`robot-scene ${error ? 'scene-unavailable' : ''}`} data-testid="robot-scene">
+      <div className="canvas-host" ref={host}>
+        {error && (
+          <div className="scene-error" role="status">
+            <strong>Explore through the catalogue</strong>
+            <p>{error}</p>
+          </div>
+        )}
+      </div>
+      <CloudNavigation
+        state={state}
+        dispatch={onNavigate}
+        elements={nodeElements}
+        hover={(key) => hoverCloud.current(key)}
+      />
     </div>
   );
 }

@@ -1,151 +1,117 @@
-# ASI Atlas — release handoff
+# ASI Atlas — immersive release handoff
 
-**Implemented and verified:** an editorial ASI phenotype overview, twelve qualitative specification cards, a future-forms explainer and a functioning Body explorer with twelve substantive capability cards, original selectable Three.js robot geometry, HTML catalogue and inspector, isolation/reset, layers, local search, future-hypothesis filters, conceptual separation and camera-preserving share URLs.
+Implemented in the existing `codex/asi-atlas` checkout of `MoheetBrain/Superintelligence-Phenotype`. The app is a scene-first portrait of artificial superintelligence, with the original twelve capability IDs, part mappings and evidence model preserved.
 
-Local development: **http://127.0.0.1:3016**. Static production preview: **http://127.0.0.1:4173** while `npm run preview` is running. These are local URLs, not public deployments.
+Local development: **http://127.0.0.1:3016**. Production preview: **http://127.0.0.1:4173** while the existing preview process runs. These are local URLs; the running website has not been publicly deployed.
 
-## Product direction after refinement
+## What changed
 
-ASI Atlas is a profile of possible superintelligence. The robot is an interactive navigation anchor. The landing screen pairs an ASI definition and three phenotype clusters with a capability snapshot. Below it, the twelve-domain index leads into rich dossiers, while the twelve-card specification sheet explains physical, cognitive and distributed possibilities qualitatively. Future forms distinguish remote control, execution migration and independent instances; persistence is conditional.
+- **Identity:** Artificial Superintelligence is the primary heading, ASI Atlas the secondary identity. The prominent 2030–2035 badge opens the exact qualified creator-scenario explanation; it promises no date for this robot or any capability. Text and provenance are editable in `src/content/arrival.ts`.
+- **Main journey:** the permanent overview, snapshot, index, beige specification grid and future-forms cards were replaced by five spatial discovery groups and one inspector. Search/List view supplies the complete HTML alternative. Camera/layer settings and planned views sit under Controls. The default desktop page fits the viewport without scrolling to a content grid.
+- **Original robot:** coral enamel, pearl panels, graphite joints and cyan sensors; broader shoulders, stronger limb proportions, a coherent waist, articulated fingers, fitted crown and relaxed stance. Real physical materials, controlled reflections and shadows. Body-only bounds drive framing; the floor and orbs do not shrink the robot. Coral, Cobalt and Pearl finishes are available.
+- **Spatial navigation:** real raycastable orbs with camera-projected HTML labels, hover/focus previews, collision spacing, viewport clamping, behind-camera clipping and a selected-context leader line. Narrow/short layouts and enlarged type use a stable label strip. Canvas drag and pinch do not count as clicks. No automatic drift or orbit.
+- **Depth:** twelve main dossiers of **270–306 words**; **60 connected subtopics**. Overview and subtopic text totals **5,875 words**, approximately **3,982 net words added** relative to the previous inspector. Evidence, measurement proposals and fourteen qualitative physical/cognitive/distributed profiles are additional. Each dossier provides mechanisms, requirements, limits, a worked scenario and open question.
+- **Physical profiles:** strength, running, jumping, dexterity, precision, reaction and endurance have selectable nodes and relevant robot highlights. Text distinguishes mass/force/torque, accuracy/repeatability, inference/full-loop latency and peak/sustained output. No physical performance numbers were invented.
+- **Local illustrations:** selectable strength contexts; five precision feedback stages; and spatial hosts/paths for remote control, migration and copying. Migration pauses the source before destination resumption. Copies retain two running instances and diverge. Removing required resources prevents execution; losing the body does not invent continuity. These are educational diagrams, not validated simulations.
+- **State and navigation:** one reducer connects geometry, cloud buttons, catalogue results, related links, subtopics and illustrations. Back/Escape follows the hierarchy and restores focus. New capability selection resets Overview and scroll. Version 2 share URLs retain extended exploration state and migrate version 1 links. Toolbar zoom now stays within the range that sharing can restore.
 
-The visual design uses charcoal and ivory surfaces, warm metal accents, larger editorial typography, generous spacing and a light studio around the robot. Mobile visitors see the robot immediately after the ASI framing. Source-backed observations remain in their scoped evidence cards; no scenario is passed off as an observed capability.
+## Verification
 
-## Substantive implementation
+- `npm run check`, `npm test`, `npm run build`, `npm run size`, and `git diff --check` passed.
+- **43 unit/component tests passed.**
+- Development Strict Mode: **21 tests passed, 1 production-only transfer test skipped**. Final production title, finish and zoom smoke also passed.
+- **22 production browser tests passed**, without retries, including all twelve separated part picks, a real 3D cloud pick, HTML cloud selection, the illustrations, legacy/current shares, navigation, mobile, fallback and lifecycle.
+- Four viewport axe scans and the profile-inspector scan returned **zero violations** after fixing a compact button name and a profile-label contrast issue.
+- Desktop **1440×900**, mobile **390×844**, small mobile **320×568** and landscape **844×390** were exercised with Chromium emulation. Actual before/after images, an inspector, subtopic/restored link and illustrations were captured and inspected.
+- **260,522 bytes** gzipped initial JS/CSS; **262,206 bytes** cold initial browser transfer including navigation. Both existing budgets pass. No added packages or downloaded visual assets.
+- Default scene: **56,698 rendered triangles**, **129 renderer-tracked geometries**, and **zero additional renders** during each 500 ms idle observation at desktop and mobile dimensions. This is not an FPS, battery or physical-device performance measurement.
 
-- Replaced the reference's anatomy asset/loading architecture with a fresh procedural renderer. The refinement uses original smooth lofted housings, beveled panels, a fitted crown, sensor face, articulated hands and tapered limbs in twelve independently selectable groups. A studio stage replaces the grid; decorative geometry stays outside the picking registry.
-- Added the full required capability schema, editable domain names/aliases/mappings, conditional examples, subtraits, scientific distinctions, proposed protocols, null results, claim scope and source verification.
-- Added one deterministic reducer for selection, visibility, isolation, separation, camera and filters. Canvas picking, catalogue search, related links, shared URLs and optional browser tools converge on the same action.
-- Separated geometry creation, picking, gesture discrimination, camera fitting, layout and resource lifecycle. Bounds fitting operates within a canvas that is physically separate from the panels. Camera movement is debounced while gestures are active and committed on gesture completion; fitted views commit before sharing.
-- Added versioned allowlisted hash state, range/coordinate validation, browser history, clipboard feedback and link fallback. Prototype-property names cannot masquerade as capability IDs.
-- Built responsive shadcn-style components using semantic HTML and a CVA button primitive, native modal dialogs, visible keyboard focus, reduced-motion handling, WebGL fallback and accessible licence/methodology content.
-- Added static root-level Vite configuration and lockfile, engineering tests, screenshot evidence, size measurements, deployment instructions and a ten-person usability protocol.
+See [VERIFICATION.md](VERIFICATION.md), [content-depth.json](content-depth.json), [preview-transfer.json](preview-transfer.json), and [SOURCE_REVIEW.md](SOURCE_REVIEW.md) for scope and exact measurements.
 
-## Verification results
+## Review the result
 
-- Fresh `npm ci`, `npm run check`, `npm run test`, `npm run build`, `npm run size`: successful.
-- **33 unit/component tests passed.**
-- **18 production browser tests passed.** Development: **17 passed, 1 production-only budget test intentionally skipped.**
-- Chromium 153.0.8010.12 through Playwright 1.63.0; desktop 1440×900, mobile 390×844, small mobile 320×568 and landscape 844×390. Actual canvas picking, touch/pinch emulation, keyboard, 200% text enlargement, reduced motion, WebGL failure/context loss, sharing and lifecycle were exercised. No physical-device testing is claimed.
-- All four viewport axe scans and an expanded-profile scan returned zero violations. This does not replace manual screen-reader or conformance testing.
-- Final JS/CSS: **238,240 gzip bytes** using the measurement script. Entire uncompressed dist: **893,604 bytes**. Cold browser transfer: **239,920 bytes**. Both 1 MB gzip and 2 MB transfer targets passed. Detailed measured values are in `build-size.json` and `preview-transfer.json`.
-- `npm audit`: zero reported vulnerabilities. The initial Vite advisory was resolved; reference dependencies were left untouched.
+- [Desktop after](screenshots/after-immersive/1440x900.png) and [desktop before](screenshots/before-immersive/1440x900.png).
+- [Mobile after](screenshots/after-immersive/390x844.png) and [mobile before](screenshots/before-immersive/390x844.png).
+- [Landscape after](screenshots/after-immersive/844x390.png) and [landscape before](screenshots/before-immersive/844x390.png).
+- [Restored subtopic](screenshots/after-immersive/restored-subtopic.png), [precision](screenshots/after-immersive/precision.png), and [copying](screenshots/after-immersive/copying.png).
 
-See [VERIFICATION.md](VERIFICATION.md) for actual commands, intermediate failures and repairs, complete test coverage and methodological limits.
+## Remaining limits and boundaries
 
-## Licensing and evidence limits
+Network and Evolution are still explicitly planned views. Broader literature synthesis and empirical ASI/robot measurements are not implemented. Only the three existing narrow paper observations have a focused primary-abstract review; other empirical gaps remain visible.
 
-Original project geometry and code are MIT. Human Atlas commit `1c38bf35c254a891200d3cedecfd57abebe83d8d` was inspected and run; only its PointerTap helper is reused, with the full ashemag MIT notice preserved. Dependency notices accompany the static output. No anatomy assets or upstream history are distributed.
+Physical devices, Safari/Firefox, manual screen readers and human usability participants have not been tested. No subjective continuity, general ASI performance, battery or FPS result is inferred from the model. The ten-person [usability protocol](USABILITY_TEST.md) remains unrun.
 
-Three narrow paper-reported observations are supported by reviewed abstracts. No benchmark replication, present-model capability measurement, ASI score or human testing is claimed. Other cards omit unsupported empirical statements and visibly mark the synthesis gap. Memory and Control and Governance remain explicitly provisional navigation groupings.
+No running-site deployment, main-branch merge, asset purchase, hosting upgrade or external replication/control was performed. The local static build and existing draft PR are the reviewable deliverables; hosting needs an authorised destination.
 
-**Deferred:** Network and Evolution implementations, broader evidence synthesis, empirical evaluations and further high-detail asset work. The original body was substantially redesigned in this pass; no additional view implementation or backend was added.
-
-**Implemented but not verified on physical hardware:** phone touch performance, Safari/Firefox, manual screen readers, battery and GPU-memory behaviour. No fps or battery numbers are invented.
-
-**Human usability pilot: not run.** The complete ten-person protocol and blank anonymous recording tables are in [USABILITY_TEST.md](USABILITY_TEST.md).
-
-**Deployment blocked: no destination hosting project/account or publication authorisation established.** The tested `dist` build and exact Vite runbook are delivered. GitHub code publication and running-site publication are separate steps. No plan upgrade, asset purchase, domain purchase or live website deployment was performed.
-
-## Actual implemented file tree
-
-The application is at the repository root, which already existed. The ignored `.inspection/` checkout, `node_modules/`, test traces, reports and generated `dist/` are intentionally excluded from source publication. The static output is present locally and reproducible with `npm run build`.
+## Implemented source tree
 
 ```text
-repository-root/
-├── docs/
-│   ├── screenshots/
-│   │   ├── body-1440x900.png
-│   │   ├── body-320x568.png
-│   │   ├── body-390x844.png
-│   │   ├── body-844x390.png
-│   │   ├── capability-profile.png
-│   │   ├── future-forms.png
-│   │   ├── phenotype-mobile.png
-│   │   ├── phenotype-overview.png
-│   │   ├── production-body.png
-│   │   └── production-metacognition.png
-│   ├── CONTENT_GUIDE.md
-│   ├── DEPLOYMENT.md
-│   ├── HANDOFF.md
-│   ├── HUMAN_ATLAS_LICENSE.txt
-│   ├── ORIGINAL_README.md
-│   ├── REFERENCE_INSPECTION.md
-│   ├── USABILITY_TEST.md
-│   ├── VERIFICATION.md
-│   ├── build-size.json
-│   └── preview-transfer.json
-├── public/
-│   ├── favicon.svg
-│   └── third-party-notices.txt
-├── scripts/
-│   ├── measure-build.mjs
-│   └── measure-preview.mjs
-├── src/
-│   ├── components/
-│   │   ├── ui/
-│   │   │   └── Button.tsx
-│   │   ├── CapabilityCatalogue.tsx
-│   │   ├── CapabilityInspector.tsx
-│   │   ├── EvidenceBadge.tsx
-│   │   ├── Methodology.tsx
-│   │   ├── Modal.tsx
-│   │   ├── PhenotypeProfile.tsx
-│   │   ├── RoadmapView.tsx
-│   │   └── SceneToolbar.tsx
-│   ├── content/
-│   │   └── methodology.ts
-│   ├── data/
-│   │   ├── capabilities.ts
-│   │   ├── domains.ts
-│   │   ├── profile.ts
-│   │   ├── schema.ts
-│   │   ├── sources.ts
-│   │   ├── validateCatalogue.ts
-│   │   └── visualMappings.ts
-│   ├── scene/
-│   │   ├── RobotScene.tsx
-│   │   ├── camera.ts
-│   │   ├── createRobot.ts
-│   │   ├── explosionLayout.ts
-│   │   ├── partRegistry.ts
-│   │   ├── picking.ts
-│   │   └── pointerTap.ts
-│   ├── state/
-│   │   ├── agentTools.ts
-│   │   ├── explorerReducer.ts
-│   │   ├── selectors.ts
-│   │   ├── shareState.ts
-│   │   └── useExplorer.ts
-│   ├── styles/
-│   │   └── globals.css
-│   ├── App.tsx
-│   └── main.tsx
-├── tests/
-│   ├── components/
-│   │   └── explorer.test.tsx
-│   ├── e2e/
-│   │   ├── explorer.spec.ts
-│   │   └── lifecycle.spec.ts
-│   ├── unit/
-│   │   ├── agentTools.test.ts
-│   │   ├── data.test.ts
-│   │   ├── scene.test.ts
-│   │   └── state.test.ts
-│   └── setup.ts
-├── .gitignore
-├── .nvmrc
-├── .prettierignore
-├── .prettierrc.json
-├── ASSET_LICENSES.md
-├── LICENSE
-├── README.md
-├── THIRD_PARTY_NOTICES.md
-├── index.html
-├── package-lock.json
-├── package.json
-├── playwright.config.ts
-├── tsconfig.json
-├── vercel.json
-├── vite.config.ts
-└── vitest.config.ts
+src/
+  App.tsx
+  main.tsx
+  components/
+    CapabilityCatalogue.tsx
+    CapabilityInspector.tsx
+    CloudNavigation.tsx
+    EvidenceBadge.tsx
+    IllustrationPanel.tsx
+    Methodology.tsx
+    Modal.tsx
+    RoadmapView.tsx
+    SceneToolbar.tsx
+    ui/
+      Button.tsx
+  content/
+    arrival.ts
+    methodology.ts
+  data/
+    capabilities.ts
+    discovery.ts
+    domains.ts
+    dossiers.ts
+    illustrations.ts
+    profile.ts
+    schema.ts
+    sources.ts
+    validateCatalogue.ts
+    visualMappings.ts
+  scene/
+    RobotScene.tsx
+    camera.ts
+    createDiscovery.ts
+    createExecution.ts
+    createRobot.ts
+    discoveryLayout.ts
+    explosionLayout.ts
+    partRegistry.ts
+    picking.ts
+    pointerTap.ts
+  state/
+    agentTools.ts
+    explorerReducer.ts
+    selectors.ts
+    shareState.ts
+    useExplorer.ts
+  styles/
+    globals.css
+tests/
+  setup.ts
+  components/
+    explorer.test.tsx
+  e2e/
+    explorer.spec.ts
+    lifecycle.spec.ts
+  unit/
+    agentTools.test.ts
+    data.test.ts
+    discovery.test.ts
+    scene.test.ts
+    state.test.ts
+scripts/
+  measure-build.mjs
+  measure-preview.mjs
+package.json, package-lock.json, index.html
+vite.config.ts, vitest.config.ts, playwright.config.ts, tsconfig.json
+vercel.json, LICENSE, THIRD_PARTY_NOTICES.md, ASSET_LICENSES.md
+docs/ — handoff, verification, source review, content guide, measurements, screenshots
 ```

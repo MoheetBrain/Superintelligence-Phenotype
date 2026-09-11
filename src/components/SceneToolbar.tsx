@@ -1,6 +1,5 @@
 import { RotateCcw, Scan, Plus, Minus } from 'lucide-react';
 import type { Action, ExplorerState } from '../state/explorerReducer';
-import type { Vec3 } from '../data/schema';
 import { Button } from './ui/Button';
 export function SceneToolbar({
   state,
@@ -9,15 +8,7 @@ export function SceneToolbar({
   state: ExplorerState;
   dispatch: (a: Action) => void;
 }) {
-  const zoom = (scale: number) => {
-    const p = state.camera.position.map(
-      (v, i) => state.camera.target[i] + (v - state.camera.target[i]) * scale,
-    ) as unknown as Vec3;
-    dispatch({
-      type: 'restore',
-      state: { ...state, camera: { ...state.camera, position: p }, cameraIntent: 'restore' },
-    });
-  };
+  const zoom = (factor: number) => dispatch({ type: 'zoom', factor });
   return (
     <div className="scene-controls">
       <div className="camera-controls" role="group" aria-label="Camera controls">

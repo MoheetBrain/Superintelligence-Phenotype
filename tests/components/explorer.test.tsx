@@ -37,7 +37,7 @@ describe('HTML alternative', () => {
       />,
     );
     expect(screen.getByText('Future hypothesis: Extrapolated')).toBeVisible();
-    expect(screen.getByText(/Hypothetical example/)).toBeVisible();
+    expect(screen.getByText('Hypothetical example · not an observed result')).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Evidence' }));
     expect(screen.getByText('Observed', { exact: true })).toBeVisible();
     expect(screen.getByText(/Models and self-evaluation tasks studied/)).toBeVisible();
