@@ -17,3 +17,9 @@ The 2030–2035 date comes from the project creator's supplied scenario. It has 
 ## Creator prediction updated — 12 September 2026
 
 The creator explicitly replaced the earlier 2030–2035 window with **IT IS HERE ALREADY!**, attributed as **My prediction as an AI student**. The dialog quotes their personal prediction and identifies the creator of ASI Atlas as its source. This statement is not an established scientific finding; it does not reclassify the atlas's empirical claims or certify every illustrated capability. The earlier source-review record above describes the superseded arrival-window framing.
+
+## Creator belief and dual-host framing — 12 September 2026
+
+At the creator’s subsequent request, the banner now reads **My belief as an AI undergraduate**, followed by **U O W · University of Westminster**, in charcoal grey. The modal identifies the statement as personal and the affiliation as creator-supplied, without attributing a position to the university. This supersedes the earlier student-prediction wording.
+
+The dual-host operational-state demonstration is a local illustrative state machine. It makes no empirical claim of ASI migration, consciousness preservation or impossible regulation. Its default evidence class is **Theoretically Plausible**. No new empirical source claims were introduced; the reviewed observations above retain their original scope. The industrial humanoids are original procedural designs, with no Figure AI model assets, logos, markings or affiliation.

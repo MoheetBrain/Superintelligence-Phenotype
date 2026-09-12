@@ -3,42 +3,61 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { visualMappings } from '../data/visualMappings';
 import type { PartRegistry } from './partRegistry';
 
-/** Original, dimensionless concept body. Geometry is an interface, never a capability model. */
+type Surface = 'shell' | 'secondary' | 'joint' | 'flex' | 'visor' | 'sensor';
+const palettes = {
+  graphite: {
+    shell: '#555f65',
+    secondary: '#9da6aa',
+    joint: '#20262b',
+    flex: '#171c20',
+    visor: '#080e14',
+    sensor: '#c6f7fa',
+  },
+  pearl: {
+    shell: '#e5e7e3',
+    secondary: '#c5cbc9',
+    joint: '#20262b',
+    flex: '#171c20',
+    visor: '#080e14',
+    sensor: '#c6f7fa',
+  },
+};
+/** Original industrial platform: arbitrary design units, not a robotics performance model. */
 export function createRobot() {
   const robot = new T.Group();
-  robot.name = 'Original ASI concept body';
+  robot.name = 'Atlas industrial humanoid';
   const decoration = new T.Group();
-  decoration.name = 'Non-interactive structural details';
+  decoration.name = 'Structural details';
   robot.add(decoration);
   const registry: PartRegistry = new Map();
-  const enamel = '#d94435',
-    shell = '#e9ebe4',
-    dark = '#202d31',
-    joint = '#52636a',
-    accent = '#75e5ed';
   const add = (
-    group: T.Group,
+    g: T.Group,
     geometry: T.BufferGeometry,
-    position: readonly number[],
-    color = shell,
+    x: number,
+    y: number,
+    z: number,
+    surface: Surface = 'shell',
   ) => {
+    const color = palettes.graphite[surface];
+    const polished = surface === 'visor';
     const material = new T.MeshPhysicalMaterial({
       color,
-      metalness: color === dark ? 0.72 : color === enamel ? 0.32 : 0.24,
-      clearcoat: color === enamel ? 0.85 : 0.2,
-      clearcoatRoughness: 0.24,
-      roughness: color === dark ? 0.3 : color === enamel ? 0.25 : 0.38,
-      emissive: color === accent ? accent : '#000000',
-      emissiveIntensity: color === accent ? 0.5 : 0,
+      metalness: polished ? 0.35 : surface === 'flex' ? 0.05 : 0.62,
+      roughness: polished ? 0.12 : surface === 'flex' ? 0.78 : 0.33,
+      clearcoat: polished ? 1 : 0.3,
+      clearcoatRoughness: 0.14,
+      emissive: surface === 'sensor' ? color : '#000000',
+      emissiveIntensity: surface === 'sensor' ? 0.35 : 0,
     });
     const mesh = new T.Mesh(geometry, material);
-    mesh.position.fromArray(position);
-    mesh.userData.baseColor = color;
-    mesh.userData.finishPanel = color === enamel;
-    mesh.userData.baseEmissive = color === accent ? accent : '#000000';
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    group.add(mesh);
+    mesh.position.set(x, y, z);
+    Object.assign(mesh.userData, {
+      surface,
+      baseColor: color,
+      baseEmissive: surface === 'sensor' ? color : '#000000',
+    });
+    mesh.castShadow = mesh.receiveShadow = true;
+    g.add(mesh);
     return mesh;
   };
   const box = (
@@ -49,70 +68,52 @@ export function createRobot() {
     w: number,
     h: number,
     d: number,
-    c = shell,
-    r = 0.055,
-  ) => add(g, new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 3, h / 3, d / 3)), [x, y, z], c);
-  const plate = (
-    g: T.Group,
-    points: readonly (readonly [number, number])[],
-    x: number,
-    y: number,
-    z: number,
-    depth: number,
-    c = shell,
-    bevel = 0.035,
-  ) => {
-    const shape = new T.Shape();
-    points.forEach(([px, py], i) => (i ? shape.lineTo(px, py) : shape.moveTo(px, py)));
-    shape.closePath();
-    return add(
-      g,
-      new T.ExtrudeGeometry(shape, {
-        depth,
-        bevelEnabled: true,
-        bevelSegments: 3,
-        steps: 1,
-        bevelSize: bevel,
-        bevelThickness: bevel,
-      }),
-      [x, y, z - depth / 2],
-      c,
-    );
-  };
-  const bearing = (
+    surface: Surface = 'shell',
+    r = 0.035,
+  ) =>
+    add(g, new RoundedBoxGeometry(w, h, d, 2, Math.min(r, w / 3, h / 3, d / 3)), x, y, z, surface);
+  const disc = (
     g: T.Group,
     x: number,
     y: number,
     z: number,
     r: number,
     depth: number,
-    c = joint,
+    surface: Surface = 'joint',
   ) => {
-    const mesh = add(g, new T.CylinderGeometry(r, r, depth, 32), [x, y, z], c);
+    const mesh = add(g, new T.CylinderGeometry(r, r, depth, 24), x, y, z, surface);
     mesh.rotation.x = Math.PI / 2;
     return mesh;
   };
+  const ring = (
+    g: T.Group,
+    x: number,
+    y: number,
+    z: number,
+    r: number,
+    tube: number,
+    surface: Surface = 'secondary',
+  ) => add(g, new T.TorusGeometry(r, tube, 8, 32), x, y, z, surface);
   const loft = (
     g: T.Group,
     x: number,
     y: number,
     z: number,
     stations: readonly (readonly [number, number, number])[],
-    c = shell,
+    surface: Surface = 'shell',
   ) => {
     const positions: number[] = [],
       indices: number[] = [],
-      sides = 40;
-    // Smooth rounded-rectangle sections create curved industrial housings.
-    for (const [sy, width, depth] of stations)
+      sides = 32;
+    for (const [sy, w, d] of stations)
       for (let j = 0; j <= sides; j++) {
-        const theta = (j / sides) * Math.PI * 2,
-          cos = Math.cos(theta),
-          sin = Math.sin(theta);
+        const angle = (j / sides) * Math.PI * 2,
+          c = Math.cos(angle),
+          s = Math.sin(angle);
         positions.push(
-          (Math.sign(cos) * Math.abs(cos) ** 0.7 * width) / 2,
+          (Math.sign(c) * Math.abs(c) ** 0.72 * w) / 2,
           sy,
-          (Math.sign(sin) * Math.abs(sin) ** 0.7 * depth) / 2,
+          (Math.sign(s) * Math.abs(s) ** 0.72 * d) / 2,
         );
       }
     for (let i = 0; i < stations.length - 1; i++)
@@ -125,18 +126,18 @@ export function createRobot() {
     geometry.setAttribute('position', new T.Float32BufferAttribute(positions, 3));
     geometry.setIndex(indices);
     geometry.computeVertexNormals();
-    return add(g, geometry, [x, y, z], c);
+    return add(g, geometry, x, y, z, surface);
   };
-  const taper = (
+  const shell = (
     g: T.Group,
     x: number,
     y: number,
     z: number,
-    top: number,
-    bottom: number,
-    height: number,
-    depth: number,
-    c = shell,
+    w: number,
+    h: number,
+    d: number,
+    surface: Surface = 'shell',
+    taper = 0.76,
   ) =>
     loft(
       g,
@@ -144,17 +145,16 @@ export function createRobot() {
       y,
       z,
       [
-        [-height / 2, 0, 0],
-        [-height / 2, bottom * 0.65, depth * 0.65],
-        [-height / 2 + 0.06, bottom + 0.07, depth],
-        [-height * 0.12, (top + bottom) / 2 + 0.1, depth * 1.1],
-        [height / 2 - 0.09, top + 0.05, depth],
-        [height / 2, top * 0.8, depth * 0.78],
-        [height / 2, 0, 0],
+        [-h / 2, 0, 0],
+        [-h / 2, w * taper * 0.8, d * 0.7],
+        [-h / 2 + 0.07, w * taper, d],
+        [h * 0.28, w, d],
+        [h / 2 - 0.04, w * 0.92, d * 0.92],
+        [h / 2, w * 0.68, d * 0.6],
+        [h / 2, 0, 0],
       ],
-      c,
+      surface,
     );
-
   for (const v of visualMappings) {
     const group = new T.Group();
     group.name = v.partId;
@@ -162,196 +162,186 @@ export function createRobot() {
     robot.add(group);
     switch (v.shape) {
       case 'head':
+        loft(group, 0, 0, -0.02, [
+          [-0.4, 0, 0],
+          [-0.38, 0.35, 0.38],
+          [-0.29, 0.53, 0.5],
+          [0.16, 0.66, 0.57],
+          [0.31, 0.58, 0.49],
+          [0.39, 0.33, 0.28],
+          [0.4, 0, 0],
+        ]);
+        box(group, 0, 0, -0.305, 0.24, 0.5, 0.025, 'secondary', 0.01);
+        break;
+      case 'eyes':
         loft(
           group,
           0,
-          0,
           -0.025,
+          -0.09,
           [
-            [-0.44, 0, 0],
-            [-0.43, 0.32, 0.36],
-            [-0.32, 0.57, 0.54],
-            [0.1, 0.76, 0.64],
-            [0.32, 0.7, 0.6],
-            [0.41, 0.5, 0.46],
-            [0.43, 0, 0],
+            [-0.32, 0, 0],
+            [-0.3, 0.3, 0.05],
+            [-0.21, 0.48, 0.12],
+            [0.16, 0.57, 0.14],
+            [0.25, 0.48, 0.08],
+            [0.28, 0, 0],
           ],
-          enamel,
+          'visor',
         );
-        box(group, 0, -0.38, 0.235, 0.37, 0.075, 0.09, dark);
-        box(group, 0, 0.05, -0.35, 0.24, 0.54, 0.06, joint);
+        for (const x of [-0.12, 0.12]) {
+          disc(group, x, 0.07, 0.008, 0.022, 0.016, 'joint');
+          disc(group, x, 0.07, 0.02, 0.009, 0.008, 'sensor');
+        }
+        box(group, 0, 0.18, 0.005, 0.07, 0.012, 0.014, 'sensor', 0.004);
         break;
       case 'halo':
-        // A fitted crown and temple interface, not a floating halo. Stable part ID retained.
-        box(group, 0, -0.012, 0.01, 0.62, 0.065, 0.49, shell, 0.02);
-        for (const s of [-1, 1]) {
-          box(group, s * 0.408, -0.2, 0.01, 0.075, 0.34, 0.34, joint, 0.03);
-          box(group, s * 0.43, -0.17, 0.195, 0.027, 0.19, 0.025, accent, 0.008);
+        box(group, 0, -0.062, -0.02, 0.37, 0.018, 0.34, 'secondary', 0.005);
+        for (const side of [-1, 1]) {
+          box(group, side * 0.326, -0.29, -0.005, 0.055, 0.21, 0.21, 'joint');
+          disc(group, side * 0.33, -0.27, 0.107, 0.027, 0.012, 'secondary');
         }
-        break;
-      case 'eyes':
-        plate(
-          group,
-          [
-            [-0.28, 0.23],
-            [0.28, 0.23],
-            [0.31, 0.11],
-            [0.24, -0.23],
-            [-0.24, -0.23],
-            [-0.31, 0.11],
-          ],
-          0,
-          0,
-          0,
-          0.12,
-          dark,
-          0.045,
-        );
-        for (const x of [-0.135, 0.135])
-          box(group, x, 0.03, 0.105, 0.11, 0.07, 0.025, accent, 0.025);
-        box(group, 0, -0.11, 0.108, 0.16, 0.014, 0.025, joint, 0.004);
-        break;
-      case 'spine':
-        box(group, 0, 0, -0.02, 0.19, 1.52, 0.16, dark);
-        for (let i = 0; i < 6; i++)
-          box(group, 0, 0.66 - i * 0.245, -0.1, 0.35, 0.15, 0.11, i === 0 ? accent : joint, 0.025);
         break;
       case 'chest':
-        taper(group, 0, -0.03, -0.03, 1.35, 0.93, 0.93, 0.58, dark);
-        for (const s of [-1, 1]) {
-          const panel = plate(
-            group,
-            [
-              [-0.03, 0.44],
-              [0.56, 0.36],
-              [0.7, 0.14],
-              [0.53, -0.32],
-              [0.13, -0.4],
-              [-0.02, -0.2],
-            ],
-            0,
-            0,
-            0.25,
-            0.2,
-            enamel,
-            0.06,
-          );
-          panel.scale.x = s;
-          box(group, s * 0.34, 0.21, 0.4, 0.38, 0.16, 0.08, shell, 0.035);
-          box(group, s * 0.14, -0.24, 0.395, 0.1, 0.1, 0.025, joint, 0.015);
-          box(group, s * 0.39, 0.37, 0.405, 0.34, 0.035, 0.035, joint, 0.008);
-          for (let i = 0; i < 3; i++)
-            box(
-              group,
-              s * (0.53 - i * 0.012),
-              -0.13 - i * 0.07,
-              0.388,
-              0.13,
-              0.018,
-              0.035,
-              dark,
-              0.005,
-            );
+        // A continuous shoulder-to-waist shell with inset titanium flanks.
+        loft(group, 0, -0.02, -0.04, [
+          [-0.48, 0, 0],
+          [-0.46, 0.68, 0.37],
+          [-0.34, 0.88, 0.52],
+          [0.15, 1.29, 0.65],
+          [0.32, 1.23, 0.57],
+          [0.43, 0.79, 0.37],
+          [0.45, 0, 0],
+        ]);
+        for (const side of [-1, 1]) {
+          const flank = shell(group, side * 0.55, -0.07, 0.08, 0.22, 0.65, 0.38, 'secondary', 0.55);
+          flank.rotation.z = -side * 0.25;
+          box(group, side * 0.36, 0.31, 0.23, 0.32, 0.025, 0.025, 'joint', 0.008);
         }
+        box(group, 0, -0.17, 0.292, 0.35, 0.017, 0.015, 'joint', 0.004);
         break;
       case 'shoulders':
-        for (const s of [-1, 1]) {
-          bearing(group, s * 0.89, -0.05, 0, 0.24, 0.38, dark);
-          const cap = box(group, s * 0.98, 0.035, 0.025, 0.44, 0.44, 0.52, enamel, 0.12);
-          cap.rotation.z = s * 0.18;
-          bearing(group, s * 1.02, -0.06, 0.285, 0.105, 0.045, joint);
-          bearing(group, s * 1.02, -0.06, 0.312, 0.047, 0.025, dark);
+        for (const side of [-1, 1]) {
+          disc(group, side * 0.87, -0.065, -0.015, 0.245, 0.34);
+          ring(group, side * 0.87, -0.065, 0.167, 0.207, 0.028);
+          disc(group, side * 0.87, -0.065, 0.18, 0.178, 0.026, 'visor');
+          disc(group, side * 0.87, -0.065, 0.198, 0.061, 0.018, 'secondary');
+          box(group, side * 0.71, 0.12, -0.035, 0.22, 0.12, 0.24, 'flex');
         }
         break;
-      case 'hips':
-        taper(group, 0, 0.03, -0.02, 0.87, 0.65, 0.36, 0.5, dark);
-        for (const s of [-1, 1]) {
-          plate(
-            group,
-            [
-              [-0.19, 0.22],
-              [0.2, 0.16],
-              [0.19, -0.22],
-              [-0.09, -0.2],
-            ],
-            s * 0.28,
-            0,
-            0.2,
-            0.16,
-            shell,
-            0.04,
-          );
-          bearing(group, s * 0.43, -0.17, 0, 0.2, 0.32, joint);
-        }
-        box(group, 0, 0.19, 0.32, 0.38, 0.038, 0.035, accent, 0.01);
-        break;
-      case 'legs':
-        for (const s of [-1, 1]) {
-          const x = s * 0.44;
-          taper(group, x, 0.72, 0, 0.43, 0.32, 1.05, 0.43, enamel);
-          box(group, x, 0.7, 0.26, 0.105, 0.6, 0.025, shell, 0.01);
-          bearing(group, x, 0.08, 0.02, 0.185, 0.36, dark);
-          box(group, x, 0.085, 0.24, 0.24, 0.21, 0.1, shell, 0.07);
-          taper(group, x, -0.56, -0.025, 0.37, 0.23, 1.04, 0.36);
-          box(group, x, -0.51, 0.19, 0.07, 0.65, 0.035, joint, 0.012);
-          bearing(group, x, -1.14, 0.0, 0.13, 0.23, dark);
-          box(group, x, -1.27, 0.15, 0.37, 0.2, 0.72, shell, 0.075);
-          box(group, x, -1.365, 0.15, 0.38, 0.065, 0.74, dark, 0.025);
-        }
-        break;
-      case 'hands':
-        for (const s of [-1, 1]) {
-          const x = s * 1.25;
-          bearing(group, x, 0.12, 0, 0.105, 0.18, dark);
-          box(group, x, -0.025, 0.03, 0.23, 0.26, 0.17, joint, 0.045);
-          box(group, x, -0.01, 0.133, 0.19, 0.2, 0.04, shell, 0.025);
-          for (let i = 0; i < 4; i++) {
-            const px = x + (i - 1.5) * 0.06,
-              length = i === 0 || i === 3 ? 0.19 : 0.24;
-            box(group, px, -0.2, 0.052, 0.046, 0.12, 0.067, shell, 0.016);
-            bearing(group, px, -0.255, 0.07, 0.025, 0.063, dark);
-            box(group, px, -0.255 - length / 3, 0.085, 0.044, length * 0.6, 0.063, shell, 0.016);
-          }
-          const thumb = box(group, x - s * 0.15, -0.08, 0.09, 0.066, 0.19, 0.075, shell, 0.024);
-          thumb.rotation.z = -s * 0.38;
-        }
-        break;
-      case 'shield':
-        plate(
-          group,
-          [
-            [-0.08, 0.15],
-            [0.08, 0.15],
-            [0.075, -0.08],
-            [0, -0.15],
-            [-0.075, -0.08],
-          ],
-          0,
-          0,
-          0,
-          0.055,
-          accent,
-          0.018,
-        );
-        box(group, 0, 0.025, 0.048, 0.016, 0.13, 0.015, dark, 0.004);
+      case 'spine':
+        box(group, 0, 0, 0.085, 0.22, 1.35, 0.12, 'joint');
+        for (let i = 0; i < 8; i++)
+          box(group, 0, 0.58 - i * 0.16, 0.015, 0.28, 0.08, 0.07, 'secondary', 0.018);
         break;
       case 'core':
-        taper(group, 0, 0.02, -0.03, 0.84, 0.66, 0.91, 0.47, dark);
-        taper(group, 0, 0.015, 0.2, 0.54, 0.4, 0.67, 0.13, shell);
-        for (const x of [-0.35, 0.35]) {
-          box(group, x, 0, 0.22, 0.08, 0.52, 0.1, enamel, 0.025);
-          box(group, x, 0.12, 0.29, 0.018, 0.19, 0.022, accent, 0.006);
+        shell(group, 0, 0.06, -0.035, 0.7, 0.88, 0.46, 'flex');
+        for (let i = 0; i < 6; i++)
+          box(group, 0, -0.22 + i * 0.1, 0.196, 0.61 - i * 0.012, 0.025, 0.025, 'joint', 0.008);
+        for (const side of [-1, 1])
+          box(group, side * 0.285, 0.09, -0.15, 0.06, 0.51, 0.06, 'secondary', 0.02);
+        break;
+      case 'hips':
+        shell(group, 0, 0.02, -0.015, 0.87, 0.35, 0.47, 'joint');
+        for (const side of [-1, 1]) {
+          shell(group, side * 0.32, 0, 0.04, 0.35, 0.33, 0.43, 'shell', 0.65);
+          disc(group, side * 0.37, -0.19, 0.015, 0.165, 0.3);
         }
         break;
       case 'arm':
-        for (const s of [-1, 1]) {
-          const upper = taper(group, s * 1.12, 0.37, -0.005, 0.34, 0.25, 0.68, 0.36);
-          upper.rotation.z = s * 0.1;
-          bearing(group, s * 1.18, -0.045, 0, 0.15, 0.29, dark);
-          const forearm = taper(group, s * 1.225, -0.45, 0.015, 0.3, 0.2, 0.61, 0.34, enamel);
-          forearm.rotation.z = s * 0.04;
-          box(group, s * 1.23, -0.4, 0.195, 0.065, 0.33, 0.035, joint, 0.01);
+        for (const side of [-1, 1]) {
+          const upper = shell(group, side * 1.01, 0.4, 0, 0.28, 0.67, 0.31, 'secondary');
+          upper.rotation.z = side * 0.08;
+          disc(group, side * 1.045, -0.035, 0, 0.143, 0.26);
+          ring(group, side * 1.045, -0.035, 0.135, 0.114, 0.015);
+          const forearm = shell(group, side * 1.09, -0.46, 0.01, 0.3, 0.75, 0.3);
+          forearm.rotation.z = side * 0.04;
+          for (let i = 0; i < 5; i++)
+            box(group, side * 1.09, -0.29 - i * 0.065, 0.164, 0.13, 0.017, 0.012, 'joint', 0.004);
+          box(group, side * 1.075, -0.72, -0.13, 0.08, 0.1, 0.025, 'secondary', 0.01);
         }
+        break;
+      case 'hands':
+        for (const side of [-1, 1]) {
+          const x = side * 1.12;
+          disc(group, x, 0.05, 0.01, 0.085, 0.14, 'joint');
+          box(group, x, -0.095, 0.035, 0.238, 0.24, 0.14, 'flex');
+          box(group, x, -0.085, 0.12, 0.204, 0.19, 0.032, 'secondary', 0.03);
+          // Four separately spaced, three-link fingers with curled distal pads.
+          for (let i = 0; i < 4; i++) {
+            const px = x + (i - 1.5) * 0.067,
+              length = [0.22, 0.28, 0.26, 0.2][i];
+            for (let j = 0; j < 3; j++) {
+              const segment = length / 3,
+                py = -0.235 - j * segment;
+              disc(group, px, py + 0.025, 0.047 + j * 0.022, 0.026, 0.065, 'joint');
+              const link = box(
+                group,
+                px,
+                py - segment / 3,
+                0.06 + j * 0.029,
+                0.048,
+                segment * 0.84,
+                0.06,
+                'secondary',
+                0.015,
+              );
+              link.rotation.x = -0.12 - j * 0.18;
+              if (j === 2)
+                box(
+                  group,
+                  px,
+                  py - segment * 0.6,
+                  0.101 + j * 0.021,
+                  0.041,
+                  0.035,
+                  0.03,
+                  'flex',
+                  0.01,
+                );
+            }
+          }
+          const thumb = new T.Group();
+          thumb.position.set(x - side * 0.137, -0.14, 0.07);
+          thumb.rotation.z = -side * 0.45;
+          thumb.rotation.x = -0.3;
+          group.add(thumb);
+          for (let j = 0; j < 2; j++) {
+            disc(thumb, 0, -j * 0.092, 0.014 + j * 0.02, 0.032, 0.07);
+            box(
+              thumb,
+              0,
+              -0.04 - j * 0.09,
+              0.032 + j * 0.026,
+              0.058,
+              0.081,
+              0.062,
+              'secondary',
+              0.02,
+            );
+          }
+        }
+        break;
+      case 'legs':
+        for (const side of [-1, 1]) {
+          const x = side * 0.36;
+          shell(group, x, 0.72, -0.015, 0.41, 1.07, 0.45);
+          box(group, x + side * 0.155, 0.79, 0.02, 0.042, 0.63, 0.26, 'secondary', 0.016);
+          disc(group, x, 0.065, 0, 0.169, 0.34);
+          ring(group, x, 0.065, 0.18, 0.137, 0.018);
+          box(group, x, 0.07, 0.215, 0.22, 0.18, 0.095, 'secondary', 0.05);
+          shell(group, x, -0.58, -0.015, 0.32, 1.13, 0.33, 'secondary', 0.63);
+          box(group, x, -0.54, -0.18, 0.16, 0.78, 0.065, 'joint');
+          box(group, x + side * 0.065, -0.52, 0.157, 0.016, 0.69, 0.015, 'shell', 0.005);
+          disc(group, x, -1.17, 0, 0.112, 0.23);
+          box(group, x, -1.3, 0.13, 0.32, 0.17, 0.59, 'shell', 0.06);
+          box(group, x, -1.377, 0.13, 0.33, 0.055, 0.61, 'flex', 0.018);
+          box(group, x, -1.278, 0.28, 0.29, 0.017, 0.019, 'joint', 0.004);
+        }
+        break;
+      case 'shield':
+        box(group, 0, 0, -0.115, 0.11, 0.15, 0.018, 'joint', 0.015);
+        box(group, 0, 0.015, -0.101, 0.048, 0.012, 0.01, 'sensor', 0.003);
         break;
     }
     const meshes: T.Mesh[] = [];
@@ -372,7 +362,44 @@ export function createRobot() {
       color: v.color,
     });
   }
-  add(decoration, new T.CylinderGeometry(0.15, 0.21, 0.32, 32), [0, 5.12, -0.025], dark);
-  box(decoration, 0, 3.08, -0.03, 0.5, 0.22, 0.35, joint);
+  const neck = add(decoration, new T.CylinderGeometry(0.12, 0.17, 0.3, 24), 0, 5.14, -0.02, 'flex');
+  for (let i = 0; i < 4; i++)
+    ring(decoration, 0, 5.02 + i * 0.062, -0.02, 0.132, 0.013, 'joint').rotation.x = Math.PI / 2;
+  neck.userData.structural = true;
+  add(decoration, new T.CylinderGeometry(0.24, 0.25, 0.16, 32), 0, 3.12, -0.015, 'secondary');
   return { robot, registry, decoration };
+}
+/** Identical geometry buffers; independent materials, transforms and capability registries. */
+export function createRobotPair() {
+  const a = createRobot(),
+    robot = a.robot.clone(true),
+    registry: PartRegistry = new Map();
+  robot.traverse((o) => {
+    if (o instanceof T.Mesh) {
+      o.material = (o.material as T.MeshPhysicalMaterial).clone();
+      const color =
+        o.userData.partId === 'interface-hands' && o.userData.surface === 'secondary'
+          ? '#626e72'
+          : palettes.pearl[o.userData.surface as Surface];
+      o.userData.baseColor = color;
+      (o.material as T.MeshPhysicalMaterial).color.set(color);
+    }
+  });
+  for (const part of a.registry.values()) {
+    const group = robot.getObjectByName(part.id) as T.Group,
+      meshes: T.Mesh[] = [];
+    group.traverse((o) => {
+      if (o instanceof T.Mesh) meshes.push(o);
+    });
+    registry.set(part.id, { ...part, group, meshes, assembled: part.assembled.clone() });
+  }
+  const b = { robot, registry, decoration: robot.getObjectByName('Structural details') as T.Group };
+  for (const [host, item] of [
+    ['host-a', a],
+    ['host-b', b],
+  ] as const)
+    item.robot.traverse((o) => {
+      o.userData.hostId = host;
+    });
+  return { a, b };
 }

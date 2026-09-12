@@ -1,3 +1,10 @@
+import {
+  initialMobility,
+  mobilityReducer,
+  type MobilityState,
+  type MobilityAction,
+  type HostView,
+} from './mobility';
 import { primaryGroup, groupIds, type DiscoveryGroupId } from '../data/discovery';
 import { profileTraits } from '../data/profile';
 import {
@@ -16,6 +23,8 @@ export interface CameraState {
 }
 export interface ExplorerState {
   view: View;
+  mobility: MobilityState;
+  hostView: HostView;
   group: DiscoveryGroupId | null;
   topic: string | null;
   profile: string | null;
@@ -37,9 +46,11 @@ export interface ExplorerState {
   cameraIntent: 'fit' | 'restore';
   cameraRevision: number;
 }
-export const defaultCamera: CameraState = { position: [5, 4.5, 15], target: [0, 3.1, 0] };
+export const defaultCamera: CameraState = { position: [0.6, 3.55, 15], target: [0, 3.1, 0] };
 export const initialState = (): ExplorerState => ({
   view: 'body',
+  mobility: initialMobility(),
+  hostView: 'dual',
   group: null,
   topic: null,
   profile: null,
@@ -62,6 +73,8 @@ export const initialState = (): ExplorerState => ({
   cameraRevision: 0,
 });
 export type Action =
+  | { type: 'mobility'; action: MobilityAction }
+  | { type: 'host-view'; value: HostView }
   | {
       type: 'select';
       id: string;
@@ -100,6 +113,28 @@ const fit = (s: ExplorerState): ExplorerState => ({
 });
 export function explorerReducer(s: ExplorerState, a: Action): ExplorerState {
   switch (a.type) {
+    case 'mobility': {
+      const next = { ...s, mobility: mobilityReducer(s.mobility, a.action) };
+      return a.action.type === 'start'
+        ? fit({
+            ...next,
+            hostView: 'transfer',
+            isolate: false,
+            explode: 0,
+            visible: [...domainIds],
+            illustration: null,
+            camera: { position: [0.6, 3.55, 15], target: [0, 3.1, 0] },
+          })
+        : next;
+    }
+    case 'host-view':
+      return fit({
+        ...s,
+        hostView: a.value,
+        isolate: false,
+        explode: 0,
+        camera: { position: [0.6, 3.55, 15], target: [0, 3.1, 0] },
+      });
     case 'select': {
       const c = capabilityById[a.id];
       if (!c) return s;

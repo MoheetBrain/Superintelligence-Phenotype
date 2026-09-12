@@ -1,17 +1,17 @@
 import { Vector3, type Camera } from 'three';
 export const rootAnchors = [
-  [-2.6, 4.9, 0.1],
-  [-2.9, 2.55, 0.2],
-  [2.7, 4.9, 0.1],
-  [2.9, 2.8, 0.2],
-  [2.5, 0.85, 0],
+  [-3.85, 5.0, 0.1],
+  [-3.85, 2.6, 0.2],
+  [3.85, 5.0, 0.1],
+  [3.85, 3.0, 0.2],
+  [3.85, 1.0, 0],
 ] as const;
 export function cloudAnchor(index: number, count: number, root: boolean) {
   if (root) return new Vector3(...rootAnchors[index]);
   const side = index % 2 === 0 ? -1 : 1,
     rows = Math.ceil(count / 2),
     row = Math.floor(index / 2);
-  return new Vector3(side * 2.65, 5.45 - row * (4.8 / Math.max(1, rows - 1)), 0.15);
+  return new Vector3(side * 3.85, 5.45 - row * (4.8 / Math.max(1, rows - 1)), 0.15);
 }
 export function projected(point: Vector3, camera: Camera, width: number, height: number) {
   const local = point.clone().applyMatrix4(camera.matrixWorldInverse),

@@ -6,17 +6,17 @@ import { capabilities } from '../../src/data/capabilities';
 
 const localPickPoints: readonly (readonly [number, number, number])[] = [
   [0, 0.2, 0.25],
-  [0, -0.012, 0.27],
-  [0, 0.66, -0.1],
+  [-0.326, -0.27, 0.107],
+  [0, 0.58, 0.13],
   [0, 0, 0.1],
   [0.4, 0.12, 0.4],
   [-1.02, -0.06, 0.3],
   [0, 0, 0.2],
   [-0.4, 0.56, 0.1],
-  [-1.25, -0.01, 0.14],
+  [-1.12, -0.085, 0.14],
   [0, 0, 0.05],
   [0, 0.27, 0.3],
-  [-1.12, 0.37, 0.17],
+  [-1.01, 0.4, 0.16],
 ];
 async function ready(page: Page) {
   await expect(page.locator('canvas')).toHaveCount(1);
@@ -56,7 +56,7 @@ test('real canvas Metacognition journey, evidence, isolate, reset, orbit', async
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
   await ready(page);
-  const point = await canvasPoint(page, [0.43, 5.95, 0.2]);
+  const point = await canvasPoint(page, [-2.176, 5.82, 0.107]);
   await page.mouse.click(point.x, point.y);
   await expect(page.getByRole('heading', { name: 'Metacognition', exact: true })).toBeVisible();
   await expect(page.getByText('Hypothetical example · not an observed result')).toBeVisible();
@@ -195,8 +195,10 @@ test('clipboard failure provides a selectable local link', async ({ page }) => {
   await page.goto('/');
   await ready(page);
   await page.getByRole('button', { name: 'Share view', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText('Clipboard access is unavailable');
-  await expect(page.getByRole('textbox', { name: 'View link' })).toHaveValue(/#v=2/);
+  await expect(page.getByRole('dialog').getByRole('status')).toContainText(
+    'Clipboard access is unavailable',
+  );
+  await expect(page.getByRole('textbox', { name: 'View link' })).toHaveValue(/#v=3/);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Share view', exact: true })).toBeFocused();
@@ -245,7 +247,7 @@ test('malformed shared links recover without broken controls', async ({ page }) 
 test('multitouch pinching does not select on either finger lift', async ({ page, context }) => {
   await page.goto('/');
   await ready(page);
-  const p = await canvasPoint(page, [0.43, 5.95, 0.2]);
+  const p = await canvasPoint(page, [-2.176, 5.82, 0.107]);
   const cdp = await context.newCDPSession(page);
   await cdp.send('Input.dispatchTouchEvent', {
     type: 'touchStart',
@@ -274,7 +276,7 @@ test('multitouch pinching does not select on either finger lift', async ({ page,
   await ready(page);
   await page.getByRole('button', { name: 'Reset explorer' }).click();
   await ready(page);
-  const tap = await canvasPoint(page, [0.43, 5.95, 0.2]);
+  const tap = await canvasPoint(page, [-2.176, 5.82, 0.107]);
   await cdp.send('Input.dispatchTouchEvent', {
     type: 'touchStart',
     touchPoints: [{ x: tap.x, y: tap.y, id: 3 }],
@@ -342,9 +344,12 @@ test('production entry requests only successful local assets', async ({ page }, 
     body: JSON.stringify({ bytes, resources }, null, 2),
     contentType: 'application/json',
   });
-  await page.screenshot({ path: 'docs/screenshots/production-body.png', fullPage: true });
+  await page.screenshot({ path: 'docs/screenshots/dual-host/production-body.png', fullPage: true });
   await choose(page, 'Metacognition');
-  await page.screenshot({ path: 'docs/screenshots/production-metacognition.png', fullPage: true });
+  await page.screenshot({
+    path: 'docs/screenshots/dual-host/production-metacognition.png',
+    fullPage: true,
+  });
 });
 for (const viewport of [
   { width: 1440, height: 900 },
@@ -364,7 +369,7 @@ for (const viewport of [
       true,
     );
     await page.screenshot({
-      path: `docs/screenshots/after-immersive/${viewport.width}x${viewport.height}.png`,
+      path: `docs/screenshots/dual-host/regression/${viewport.width}x${viewport.height}.png`,
       fullPage: true,
     });
     await choose(page, 'Metacognition');
@@ -413,7 +418,7 @@ test('former profile content now opens through the spatial hierarchy and List vi
   await expect(page.locator('.list-profiles button')).toHaveCount(15);
 });
 
-test('landing identity, attributed student prediction and real 3D cloud selection', async ({
+test('landing identity, attributed undergraduate belief and real 3D cloud selection', async ({
   page,
 }) => {
   await page.goto('/');
@@ -421,19 +426,21 @@ test('landing identity, attributed student prediction and real 3D cloud selectio
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('ARTIFICIAL SUPERINTELLIGENCE');
   await expect(page.getByTestId('inspector')).toHaveCount(0);
   await expect(page.locator('.profile-card-grid,.forms-grid,.phenotype-overview')).toHaveCount(0);
-  expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 2)).toBe(
-    true,
-  );
+  expect(
+    Number(await page.locator('canvas').getAttribute('data-body-height-ratio')),
+  ).toBeGreaterThan(0.6);
+  await expect(page.getByRole('button', { name: 'Inspect Host A graphite' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Inspect Host B pearl' })).toBeVisible();
   await page.getByRole('button', { name: /IT IS HERE ALREADY!/ }).click();
   await expect(
     page
       .getByRole('dialog')
       .getByText(
-        /As an AI student, my prediction is that artificial superintelligence is already here/,
+        /As an AI undergraduate at U O W — University of Westminster, my belief is that artificial superintelligence is already here/,
       ),
   ).toBeVisible();
   await page.keyboard.press('Escape');
-  const point = await canvasPoint(page, [-2.6, 4.9, 0.1]);
+  const point = await canvasPoint(page, [-3.85, 5.0, 0.1]);
   await page.mouse.click(point.x, point.y);
   await expect(page).toHaveURL(/group=mind/);
   await expect(
@@ -471,7 +478,7 @@ test('subtopics, Back and old/new shared links restore the same reading level', 
       .getByTestId('inspector')
       .getByRole('heading', { name: 'Cross-domain transfer', exact: true }),
   ).toBeVisible();
-  await other.screenshot({ path: 'docs/screenshots/after-immersive/restored-subtopic.png' });
+  await other.screenshot({ path: 'docs/screenshots/dual-host/regression/restored-subtopic.png' });
   await other.close();
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
@@ -518,7 +525,7 @@ test('strength tasks and precision steps change the visible mechanical context',
   ).toBeVisible();
   await page.getByRole('button', { name: 'Next stage', exact: true }).click();
   await expect(page.locator('canvas')).toHaveAttribute('data-context', 'self-improvement');
-  await page.screenshot({ path: 'docs/screenshots/after-immersive/precision.png' });
+  await page.screenshot({ path: 'docs/screenshots/dual-host/regression/precision.png' });
 });
 
 test('remote, migration and copying show execution states and conditional failure', async ({
@@ -572,5 +579,5 @@ test('remote, migration and copying show execution states and conditional failur
     })
     .check();
   await page.locator('.inspector-content').evaluate((e) => (e.scrollTop = 0));
-  await page.screenshot({ path: 'docs/screenshots/after-immersive/copying.png' });
+  await page.screenshot({ path: 'docs/screenshots/dual-host/regression/copying.png' });
 });

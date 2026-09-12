@@ -1,3 +1,9 @@
+# Current handoff: dual-host exhibit
+
+The current implementation and public hosting state are documented in [DUAL_HOST_HANDOFF.md](DUAL_HOST_HANDOFF.md) and [PUBLISHING.md](PUBLISHING.md). The previous immersive-release handoff below is retained as a historical record; its coral robot and student-prediction description are superseded.
+
+---
+
 # ASI Atlas — immersive release handoff
 
 Implemented in the existing `codex/asi-atlas` checkout of `MoheetBrain/Superintelligence-Phenotype`. The app is a scene-first portrait of artificial superintelligence, with the original twelve capability IDs, part mappings and evidence model preserved.

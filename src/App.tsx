@@ -16,6 +16,7 @@ import { capabilityById } from './data/capabilities';
 import { discoveryGroups } from './data/discovery';
 import { profileTraits } from './data/profile';
 import { arrivalScenario } from './content/arrival';
+import { MobilityControls } from './components/MobilityControls';
 import { RobotScene } from './scene/RobotScene';
 import { CapabilityCatalogue } from './components/CapabilityCatalogue';
 import { CapabilityInspector } from './components/CapabilityInspector';
@@ -199,6 +200,7 @@ export default function App() {
             {arrivalScenario.status}
             <ArrowUpRight size={14} />
           </span>
+          <small>{arrivalScenario.institution}</small>
         </button>
       </div>
       {state.view === 'body' ? (
@@ -252,7 +254,9 @@ export default function App() {
             <section className="scene-panel" aria-label="Body explorer">
               <div className="scene-heading">
                 <span>
-                  {group ? `${group.name} / CHOOSE A CONCEPT` : 'CHOOSE A CLOUD. FOLLOW AN IDEA.'}
+                  {group
+                    ? `${group.name} / CHOOSE A CONCEPT`
+                    : 'SUBSTRATE MOBILITY / TWO COMPATIBLE HOSTS'}
                 </span>
                 <button className="what-is-asi" onClick={() => setIntro(true)}>
                   <Info size={14} /> What is ASI?
@@ -281,6 +285,20 @@ export default function App() {
               />
             )}
           </div>
+          <MobilityControls
+            state={state}
+            dispatch={dispatch}
+            onStart={(mode) =>
+              dispatch({
+                type: 'mobility',
+                action: {
+                  type: 'start',
+                  mode,
+                  immediate: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+                },
+              })
+            }
+          />
         </main>
       ) : (
         <main>
@@ -354,8 +372,13 @@ export default function App() {
         <Modal label="Scene settings" onClose={() => setSettings(false)}>
           <h2>Scene controls</h2>
           <SceneToolbar state={state} dispatch={dispatch} />
-          <h3>Finish</h3>
-          <div className="finish-selector" role="group" aria-label="Robot finish">
+          <h3>Host materials</h3>
+          <p>
+            Host A: graphite / titanium. Host B: pearl / graphite. Both share the same original
+            platform.
+          </p>
+          <h3>Status accent</h3>
+          <div className="finish-selector" role="group" aria-label="Robot status accent">
             {(['Coral', 'Cobalt', 'Pearl'] as const).map((f) => (
               <button
                 key={f}
@@ -363,7 +386,7 @@ export default function App() {
                 onClick={() => dispatch({ type: 'finish', value: f })}
               >
                 <span className={`finish-dot finish-${f.toLowerCase()}`} />
-                {f}
+                {f === 'Coral' ? 'Cyan' : f === 'Pearl' ? 'Neutral white' : 'Soft blue'}
               </button>
             ))}
           </div>
@@ -418,7 +441,7 @@ export default function App() {
         </Modal>
       )}
       {timeline && (
-        <Modal label="Creator’s prediction" onClose={() => setTimeline(false)}>
+        <Modal label="Creator’s belief" onClose={() => setTimeline(false)}>
           <h2>{arrivalScenario.headline}</h2>
           <p className="scenario-tag">{arrivalScenario.status}</p>
           <blockquote className="creator-prediction">
@@ -441,8 +464,9 @@ export default function App() {
           <label htmlFor="share-link">View link</label>
           <textarea id="share-link" readOnly value={share} onFocus={(e) => e.target.select()} />
           <p>
-            Includes the discovery group, capability, subtopic, illustration, layers and camera.
-            Earlier atlas links still work.
+            Includes the host view, completed transfer arrangement, discovery group, capability,
+            subtopic, illustration, layers and camera. In-progress transfers reopen at the starting
+            state. Earlier atlas links still work.
           </p>
         </Modal>
       )}

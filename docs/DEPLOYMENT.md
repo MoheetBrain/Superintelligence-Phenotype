@@ -1,6 +1,6 @@
 # Deployment runbook
 
-**Update — 12 September 2026:** The creator has requested publication and a Sites destination is registered in `.openai/hosting.json`. The current workflow uses Sites with owner-private access by default; see [PUBLISHING.md](PUBLISHING.md). The Vercel-specific guidance below remains an alternative hosting runbook. Registration alone is not proof of a successful deployment.
+**Update — 12 September 2026:** The creator has requested publication and a Sites destination is registered in `.openai/hosting.json`. The current workflow uses Sites with explicitly requested public access at https://superintel.site; see [PUBLISHING.md](PUBLISHING.md). The Vercel-specific guidance below remains an alternative hosting runbook. Registration alone is not proof of a successful deployment.
 
 **Publishing code on GitHub and publishing the running website are separate steps.** A Git branch or repository URL is not a live website.
 

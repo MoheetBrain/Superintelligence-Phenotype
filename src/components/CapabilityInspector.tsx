@@ -7,6 +7,7 @@ import { Button } from './ui/Button';
 import { EvidenceBadge } from './EvidenceBadge';
 import { phenotypeContext, profileTraits } from '../data/profile';
 import { dossiers } from '../data/dossiers';
+import { SubstrateMobility } from './SubstrateMobility';
 import { IllustrationPanel } from './IllustrationPanel';
 export function CapabilityInspector({
   capability: c,
@@ -189,7 +190,11 @@ export function CapabilityInspector({
               </>
             ) : (
               <>
-                <p className="meaning">{c.meaning}</p>
+                {c.id === 'substrate-mobility' ? (
+                  <SubstrateMobility />
+                ) : (
+                  <p className="meaning">{c.meaning}</p>
+                )}
                 <div className="hypothesis">
                   <span className="section-caption">IMAGINE THIS</span>
                   <p>{c.hypotheticalExample}</p>

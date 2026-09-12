@@ -1,10 +1,10 @@
 # Artificial Superintelligence · ASI Atlas
 
-An explorable portrait of possible superintelligence: its capabilities, limits and forms. Five spatial discovery groups surround an original interactive robot. Choose a capability, follow a subtopic, try an illustrative scenario or inspect the evidence behind a claim.
+An explorable portrait of possible superintelligence: its capabilities, limits and forms. Two original industrial humanoid hosts demonstrate migration, copying, forking and remote control. Five discovery groups connect the exhibit to the full capability atlas. Choose a capability, follow a subtopic, try an illustrative scenario or inspect the evidence behind a claim.
 
-![Immersive ASI Atlas](docs/screenshots/after-immersive/1440x900.png)
+![Immersive ASI Atlas](docs/screenshots/dual-host/1440x1000.png)
 
-**IT IS HERE ALREADY!** is prominently attributed as the creator's personal prediction as an AI student. It replaces the earlier arrival window and is not presented as an established scientific finding. All project measurements remain **Not measured for this project.** AI need not be humanoid, and abstract capabilities do not occupy physical organs.
+**IT IS HERE ALREADY!** is prominently attributed as the creator's personal belief as an AI undergraduate at **U O W · University of Westminster**. It replaces the earlier arrival window and is not presented as an established scientific finding. All project measurements remain **Not measured for this project.** AI need not be humanoid, and abstract capabilities do not occupy physical organs.
 
 ## Run
 
@@ -33,12 +33,13 @@ node scripts/measure-preview.mjs
 
 ## Explore
 
-- Choose **Mind**, **Physical capabilities**, **Beyond one body**, **Learning & evolution** or **Resources & control**. The orbs are real Three.js objects; their projected HTML labels are keyboard-operable. Compact screens use a stable scrolling label strip.
-- Select robot geometry, a cloud or a result in **Search / List view**. Every route uses the same reducer. The inspector opens beside the scene on desktop and below it on narrow screens.
+- Drag **Operational State** from Host A into Host B, or use **Migrate A → B**, **Copy A → B**, and **Fork A → B**. Remote control keeps the state on A. Reset begins a new comparison from the same illustrative starting state. **Dual host / Host A / Host B / Transfer view** and **Inspect parts** frame the platform.
+- Choose **Mind**, **Physical capabilities**, **Beyond one body**, **Learning & evolution** or **Resources & control**. The orbs are real Three.js objects; their HTML labels are keyboard-operable and wrap on compact screens.
+- Select robot geometry, a cloud or a result in **Search / List view**. Every route uses the same reducer. The inspector opens beside the scene on desktop and as a bottom sheet on narrow screens.
 - Each of the twelve dossiers has five explorable subtopics, mechanisms, prerequisites, limits, a worked scenario, open questions, source scope and proposed measurement. The overview resets when another capability opens.
 - Try **Strength depends on the body**, step through **Precision is a feedback loop**, or compare **Remote control / Migration / Copying**. These local illustrations highlight context and execution arrangements; they are not validated simulations or external control tools.
-- Use **Back / Escape** one level at a time, or **Reset** to return home with default layers and camera. **Controls** contains camera presets, zoom, conceptual separation, layers and Coral/Cobalt/Pearl finishes.
-- **Share** includes group, capability, profile, subtopic, illustration conditions, layers, filters, finish and camera. Version 1 capability links migrate into the current hierarchy; version 2 restores the expanded state. Clipboard failure leaves a selectable link.
+- Use **Back / Escape** one level at a time, or **Reset** to return home with default layers and camera. **Controls** contains camera presets, zoom, conceptual separation, layers and status-accent colours. The graphite and pearl body materials remain distinct.
+- **Share** includes group, capability, profile, subtopic, illustration conditions, layers, filters, finish and camera. Version 3 also restores the chosen host view and completed transfer comparison. Versions 1 and 2 remain readable; in-progress transfers reopen safely at their starting state. Clipboard failure leaves a selectable link.
 - **List view** provides all content without WebGL. Sources and measurements remain HTML. Network and Evolution are explicitly planned future views, available under Controls.
 
 ## Architecture
@@ -54,7 +55,7 @@ node scripts/measure-preview.mjs
 | Original body, orbs, hosts, picking, fitting and label placement  | `src/scene/`                                          |
 | Accessible catalogue, inspector, illustrations and modal controls | `src/components/`                                     |
 
-The renderer runs on changes, without automatic orbit or an idle animation loop. Default camera fitting uses visible body bounds, excluding the floor and discovery nodes. Scene and inspector occupy separate layout regions. Geometry, materials, environment textures, shadows, observers, controls and listeners are disposed on unmount. Optional feature-detected WebMCP tools use the same selection reducer.
+The renderer runs on changes and during the finite transfer animation, without automatic orbit or an idle animation loop. Default camera fitting uses visible body bounds, excluding the floor and discovery nodes. Scene and inspector occupy separate layout regions. Geometry, materials, environment textures, shadows, observers, controls and listeners are disposed on unmount. Optional feature-detected WebMCP tools use the same selection reducer.
 
 ## Content and provenance
 
@@ -66,8 +67,8 @@ All robot, cloud and host geometry is original project code. No stock references
 
 ## Handoff
 
-The [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) record implemented behaviour, actual checks and remaining limits. Screenshots compare [before](docs/screenshots/before-immersive/) and [after](docs/screenshots/after-immersive/) at desktop, mobile and landscape sizes.
+The [dual-host implementation report](docs/DUAL_HOST_HANDOFF.md), [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) record implemented behaviour, actual checks and remaining limits. Screenshots compare [before](docs/screenshots/before-immersive/) and [after](docs/screenshots/after-immersive/) at desktop, mobile and landscape sizes.
 
-Publication was requested on 12 September 2026. The atlas is configured for Sites using its existing static Vite build, with owner-private access by default. See [publishing notes](docs/PUBLISHING.md); deployment success and the production URL are reported by Sites. No purchases or plan changes were made.
+The atlas is public at **[superintel.site](https://superintel.site)**, with HTTPS and no sign-in required. Public access was explicitly requested on 12 September 2026. The existing static Vite build is hosted by Sites. See [publishing notes](docs/PUBLISHING.md); deployment success and the production URL are reported by Sites. No purchases or plan changes were made.
 
 Physical-device, Safari/Firefox, manual screen-reader and participant testing remain unperformed. The [ten-person usability protocol](docs/USABILITY_TEST.md) contains no invented results. Network/Evolution views and empirical ASI measurements remain deferred. The original research introduction is preserved in [ORIGINAL_README.md](docs/ORIGINAL_README.md).

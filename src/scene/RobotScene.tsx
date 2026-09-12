@@ -1,20 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import * as T from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { CloudNavigation, nodeAction } from '../components/CloudNavigation';
+import { HostCameraControls } from '../components/MobilityControls';
+import { Modal } from '../components/Modal';
+import { relevantState } from '../content/mobility';
 import { discoveryNodes } from '../data/discovery';
 import { mechanicalContext } from '../data/illustrations';
 import { createDiscovery, disposeGroup } from './createDiscovery';
-import { projected, placeCallouts } from './discoveryLayout';
-import { createRobot } from './createRobot';
-import { createExecution } from './createExecution';
+import { projected } from './discoveryLayout';
+import { createRobotPair } from './createRobot';
+import { createOperationalState } from './createOperationalState';
 import { applyExplosion } from './explosionLayout';
 import { fitCamera, readCamera } from './camera';
-import { highlightParts, conceptsForPart } from './partRegistry';
+import { highlightParts, conceptsForPart, type PartRegistry } from './partRegistry';
 import { pickPart } from './picking';
 import { PointerTap } from './pointerTap';
 import { capabilityById } from '../data/capabilities';
+import {
+  hostSnapshots,
+  isTransferred,
+  isTransferring,
+  type MobilityState,
+} from '../state/mobility';
 import type { Action, ExplorerState } from '../state/explorerReducer';
 interface Props {
   state: ExplorerState;
@@ -22,14 +31,139 @@ interface Props {
   onChoose: (ids: string[]) => void;
   onNavigate?: (a: Action) => void;
 }
+interface Drag {
+  pointerId: number;
+  x: number;
+  y: number;
+  startX: number;
+  startY: number;
+  moved: boolean;
+  eligible: boolean;
+}
+/** Legacy execution URLs continue to display their original three-step arrangements. */
+function sceneMobility(s: ExplorerState): MobilityState {
+  if (s.illustration !== 'execution') return s.mobility;
+  return {
+    ...s.mobility,
+    remote: s.execution === 'remote',
+    mode: s.execution === 'copy' ? 'copy' : 'migrate',
+    phase: s.step === 2 ? 'complete' : s.step === 1 ? 'restoring' : 'ready',
+  };
+}
+function sceneHosts(s: ExplorerState) {
+  const hosts = hostSnapshots(sceneMobility(s));
+  if (s.illustration === 'execution')
+    for (const h of hosts) {
+      if (!s.recoveryAvailable) {
+        h.status = 'inactive';
+        h.detail = 'Execution unavailable';
+        h.state = null;
+      } else if (!s.bodyAvailable) h.detail = 'Body unavailable · runtime retained';
+    }
+  return hosts;
+}
 export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }: Props) {
-  const nodeElements = useRef(new Map<string, HTMLButtonElement>());
-  const hoverCloud = useRef<(key: string | null) => void>(() => {});
-  const host = useRef<HTMLDivElement>(null);
-  const latest = useRef({ state, dispatch, onChoose, onNavigate });
-  latest.current = { state, dispatch, onChoose, onNavigate };
-  const update = useRef<() => void>(() => {});
-  const [error, setError] = useState('');
+  const host = useRef<HTMLDivElement>(null),
+    nodeElements = useRef(new Map<string, HTMLButtonElement>());
+  const stateButtons = useRef(new Map<string, HTMLButtonElement>()),
+    hostLabels = useRef(new Map<string, HTMLButtonElement>());
+  const linkLabel = useRef<HTMLSpanElement>(null),
+    dragRef = useRef<Drag | null>(null),
+    suppressClick = useRef(false);
+  const [drag, setDrag] = useState<Drag | null>(null),
+    [error, setError] = useState(''),
+    [info, setInfo] = useState(false),
+    [gestureStatus, setGestureStatus] = useState('');
+  const latest = useRef({ state, dispatch, onChoose, onNavigate, drag });
+  latest.current = { state, dispatch, onChoose, onNavigate, drag };
+  const update = useRef<() => void>(() => {}),
+    hoverCloud = useRef<(key: string | null) => void>(() => {});
+  const demo = sceneMobility(state),
+    snapshots = sceneHosts(state);
+  const canDrag =
+    !error &&
+    !demo.remote &&
+    !isTransferring(demo) &&
+    !isTransferred(demo) &&
+    state.illustration !== 'execution' &&
+    state.hostView !== 'host-a' &&
+    state.hostView !== 'host-b' &&
+    !state.isolate &&
+    state.explode === 0;
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  useEffect(() => {
+    const m = state.mobility;
+    if (state.illustration === 'execution') return;
+    if (!isTransferring(m) && !(m.phase === 'complete' && m.mode === 'fork')) return;
+    const timer = setTimeout(
+      () => dispatch({ type: 'mobility', action: { type: 'advance', revision: m.revision } }),
+      reduced() ? 0 : m.phase === 'complete' ? 2500 : 650,
+    );
+    return () => clearTimeout(timer);
+  }, [state.mobility, state.illustration, dispatch]);
+  useEffect(() => {
+    if (!canDrag && dragRef.current) {
+      dragRef.current = null;
+      setDrag(null);
+    }
+  }, [canDrag]);
+  const dropEligible = (x: number, y: number) => {
+    const target = stateButtons.current.get('host-b');
+    if (!target || target.hidden) return false;
+    const r = target.getBoundingClientRect(),
+      radius = Math.max(48, r.width * 0.8);
+    return Math.hypot(x - r.x - r.width / 2, y - r.y - r.height / 2) < radius;
+  };
+  const endDrag = (cancelled = false) => {
+    const d = dragRef.current;
+    if (!d) return;
+    suppressClick.current = d.moved;
+    dragRef.current = null;
+    setDrag(null);
+    if (!cancelled && d.moved && d.eligible) {
+      dispatch({
+        type: 'mobility',
+        action: { type: 'start', mode: state.mobility.mode, immediate: reduced(), fromDrop: true },
+      });
+      setGestureStatus('Drop accepted.');
+    } else if (d.moved || cancelled)
+      setGestureStatus(
+        cancelled
+          ? 'Drag cancelled. Operational state remains on Host A.'
+          : 'Drop cancelled. Operational state returned to Host A.',
+      );
+  };
+  const pointerDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (!canDrag || e.button !== 0 || !e.isPrimary) return;
+    e.preventDefault();
+    e.currentTarget.focus({ preventScroll: true });
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const d = {
+      pointerId: e.pointerId,
+      x: e.clientX,
+      y: e.clientY,
+      startX: e.clientX,
+      startY: e.clientY,
+      moved: false,
+      eligible: false,
+    };
+    dragRef.current = d;
+    setDrag(d);
+    setGestureStatus('Hold and drag into Host B.');
+  };
+  const pointerMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const d = dragRef.current;
+    if (!d || d.pointerId !== e.pointerId) return;
+    const next = {
+      ...d,
+      x: e.clientX,
+      y: e.clientY,
+      moved: d.moved || Math.hypot(e.clientX - d.startX, e.clientY - d.startY) > 6,
+      eligible: dropEligible(e.clientX, e.clientY),
+    };
+    dragRef.current = next;
+    setDrag(next);
+  };
   useEffect(() => {
     const el = host.current!;
     let renderer: T.WebGLRenderer;
@@ -41,250 +175,263 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       });
     } catch {
       setError(
-        '3D is unavailable in this browser. Choose a discovery group here, or open List view to explore every concept.',
+        '3D is unavailable in this browser. The transfer buttons, host status and full capability catalogue remain available.',
       );
       return;
     }
     let disposed = false,
+      failed = false,
       frame = 0,
-      cameraTimer: ReturnType<typeof setTimeout> | undefined,
       applying = false,
-      failed = false;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    renderer.setClearColor('#111615', 0);
+      cameraTimer: ReturnType<typeof setTimeout> | undefined;
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    renderer.setClearColor('#e7eceb', 0);
     renderer.outputColorSpace = T.SRGBColorSpace;
     renderer.toneMapping = T.ACESFilmicToneMapping;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = T.PCFSoftShadowMap;
     el.appendChild(renderer.domElement);
     const canvas = renderer.domElement;
+    canvas.setAttribute('role', 'img');
     canvas.setAttribute(
       'aria-label',
-      'Interactive robot. Drag to rotate; scroll or pinch to zoom. Use the catalogue for keyboard selection.',
+      'Two original humanoid hosts. Drag to orbit; scroll or pinch to zoom. Use the operational-state control or action buttons to compare execution arrangements.',
     );
-    canvas.setAttribute('role', 'img');
-    const scene = new T.Scene();
-    const camera = new T.PerspectiveCamera(34, 1, 0.05, 250);
-    const controls = new OrbitControls(camera, canvas);
+    const scene = new T.Scene(),
+      camera = new T.PerspectiveCamera(34, 1, 0.05, 250),
+      controls = new OrbitControls(camera, canvas);
     controls.enableDamping = false;
     controls.minDistance = 0.3;
     controls.maxDistance = 150;
-    controls.enablePan = true;
-    controls.maxPolarAngle = Math.PI * 0.97;
-    const { robot, registry, decoration } = createRobot();
-    scene.add(robot);
-    const execution = createExecution();
-    scene.add(execution.group);
-    const executionLabels = execution.labels.map(() => {
-      const label = document.createElement('span');
-      label.className = 'execution-label';
-      label.hidden = true;
-      label.setAttribute('aria-hidden', 'true');
-      el.appendChild(label);
-      return label;
-    });
-    const visibleBodyBounds = new T.Box3();
-    let nodes = discoveryNodes(latest.current.state.group);
-    let clouds = createDiscovery(nodes, !latest.current.state.group);
+    controls.maxPolarAngle = Math.PI * 0.94;
+    const pair = createRobotPair();
+    scene.add(pair.a.robot, pair.b.robot);
+    const allRegistry: PartRegistry = new Map();
+    for (const [id, item] of [
+      ['host-a', pair.a],
+      ['host-b', pair.b],
+    ] as const)
+      for (const [key, p] of item.registry) allRegistry.set(`${id}:${key}`, p);
+    const operational = createOperationalState();
+    scene.add(operational.group);
+    let nodes = discoveryNodes(latest.current.state.group),
+      clouds = createDiscovery(nodes, !latest.current.state.group);
     scene.add(clouds.group);
-    const leader = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    leader.classList.add('callout-leaders');
-    leader.setAttribute('aria-hidden', 'true');
-    el.appendChild(leader);
-    const connector = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    connector.classList.add('selected-connector');
-    leader.appendChild(connector);
-    const nodeLines = new Map<string, SVGLineElement>();
-    const syncLines = () => {
-      for (const line of nodeLines.values()) line.remove();
-      nodeLines.clear();
-      for (const node of nodes) {
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('stroke', node.color);
-        leader.appendChild(line);
-        nodeLines.set(node.key, line);
-      }
-    };
-    syncLines();
-    hoverCloud.current = (key) => {
-      for (const mesh of clouds.meshes) {
-        const mat = mesh.material as T.MeshStandardMaterial;
-        if (mat.emissive) mat.emissiveIntensity = mesh.userData.cloudKey === key ? 1.3 : 0.65;
-      }
-      invalidate();
-    };
-
-    const pmrem = new T.PMREMGenerator(renderer);
-    const room = new RoomEnvironment();
-    const env = pmrem.fromScene(room, 0.04);
+    const pmrem = new T.PMREMGenerator(renderer),
+      room = new RoomEnvironment(),
+      env = pmrem.fromScene(room, 0.05);
     scene.environment = env.texture;
-    scene.environmentIntensity = 0.65;
+    scene.environmentIntensity = 0.8;
     room.dispose();
     pmrem.dispose();
-    scene.add(new T.HemisphereLight('#cae7ff', '#17212c', 0.65));
-    const key = new T.DirectionalLight('#fff0df', 3.0);
-    key.position.set(-3, 12, 5);
+    scene.add(new T.HemisphereLight('#f0f6ff', '#899b9d', 1.6));
+    const key = new T.DirectionalLight('#fff6e9', 3.1);
+    key.position.set(-3, 10, 6);
     key.target.position.set(0, 3, 0);
     key.castShadow = true;
     key.shadow.mapSize.set(1024, 1024);
     Object.assign(key.shadow.camera, {
-      left: -4,
-      right: 4,
-      top: 4,
-      bottom: -4,
+      left: -6,
+      right: 6,
+      top: 6,
+      bottom: -6,
       near: 0.5,
-      far: 20,
+      far: 24,
     });
-    key.shadow.normalBias = 0.025;
-    scene.add(key.target);
-    scene.add(key);
-    const rim = new T.DirectionalLight('#82daff', 3.0);
-    rim.position.set(4, 4, -4);
+    key.shadow.normalBias = 0.03;
+    scene.add(key, key.target);
+    const rim = new T.DirectionalLight('#cdeaff', 2.3);
+    rim.position.set(5, 6, -4);
     scene.add(rim);
+    const fill = new T.DirectionalLight('#ffffff', 0.8);
+    fill.position.set(1, 5, 8);
+    scene.add(fill);
     const stage = new T.Group();
     scene.add(stage);
-    const floor = new T.Mesh(new T.PlaneGeometry(30, 30), new T.ShadowMaterial({ opacity: 0.28 }));
+    const floor = new T.Mesh(
+      new T.PlaneGeometry(50, 50),
+      new T.MeshPhysicalMaterial({
+        color: '#d7dfdc',
+        roughness: 0.4,
+        metalness: 0.13,
+        transparent: true,
+        opacity: 0.58,
+      }),
+    );
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = 0.069;
+    floor.position.y = 0.06;
     floor.receiveShadow = true;
     stage.add(floor);
-    for (const radius of [1.5, 1.65]) {
-      const ring = new T.Mesh(
-        new T.RingGeometry(radius, radius + 0.013, 96),
-        new T.MeshBasicMaterial({
-          color: '#85978c',
-          side: T.DoubleSide,
-          transparent: true,
-          opacity: 0.4,
-        }),
+    const grid = new T.GridHelper(32, 64, '#9caaa8', '#b9c6c2');
+    grid.position.y = 0.065;
+    (grid.material as T.Material).transparent = true;
+    (grid.material as T.Material).opacity = 0.17;
+    stage.add(grid);
+    const podiums = [-1, 1].map((side) => {
+      const mesh = new T.Mesh(
+        new T.CylinderGeometry(1.3, 1.34, 0.045, 64),
+        new T.MeshStandardMaterial({ color: '#cbd5d1', roughness: 0.4, metalness: 0.32 }),
       );
-      ring.rotation.x = -Math.PI / 2;
-      ring.position.y = 0.071;
-      stage.add(ring);
-    }
+      mesh.position.set(side * 1.85, 0.038, 0);
+      mesh.receiveShadow = true;
+      stage.add(mesh);
+      return mesh;
+    });
     const tooltip = document.createElement('div');
     tooltip.className = 'part-tooltip';
     tooltip.hidden = true;
     tooltip.setAttribute('aria-hidden', 'true');
     el.appendChild(tooltip);
     const labels = new Map<string, HTMLSpanElement>();
-    for (const p of registry.values()) {
+    for (const p of pair.a.registry.values()) {
       const label = document.createElement('span');
       label.className = 'part-label';
-      label.textContent = p.label;
       label.hidden = true;
       label.setAttribute('aria-hidden', 'true');
       el.appendChild(label);
       labels.set(p.id, label);
     }
+    const visibleBounds = new T.Box3(),
+      anchors = [new T.Vector3(), new T.Vector3()];
+    let phaseStart = 0,
+      lastPhase = '',
+      lastWidth = 0,
+      lastHeight = 0,
+      revision = -1,
+      lastState: ExplorerState | undefined;
+    function invalidate() {
+      if (!frame && !disposed && !failed) frame = requestAnimationFrame(render);
+    }
+    function place(button: HTMLElement | undefined | null, p: T.Vector3, show = true) {
+      if (!button) return;
+      const v = projected(p, camera, el.clientWidth, el.clientHeight);
+      button.hidden =
+        !show || !v.visible || v.x < 0 || v.x > el.clientWidth || v.y < 0 || v.y > el.clientHeight;
+      button.style.left = `${v.x}px`;
+      button.style.top = `${v.y}px`;
+    }
     function render() {
       frame = 0;
       if (disposed || failed) return;
       try {
+        const { state: s, drag: d } = latest.current,
+          m = sceneMobility(s),
+          compact = camera.aspect < 0.85;
+        const legacy = s.illustration === 'execution',
+          animated = isTransferring(m) && !legacy && !reduced();
+        const progress = legacy
+          ? 0.5
+          : m.fromDrop
+            ? 1
+            : Math.min(1, (performance.now() - phaseStart) / 650);
+        let dragPoint: T.Vector3 | null = null;
+        if (d) {
+          const rect = canvas.getBoundingClientRect(),
+            ray = new T.Raycaster();
+          ray.setFromCamera(
+            new T.Vector2(
+              ((d.x - rect.left) / rect.width) * 2 - 1,
+              (-(d.y - rect.top) / rect.height) * 2 + 1,
+            ),
+            camera,
+          );
+          dragPoint = new T.Vector3();
+          const normal = camera.getWorldDirection(new T.Vector3());
+          ray.ray.intersectPlane(
+            new T.Plane().setFromNormalAndCoplanarPoint(normal, anchors[0]),
+            dragPoint,
+          );
+        }
+        operational.update(m, anchors[0], anchors[1], dragPoint, progress);
+        operational.face(camera);
+        operational.a.visible = operational.a.visible && pair.a.robot.visible;
+        operational.b.visible = operational.b.visible && pair.b.robot.visible;
+        operational.target.visible = operational.target.visible && pair.b.robot.visible;
+        operational.path.visible =
+          operational.path.visible && pair.a.robot.visible && pair.b.robot.visible;
+        if (legacy && !s.recoveryAvailable) {
+          operational.a.visible = operational.b.visible = false;
+          operational.path.visible = false;
+        }
         for (const mesh of clouds.meshes)
           if (mesh.geometry instanceof T.TorusGeometry) mesh.quaternion.copy(camera.quaternion);
         renderer.render(scene, camera);
         canvas.dataset.renderCount = String(Number(canvas.dataset.renderCount ?? 0) + 1);
         canvas.dataset.triangles = String(renderer.info.render.triangles);
         canvas.dataset.geometries = String(renderer.info.memory.geometries);
-        const w = el.clientWidth,
-          h = el.clientHeight;
-        if (!visibleBodyBounds.isEmpty()) {
-          const ys: number[] = [];
-          for (const x of [visibleBodyBounds.min.x, visibleBodyBounds.max.x])
-            for (const y of [visibleBodyBounds.min.y, visibleBodyBounds.max.y])
-              for (const z of [visibleBodyBounds.min.z, visibleBodyBounds.max.z])
-                ys.push(projected(new T.Vector3(x, y, z), camera, w, h).y);
-          canvas.dataset.bodyHeightRatio = String((Math.max(...ys) - Math.min(...ys)) / h);
-        }
-        for (const [i, label] of executionLabels.entries()) {
-          const p = projected(execution.labels[i], camera, w, h);
-          label.style.left = `${Math.max(75, Math.min(w - 75, p.x))}px`;
-          label.style.top = `${p.y}px`;
-          label.hidden = !execution.group.visible || !p.visible;
-        }
-        const points = nodes.map((n) => ({
-          key: n.key,
-          ...projected(clouds.anchors.get(n.key)!, camera, w, h),
-        }));
-        const compact =
-          w < 840 ||
-          h < 400 ||
-          parseFloat(getComputedStyle(document.documentElement).fontSize) > 20;
-        el.parentElement?.classList.toggle('compact-clouds', compact);
-        const placements = placeCallouts(points, w, h);
-        for (const p of points) {
-          const button = nodeElements.current.get(p.key),
-            place = placements.get(p.key),
-            line = nodeLines.get(p.key);
-          if (!button || !place || !line) continue;
-          button.style.left = `${place.x}px`;
-          button.style.top = `${place.y}px`;
-          button.style.visibility = compact || place.visible ? 'visible' : 'hidden';
-          button.tabIndex = clouds.group.visible && (compact || place.visible) ? 0 : -1;
-          line.style.display = compact || !place.visible || !clouds.group.visible ? 'none' : '';
-          line.setAttribute('x1', String(p.x));
-          line.setAttribute('y1', String(p.y));
-          line.setAttribute('x2', String(p.x < w / 2 ? place.x + 205 : place.x));
-          line.setAttribute('y2', String(place.y + 24));
-        }
-        const s = latest.current.state;
-        const selected = s.selected
-          ? registry.get(capabilityById[s.selected]!.viewCoordinates.body.partIds[0])
-          : null;
-        const p = selected ? projected(selected.group.position, camera, w, h) : null;
-        connector.style.display =
-          p?.visible && s.selected && s.illustration !== 'execution' ? '' : 'none';
-        if (p?.visible)
-          connector.setAttribute(
-            'd',
-            `M ${p.x} ${p.y} Q ${w - 90} ${p.y} ${w} ${Math.min(h - 35, 170)}`,
+        canvas.dataset.hostView = s.hostView;
+        canvas.dataset.transferPhase = m.phase;
+        canvas.dataset.stateHosts = [
+          operational.a.visible && operational.group.visible ? 'a' : '',
+          operational.b.visible && operational.group.visible ? 'b' : '',
+        ]
+          .filter(Boolean)
+          .join(',');
+        const hide = s.explode > 0 || s.isolate || s.visible.length !== 12;
+        for (const [i, id] of (['host-a', 'host-b'] as const).entries()) {
+          const item = i === 0 ? pair.a : pair.b;
+          const labelAnchor = item.robot.position.clone().add(new T.Vector3(0, 6.55, 0));
+          place(hostLabels.current.get(id), labelAnchor, item.robot.visible && !hide);
+          const orb = i === 0 ? operational.a : operational.b;
+          place(
+            stateButtons.current.get(id),
+            i === 0 ? orb.position : anchors[1],
+            item.robot.visible && !hide && (i === 1 || orb.visible),
           );
-
-        let index = 0;
-        for (const p of registry.values()) {
-          index++;
-          const label = labels.get(p.id)!;
-          label.textContent = el.clientHeight < 450 ? String(index).padStart(2, '0') : p.label;
-          label.hidden = !p.group.visible || latest.current.state.explode < 0.8;
-          if (!label.hidden) {
-            const point = p.group.position
-              .clone()
-              .add(new T.Vector3(0, -1.3, 0))
-              .project(camera);
-            label.style.left = `${((point.x + 1) * el.clientWidth) / 2}px`;
-            label.style.top = `${((1 - point.y) * el.clientHeight) / 2}px`;
-            label.hidden = point.z > 1 || point.z < -1;
-          }
         }
+        place(
+          linkLabel.current,
+          anchors[0]
+            .clone()
+            .lerp(anchors[1], 0.5)
+            .add(new T.Vector3(0, 0.45, 0)),
+          m.remote && !hide,
+        );
+        let index = 0;
+        for (const p of (s.hostView === 'host-b' ? pair.b.registry : pair.a.registry).values()) {
+          const label = labels.get(p.id)!;
+          label.textContent = el.clientHeight < 450 ? String(++index).padStart(2, '0') : p.label;
+          place(
+            label,
+            p.group.getWorldPosition(new T.Vector3()).add(new T.Vector3(0, -1.25, 0)),
+            p.group.visible && s.explode > 0.8,
+          );
+        }
+        const ys: number[] = [];
+        if (!visibleBounds.isEmpty())
+          for (const x of [visibleBounds.min.x, visibleBounds.max.x])
+            for (const y of [visibleBounds.min.y, visibleBounds.max.y])
+              for (const z of [visibleBounds.min.z, visibleBounds.max.z])
+                ys.push(
+                  projected(new T.Vector3(x, y, z), camera, el.clientWidth, el.clientHeight).y,
+                );
+        if (ys.length)
+          canvas.dataset.bodyHeightRatio = String(
+            (Math.max(...ys) - Math.min(...ys)) / el.clientHeight,
+          );
+        el.dataset.staggered = String(compact);
+        if (animated) invalidate();
       } catch {
         failed = true;
-        setError('The 3D renderer stopped. The full catalogue remains available. Reload to retry.');
+        setError(
+          'The 3D renderer stopped. The transfer controls and catalogue remain available. Reload to retry.',
+        );
       }
     }
-    function invalidate() {
-      if (!frame && !disposed && !failed) frame = requestAnimationFrame(render);
-    }
-    const saveCamera = () => {
-      clearTimeout(cameraTimer);
-      cameraTimer = setTimeout(() => {
-        if (!disposed && !failed && !applying)
-          latest.current.dispatch({ type: 'camera', camera: readCamera(camera, controls) });
-      }, 180);
-    };
-    const changed = () => {
-      invalidate();
-      if (!applying) saveCamera();
-    };
-    const commitCamera = () => {
+    function commitCamera() {
       clearTimeout(cameraTimer);
       if (!disposed && !failed && !applying)
         latest.current.dispatch({ type: 'camera', camera: readCamera(camera, controls) });
+    }
+    const changed = () => {
+      invalidate();
+      if (!applying) {
+        clearTimeout(cameraTimer);
+        cameraTimer = setTimeout(commitCamera, 180);
+      }
     };
     controls.addEventListener('change', changed);
     controls.addEventListener('end', commitCamera);
-    let revision = -1,
-      lastState: ExplorerState | undefined;
     function apply() {
       if (disposed || failed) return;
       const s = latest.current.state;
@@ -295,55 +442,73 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         nodes = discoveryNodes(s.group);
         clouds = createDiscovery(nodes, !s.group);
         scene.add(clouds.group);
-        syncLines();
       }
       clouds.group.visible = s.explode === 0 && !s.isolate && s.illustration !== 'execution';
-      const executionText = execution.update(s);
-      executionLabels.forEach((l, i) => (l.textContent = executionText[i]));
-      for (const mesh of clouds.meshes) {
-        const node = nodes.find((n) => n.key === mesh.userData.cloudKey);
-        const selected = node?.profile
-          ? s.profile === node.profile
-          : !s.profile && node?.capability === s.selected;
-        const mat = mesh.material as T.MeshStandardMaterial;
-        mat.emissiveIntensity = selected ? 1.4 : 0.65;
-      }
-      for (const p of registry.values())
-        for (const mesh of p.meshes) {
-          const mat = mesh.material as T.MeshStandardMaterial;
-          const dim = s.illustration === 'execution' && !s.bodyAvailable;
-          if (mat.transparent !== dim) {
-            mat.transparent = dim;
-            mat.needsUpdate = true;
-          }
-          mat.depthWrite = !dim;
-          mesh.castShadow = !dim;
-          mat.opacity = dim ? 0.2 : 1;
-        }
-      canvas.dataset.context = mechanicalContext(s.profile, s.illustration, s.example, s.step).join(
-        ',',
-      );
       for (const button of nodeElements.current.values()) button.hidden = !clouds.group.visible;
+      const m = sceneMobility(s),
+        phaseKey = `${m.revision}:${m.phase}`;
+      if (phaseKey !== lastPhase) {
+        lastPhase = phaseKey;
+        phaseStart = performance.now();
+      }
       const context = mechanicalContext(s.profile, s.illustration, s.example, s.step);
-      const parts = context.length
-        ? [...registry.values()].filter((p) => context.includes(p.domain)).map((p) => p.id)
+      canvas.dataset.context = context.join(',');
+      const selectedParts = context.length
+        ? [...pair.a.registry.values()].filter((p) => context.includes(p.domain)).map((p) => p.id)
         : s.selected
           ? capabilityById[s.selected]?.viewCoordinates.body.partIds
           : [];
-      for (const p of registry.values())
-        p.group.visible = s.isolate ? !!parts?.includes(p.id) : s.visible.includes(p.domain);
-      decoration.visible =
-        !s.isolate &&
-        s.explode === 0 &&
-        s.visible.length === 12 &&
-        !(s.illustration === 'execution' && !s.bodyAvailable);
+      const single =
+        s.explode > 0 || s.isolate || s.hostView === 'host-a' || s.hostView === 'host-b';
+      const narrow = camera.aspect < 0.85;
+      pair.a.robot.position.set(single ? 0 : narrow ? -1.2 : -1.85, 0, 0);
+      pair.b.robot.position.set(single ? 0 : narrow ? 1.2 : 1.85, 0, narrow ? -1.6 : 0);
+      pair.a.robot.visible = s.hostView !== 'host-b';
+      pair.b.robot.visible = !single || s.hostView === 'host-b';
+      for (const [i, item] of [pair.a, pair.b].entries()) {
+        const robotVisible = item.robot.visible;
+        for (const p of item.registry.values())
+          p.group.visible =
+            robotVisible &&
+            (s.isolate ? !!selectedParts?.includes(p.id) : s.visible.includes(p.domain));
+        item.decoration.visible =
+          robotVisible && !s.isolate && s.explode === 0 && s.visible.length === 12;
+        applyExplosion(item.registry, s.explode, camera.aspect);
+        highlightParts(item.registry, s.selected, null, s.finish, context);
+        const snap = sceneHosts(s)[i];
+        for (const p of item.registry.values())
+          for (const mesh of p.meshes) {
+            const mat = mesh.material as T.MeshStandardMaterial;
+            const unavailable = s.illustration === 'execution' && !s.bodyAvailable;
+            mat.transparent = unavailable;
+            mat.depthWrite = !unavailable;
+            mat.opacity = unavailable ? 0.2 : 1;
+            mesh.castShadow = !unavailable;
+            if (snap.status === 'inactive' || (i === 0 && latest.current.drag)) {
+              mat.color.multiplyScalar(0.62);
+              mat.emissiveIntensity = 0;
+            }
+            if (i === 1 && latest.current.drag?.eligible) {
+              mat.emissive.set('#20a3aa');
+              mat.emissiveIntensity = 0.22;
+            }
+            if (i === 1 && m.remote) {
+              mat.emissive.set('#50898d');
+              mat.emissiveIntensity = 0.12;
+            }
+          }
+        item.robot.updateMatrixWorld(true);
+        anchors[i].copy(item.robot.position).add(new T.Vector3(0, 4.35, 0.72));
+        podiums[i].position.x = item.robot.position.x;
+        podiums[i].position.z = item.robot.position.z;
+        podiums[i].visible = robotVisible;
+      }
       stage.visible = !s.isolate && s.explode < 0.25 && s.visible.length > 0;
-      applyExplosion(registry, s.explode, camera.aspect);
-      robot.updateMatrixWorld(true);
-      visibleBodyBounds.makeEmpty();
-      for (const p of registry.values())
-        if (p.group.visible) visibleBodyBounds.union(new T.Box3().setFromObject(p.group));
-      highlightParts(registry, s.selected, null, s.finish, context);
+      operational.group.visible = !s.isolate && s.explode === 0 && s.visible.length === 12;
+      visibleBounds.makeEmpty();
+      for (const p of allRegistry.values())
+        if (p.group.visible) visibleBounds.union(new T.Box3().setFromObject(p.group));
+      controls.enabled = !latest.current.drag;
       if (revision !== s.cameraRevision || !lastState) {
         clearTimeout(cameraTimer);
         revision = s.cameraRevision;
@@ -352,7 +517,7 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
           controls.target.fromArray(s.camera.target);
           controls.update();
         } else {
-          fitCamera(camera, controls, registry, s);
+          fitCamera(camera, controls, allRegistry, s);
           fitted = true;
         }
       }
@@ -362,71 +527,28 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       invalidate();
     }
     update.current = apply;
-    let lastWidth = 0,
-      lastHeight = 0;
     const resize = () => {
       const w = el.clientWidth,
         h = el.clientHeight;
       if (!w || !h || (w === lastWidth && h === lastHeight)) return;
-      const wasSized = lastWidth > 0;
+      const sized = lastWidth > 0;
       lastWidth = w;
       lastHeight = h;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      if (wasSized) latest.current.dispatch({ type: 'refit' });
+      if (sized) latest.current.dispatch({ type: 'refit' });
       apply();
     };
     const observer = new ResizeObserver(resize);
     observer.observe(el);
-    const tap = new PointerTap();
-    const down = (e: PointerEvent) => {
-      tooltip.hidden = true;
-      tap.down(e.pointerId, e.clientX, e.clientY, e.pointerType === 'touch' ? 10 : 5);
-    };
-    const move = (e: PointerEvent) => {
-      tap.move(e.pointerId, e.clientX, e.clientY);
-      if (e.buttons || e.pointerType === 'touch') {
-        tooltip.hidden = true;
-        return;
-      }
-      const cloudKey = cloudAt(e);
-      if (cloudKey) {
-        const node = nodes.find((n) => n.key === cloudKey);
-        tooltip.hidden = false;
-        tooltip.textContent = node?.preview ?? '';
-        const r = canvas.getBoundingClientRect();
-        tooltip.style.left = `${Math.max(8, Math.min(e.clientX - r.left + 12, r.width - 235))}px`;
-        tooltip.style.top = `${Math.max(8, e.clientY - r.top - 55)}px`;
-        canvas.style.cursor = 'pointer';
-        hoverCloud.current(cloudKey);
-        return;
-      }
-      const rect = canvas.getBoundingClientRect(),
-        id = pickPart(e.clientX, e.clientY, rect, camera, registry);
-      highlightParts(
-        registry,
-        latest.current.state.selected,
-        id,
-        latest.current.state.finish,
-        mechanicalContext(
-          latest.current.state.profile,
-          latest.current.state.illustration,
-          latest.current.state.example,
-          latest.current.state.step,
-        ),
-      );
-      canvas.style.cursor = id ? 'pointer' : 'grab';
-      tooltip.hidden = !id;
-      if (id) {
-        tooltip.textContent = conceptsForPart(id)
-          .map((c) => c.name)
-          .join(' / ');
-        tooltip.style.left = `${Math.max(8, Math.min(e.clientX - rect.left + 15, rect.width - 235))}px`;
-        tooltip.style.top = `${Math.max(8, e.clientY - rect.top - 35)}px`;
-      }
+    hoverCloud.current = (key) => {
+      for (const mesh of clouds.meshes)
+        (mesh.material as T.MeshStandardMaterial).emissiveIntensity =
+          mesh.userData.cloudKey === key ? 1.3 : 0.5;
       invalidate();
     };
+    const tap = new PointerTap();
     const cloudAt = (e: PointerEvent) => {
       if (!clouds.group.visible) return null;
       const r = canvas.getBoundingClientRect(),
@@ -440,8 +562,33 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       );
       return ray.intersectObjects([
         ...clouds.meshes,
-        ...[...registry.values()].filter((p) => p.group.visible).flatMap((p) => p.meshes),
+        ...[...allRegistry.values()].filter((p) => p.group.visible).flatMap((p) => p.meshes),
       ])[0]?.object.userData.cloudKey as string | undefined;
+    };
+    const down = (e: PointerEvent) => {
+      tooltip.hidden = true;
+      tap.down(e.pointerId, e.clientX, e.clientY, e.pointerType === 'touch' ? 10 : 5);
+    };
+    const move = (e: PointerEvent) => {
+      tap.move(e.pointerId, e.clientX, e.clientY);
+      if (e.buttons || e.pointerType === 'touch') {
+        tooltip.hidden = true;
+        return;
+      }
+      const rect = canvas.getBoundingClientRect(),
+        cloudKey = cloudAt(e),
+        id = cloudKey ? null : pickPart(e.clientX, e.clientY, rect, camera, allRegistry);
+      canvas.style.cursor = id || cloudKey ? 'pointer' : 'grab';
+      tooltip.hidden = !id && !cloudKey;
+      if (!tooltip.hidden) {
+        tooltip.textContent = cloudKey
+          ? (nodes.find((n) => n.key === cloudKey)?.preview ?? '')
+          : conceptsForPart(id!)
+              .map((c) => c.name)
+              .join(' / ');
+        tooltip.style.left = `${Math.max(8, Math.min(e.clientX - rect.left + 12, rect.width - 235))}px`;
+        tooltip.style.top = `${Math.max(8, e.clientY - rect.top - 48)}px`;
+      }
     };
     const up = (e: PointerEvent) => {
       if (!tap.up(e.pointerId, e.clientX, e.clientY)) return;
@@ -451,93 +598,208 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         if (node) latest.current.onNavigate(nodeAction(node));
         return;
       }
-      const id = pickPart(e.clientX, e.clientY, canvas.getBoundingClientRect(), camera, registry);
+      const id = pickPart(
+        e.clientX,
+        e.clientY,
+        canvas.getBoundingClientRect(),
+        camera,
+        allRegistry,
+      );
       if (id) {
         tooltip.hidden = true;
         latest.current.onChoose(conceptsForPart(id).map((c) => c.id));
       }
     };
-    const cancel = (e: PointerEvent) => tap.cancel(e.pointerId);
-    const leave = () => {
-      tooltip.hidden = true;
-      highlightParts(
-        registry,
-        latest.current.state.selected,
-        null,
-        latest.current.state.finish,
-        mechanicalContext(
-          latest.current.state.profile,
-          latest.current.state.illustration,
-          latest.current.state.example,
-          latest.current.state.step,
-        ),
-      );
-      invalidate();
-    };
-    canvas.addEventListener('pointerdown', down);
-    canvas.addEventListener('pointermove', move);
-    canvas.addEventListener('pointerup', up);
-    canvas.addEventListener('pointercancel', cancel);
-    canvas.addEventListener('pointerleave', leave);
+    const cancel = (e: PointerEvent) => tap.cancel(e.pointerId),
+      leave = () => {
+        tooltip.hidden = true;
+      };
     const lost = (e: Event) => {
       e.preventDefault();
       failed = true;
       cancelAnimationFrame(frame);
       clearTimeout(cameraTimer);
       setError(
-        'The device paused this 3D session. The catalogue still works. Reload to restart the scene.',
+        'The device paused this 3D session. The catalogue and transfer controls still work. Reload to restart the scene.',
       );
     };
+    const listeners = {
+      pointerdown: down,
+      pointermove: move,
+      pointerup: up,
+      pointercancel: cancel,
+      pointerleave: leave,
+    };
+    for (const [name, listener] of Object.entries(listeners))
+      canvas.addEventListener(name, listener as EventListener);
     canvas.addEventListener('webglcontextlost', lost);
     resize();
     return () => {
       disposed = true;
       update.current = () => {};
+      hoverCloud.current = () => {};
       clearTimeout(cameraTimer);
       cancelAnimationFrame(frame);
       observer.disconnect();
       controls.removeEventListener('change', changed);
       controls.removeEventListener('end', commitCamera);
       controls.dispose();
-      canvas.removeEventListener('pointerdown', down);
-      canvas.removeEventListener('pointermove', move);
-      canvas.removeEventListener('pointerup', up);
-      canvas.removeEventListener('pointercancel', cancel);
-      canvas.removeEventListener('pointerleave', leave);
+      for (const [name, listener] of Object.entries(listeners))
+        canvas.removeEventListener(name, listener as EventListener);
       canvas.removeEventListener('webglcontextlost', lost);
+      const geometries = new Set<T.BufferGeometry>(),
+        materials = new Set<T.Material>();
       scene.traverse((o) => {
-        if (o instanceof T.Mesh || o instanceof T.Line) {
-          o.geometry.dispose();
-          for (const m of Array.isArray(o.material) ? o.material : [o.material]) m.dispose();
+        if (o instanceof T.Mesh || o instanceof T.Line || o instanceof T.Points) {
+          geometries.add(o.geometry);
+          for (const mat of Array.isArray(o.material) ? o.material : [o.material])
+            materials.add(mat);
         }
       });
+      for (const g of geometries) g.dispose();
+      for (const m of materials) m.dispose();
       key.shadow.dispose();
       env.dispose();
       renderer.dispose();
-      leader.remove();
       canvas.remove();
       tooltip.remove();
       for (const l of labels.values()) l.remove();
-      for (const l of executionLabels) l.remove();
     };
   }, []);
-  useEffect(() => update.current(), [state]);
+  useEffect(() => update.current(), [state, drag]);
   return (
-    <div className={`robot-scene ${error ? 'scene-unavailable' : ''}`} data-testid="robot-scene">
+    <div
+      className={`robot-scene dual-host-scene ${error ? 'scene-unavailable' : ''}`}
+      data-testid="robot-scene"
+    >
+      <HostCameraControls value={state.hostView} dispatch={onNavigate} />
       <div className="canvas-host" ref={host}>
-        {error && (
+        {error ? (
           <div className="scene-error" role="status">
-            <strong>Explore through the catalogue</strong>
+            <strong>Explore through the controls and catalogue</strong>
             <p>{error}</p>
           </div>
+        ) : (
+          <>
+            {snapshots.map((h, i) => (
+              <button
+                key={h.id}
+                className="floating-host-label"
+                data-host={h.id}
+                ref={(el) => {
+                  if (el) hostLabels.current.set(h.id, el);
+                  else hostLabels.current.delete(h.id);
+                }}
+                aria-label={`Inspect ${i === 0 ? 'Host A graphite' : 'Host B pearl'}`}
+                onClick={() => onNavigate({ type: 'host-view', value: h.id })}
+              >
+                <strong>
+                  {i === 0 ? 'HOST A' : 'HOST B'}{' '}
+                  <span>{i === 0 ? 'GRAPHITE / TITANIUM' : 'PEARL / GRAPHITE'}</span>
+                </strong>
+                <small>
+                  {h.status.toUpperCase()} · {h.detail}
+                </small>
+              </button>
+            ))}
+            <button
+              ref={(el) => {
+                if (el) stateButtons.current.set('host-a', el);
+                else stateButtons.current.delete('host-a');
+              }}
+              className={`operational-handle ${drag ? 'dragging' : ''}`}
+              aria-label="Extract operational state from Host A"
+              aria-describedby="state-drag-help"
+              onPointerDown={pointerDown}
+              onPointerMove={pointerMove}
+              onPointerUp={() => endDrag()}
+              onPointerCancel={() => endDrag(true)}
+              onLostPointerCapture={() => {
+                if (dragRef.current) endDrag(true);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape' && dragRef.current) {
+                  e.stopPropagation();
+                  endDrag(true);
+                }
+              }}
+              onClick={() => {
+                if (!suppressClick.current) setInfo(true);
+                suppressClick.current = false;
+              }}
+            >
+              <span className="state-handle-ring" />
+              <span className="state-handle-label">
+                Operational State
+                <small>
+                  {canDrag ? 'Hold to extract · drag to Host B' : 'Inspect state abstraction'}
+                </small>
+              </span>
+            </button>
+            <button
+              ref={(el) => {
+                if (el) stateButtons.current.set('host-b', el);
+                else stateButtons.current.delete('host-b');
+              }}
+              className={`operational-target ${drag?.eligible ? 'eligible' : ''}`}
+              aria-label="Host B compatible execution environment"
+              onClick={() => setInfo(true)}
+            >
+              <span />
+              <small>
+                {drag?.eligible
+                  ? 'Compatible host'
+                  : snapshots[1].state
+                    ? 'State restored'
+                    : demo.remote
+                      ? 'Actuator / no local agent'
+                      : 'Compatible host'}
+              </small>
+            </button>
+            <span className="communication-label" ref={linkLabel}>
+              commands + observations
+            </span>
+            {drag && (
+              <div className="drag-guidance" role="status">
+                {drag.eligible
+                  ? 'Compatible host · release to restore state'
+                  : 'Drop into a compatible execution environment'}
+              </div>
+            )}
+          </>
         )}
       </div>
+      <p id="state-drag-help" className="sr-only">
+        Hold and drag Operational State into Host B. Press Escape to cancel. The Migrate, Copy and
+        Fork buttons below are equivalent keyboard alternatives.
+      </p>
+      <span className="sr-only" role="status">
+        {gestureStatus}
+      </span>
       <CloudNavigation
         state={state}
         dispatch={onNavigate}
         elements={nodeElements}
         hover={(key) => hoverCloud.current(key)}
       />
+      {info && (
+        <Modal label="Operational State" onClose={() => setInfo(false)}>
+          <h2>Operational State</h2>
+          <p>
+            This is a visual abstraction of information required for functional continuation. It is
+            not a claim about consciousness or personal identity.
+          </p>
+          <ul>
+            {relevantState.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <p>
+            The demo changes local visual records only. It does not transfer files, models,
+            credentials, permissions or running software between machines.
+          </p>
+        </Modal>
+      )}
     </div>
   );
 }

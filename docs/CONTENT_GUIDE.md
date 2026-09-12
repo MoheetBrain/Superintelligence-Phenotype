@@ -45,6 +45,8 @@ The specification content is now accessed through the five groups in `src/data/d
 
 `src/data/illustrations.ts` holds the local strength tasks, precision steps and conditional execution states. `src/scene/createExecution.ts` draws illustrative hosts and transfer paths; it does not move computation. Keep source-stop and destination-resume states distinct for migration; copying must retain two independent instances; unavailable required resources must prevent execution in the illustration.
 
-`src/content/arrival.ts` is the single editable source for the arrival scenario and creator provenance. The current headline is **IT IS HERE ALREADY!**, explicitly attributed as the creator’s personal prediction as an AI student. It replaces the previous arrival window. Do not present it as an established scientific finding or attach unrelated model papers as verification.
+`src/content/arrival.ts` is the single editable source for the arrival scenario and creator provenance. The current headline is **IT IS HERE ALREADY!**, explicitly attributed as the creator’s personal belief as an AI undergraduate, with the user-supplied attribution U O W · University of Westminster. It replaces the previous arrival window. Do not present it as an established scientific finding or attach unrelated model papers as verification.
 
 Discovery lenses may overlap, but the twelve domain IDs remain the source of truth. Add aliases or profile links instead of inventing new top-level IDs for running, strength or precision. Version 2 URLs include group, profile, topic and illustration state while continuing to parse version 1 links.
+
+The dual-host exhibit uses `src/content/mobility.ts` and `src/components/SubstrateMobility.tsx` for operational-state requirements, failure cases, distinctions and qualified implications. Its general ASI hypothesis is **Theoretically Plausible**. The creator’s belief does not reclassify that hypothesis or represent a university position.

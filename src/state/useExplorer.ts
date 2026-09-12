@@ -12,9 +12,15 @@ export function useExplorer() {
     setState(next);
     if (action.type !== 'restore') {
       const hash = serializeState(next);
-      const method = ['camera', 'zoom', 'query', 'evidence', 'explode', 'refit'].includes(
-        action.type,
-      )
+      const method = [
+        'camera',
+        'zoom',
+        'query',
+        'evidence',
+        'explode',
+        'refit',
+        'mobility',
+      ].includes(action.type)
         ? 'replaceState'
         : 'pushState';
       if (window.location.hash !== hash) window.history[method](null, '', hash);

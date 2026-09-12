@@ -32,16 +32,20 @@ export function highlightParts(
           ? '#8de6ec'
           : part.id === hovered
             ? '#d4fbff'
-            : mesh.userData.finishPanel
-              ? { Coral: '#d94435', Cobalt: '#3167ce', Pearl: '#d5e3e9' }[finish]
-              : (mesh.userData.baseColor as string),
+            : mesh.userData.surface === 'sensor'
+              ? { Coral: '#c6f7fa', Cobalt: '#a8c5ff', Pearl: '#fafdf8' }[finish]
+              : mesh.userData.finishPanel
+                ? { Coral: '#d94435', Cobalt: '#3167ce', Pearl: '#d5e3e9' }[finish]
+                : (mesh.userData.baseColor as string),
       );
       material.emissive.set(
         ids.includes(part.id)
           ? '#2cabb9'
           : part.id === hovered
             ? '#719ba0'
-            : ((mesh.userData.baseEmissive as string) ?? '#000000'),
+            : mesh.userData.surface === 'sensor'
+              ? { Coral: '#c6f7fa', Cobalt: '#a8c5ff', Pearl: '#fafdf8' }[finish]
+              : ((mesh.userData.baseEmissive as string) ?? '#000000'),
       );
       material.emissiveIntensity = ids.includes(part.id) ? 0.23 : 0.1;
     }

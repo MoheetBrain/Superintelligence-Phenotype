@@ -1,3 +1,4 @@
+import { hostViews, transferModes } from './mobility';
 import { groupIds, primaryGroup } from '../data/discovery';
 import { profileTraits } from '../data/profile';
 import { illustrationIds, executionModes } from '../data/illustrations';
@@ -8,7 +9,7 @@ import { evidenceLevels } from '../content/methodology';
 import type { Vec3 } from '../data/schema';
 export function serializeState(s: ExplorerState): string {
   const p = new URLSearchParams({
-    v: '2',
+    v: '3',
     view: s.view,
     layers: s.visible.length === 12 ? 'all' : s.visible.length ? s.visible.join(',') : 'none',
     isolate: s.isolate ? '1' : '0',
@@ -16,6 +17,11 @@ export function serializeState(s: ExplorerState): string {
     pos: s.camera.position.map((n) => n.toFixed(5)).join(','),
     target: s.camera.target.map((n) => n.toFixed(5)).join(','),
   });
+  p.set('host', s.hostView);
+  p.set('transfer', s.mobility.mode);
+  p.set('phase', s.mobility.phase);
+  if (s.mobility.remote) p.set('remote', '1');
+  if (s.mobility.explored) p.set('explored', '1');
   if (s.selected) p.set('cap', s.selected);
   if (s.group) p.set('group', s.group);
   if (s.topic) p.set('topic', s.topic);
@@ -55,7 +61,15 @@ export function parseState(hash: string): ExplorerState {
   const s = initialState();
   if (hash.length > 5000) return s;
   const p = new URLSearchParams(hash.replace(/^#/, ''));
-  if (!['1', '2'].includes(p.get('v') ?? '')) return s;
+  if (!['1', '2', '3'].includes(p.get('v') ?? '')) return s;
+  s.hostView = hostViews.find((v) => v === p.get('host')) ?? 'dual';
+  s.mobility.mode = transferModes.find((v) => v === p.get('transfer')) ?? 'migrate';
+  const phase = p.get('phase');
+  s.mobility.phase = phase === 'complete' || phase === 'diverged' ? phase : 'ready';
+  if (s.mobility.phase === 'diverged' && s.mobility.mode !== 'fork') s.mobility.phase = 'complete';
+  s.mobility.remote = p.get('remote') === '1';
+  if (s.mobility.remote) s.mobility.phase = 'ready';
+  s.mobility.explored = p.get('explored') === '1' || s.mobility.phase !== 'ready';
   const view = p.get('view');
   if (view === 'network' || view === 'evolution') s.view = view;
   const layers = p.get('layers');

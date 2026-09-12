@@ -1,22 +1,22 @@
 {
-  "measuredAt": "2026-09-11T13:33:03.863Z",
+  "measuredAt": "2026-09-12T14:31:26.558Z",
   "node": "v24.18.0",
   "targets": {
     "initialJsCssGzipBytes": 1000000,
     "totalInitialTransferBytes": 2000000
   },
-  "initialJsCssGzipBytes": 260522,
-  "allDistUncompressedBytes": 967370,
+  "initialJsCssGzipBytes": 263183,
+  "allDistUncompressedBytes": 978616,
   "files": [
     {
-      "path": "dist/assets/index-ByNBFyZu.css",
-      "bytes": 26168,
-      "gzipBytes": 6566
+      "path": "dist/assets/index-BWrsTFUM.css",
+      "bytes": 38236,
+      "gzipBytes": 9057
     },
     {
-      "path": "dist/assets/index-N6zQxXbu.js",
-      "bytes": 919125,
-      "gzipBytes": 253956
+      "path": "dist/assets/index-DpWw82UE.js",
+      "bytes": 918303,
+      "gzipBytes": 254126
     },
     {
       "path": "dist/favicon.svg",
@@ -26,7 +26,7 @@
     {
       "path": "dist/index.html",
       "bytes": 784,
-      "gzipBytes": 465
+      "gzipBytes": 463
     },
     {
       "path": "dist/third-party-notices.txt",

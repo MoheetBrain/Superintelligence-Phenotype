@@ -1,3 +1,9 @@
+# Current verification
+
+See [DUAL_HOST_HANDOFF.md](DUAL_HOST_HANDOFF.md) for the latest dual-host implementation and checks. The earlier release measurements below are historical, not measurements of the new two-host renderer.
+
+---
+
 # Immersive atlas verification — 11 September 2026
 
 This report covers the current immersive refinement. Earlier implementation/refinement results remain in Git history. No screenshot or automated browser run is presented as a human or physical-device test.

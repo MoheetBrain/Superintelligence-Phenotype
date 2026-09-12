@@ -16,6 +16,11 @@ export function fitCamera(
     box.expandByPoint(new Vector3(-3.2, 0.1, -0.4));
     box.expandByPoint(new Vector3(3.2, 6.8, 0.6));
   }
+  if (!state.isolate && state.explode === 0) {
+    box.max.y += 0.55;
+    if (state.hostView === 'transfer' && state.illustration !== 'execution')
+      box.min.y = Math.max(box.min.y, 1.15);
+  }
   const center = box.getCenter(new Vector3());
   const size = box.getSize(new Vector3());
   if (state.selected && !state.isolate && state.explode === 0) {
