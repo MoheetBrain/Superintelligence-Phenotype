@@ -2,7 +2,7 @@
 
 An explorable portrait of possible superintelligence: its capabilities, limits and forms. Two original industrial humanoid hosts demonstrate migration, copying, forking and remote control. Five discovery groups connect the exhibit to the full capability atlas. Choose a capability, follow a subtopic, try an illustrative scenario or inspect the evidence behind a claim.
 
-![Immersive ASI Atlas](docs/screenshots/dual-host/1440x1000.png)
+![Immersive ASI Atlas](docs/screenshots/reconstruction/final-dual-front.png)
 
 **IT IS HERE ALREADY!** is prominently attributed as the creator's personal belief as an AI undergraduate at **U O W · University of Westminster**. It replaces the earlier arrival window and is not presented as an established scientific finding. All project measurements remain **Not measured for this project.** AI need not be humanoid, and abstract capabilities do not occupy physical organs.
 
@@ -53,9 +53,12 @@ node scripts/measure-preview.mjs
 | Arrival scenario and provenance                                   | `src/content/arrival.ts`                              |
 | Unified selection, navigation, URL migration and history          | `src/state/`                                          |
 | Original body, orbs, hosts, picking, fitting and label placement  | `src/scene/`                                          |
+| Normalized humanoid specification, shells, real joint rig and PBR materials | `src/scene/robot/` |
 | Accessible catalogue, inspector, illustrations and modal controls | `src/components/`                                     |
 
 The renderer runs on changes and during the finite transfer animation, without automatic orbit or an idle animation loop. Default camera fitting uses visible body bounds, excluding the floor and discovery nodes. Scene and inspector occupy separate layout regions. Geometry, materials, environment textures, shadows, observers, controls and listeners are disposed on unmount. Optional feature-detected WebMCP tools use the same selection reducer.
+
+The reconstructed hosts share 148,120-triangle geometry per body. A single H = 1 specification controls the pod head, continuous chest, compact waist, horizontal pelvis, tapered limbs, articulated hands and shoe-shaped feet. Development builds expose five reference views, staged clay/material comparison and normalized landmarks at `?robotDebug=1`; this code is excluded from production.
 
 ## Content and provenance
 
@@ -67,7 +70,7 @@ All robot, cloud and host geometry is original project code. No stock references
 
 ## Handoff
 
-The [dual-host implementation report](docs/DUAL_HOST_HANDOFF.md), [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) record implemented behaviour, actual checks and remaining limits. Screenshots compare [before](docs/screenshots/before-immersive/) and [after](docs/screenshots/after-immersive/) at desktop, mobile and landscape sizes.
+The latest [robot reconstruction report](docs/ROBOT_RECONSTRUCTION.md) contains before/after screenshots, parameters, the staged visual correction loop, triangle counts, file responsibilities, tests and specific remaining mismatches. The [dual-host implementation report](docs/DUAL_HOST_HANDOFF.md), [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) preserve earlier implementation history.
 
 The atlas is public at **[superintel.site](https://superintel.site)**, with HTTPS and no sign-in required. Public access was explicitly requested on 12 September 2026. The existing static Vite build is hosted by Sites. See [publishing notes](docs/PUBLISHING.md); deployment success and the production URL are reported by Sites. No purchases or plan changes were made.
 

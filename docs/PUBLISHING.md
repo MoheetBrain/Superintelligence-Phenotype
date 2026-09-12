@@ -9,3 +9,5 @@ For updates: build the existing application, push the exact source revision, pac
 The current banner says **IT IS HERE ALREADY!**, **My belief as an AI undergraduate**, and **U O W · University of Westminster**. The statement and affiliation are user-supplied and remain separate from the atlas’s evidence classifications. See `src/content/arrival.ts`.
 
 The dual-host update’s implementation, validation and limitations are recorded in [DUAL_HOST_HANDOFF.md](DUAL_HOST_HANDOFF.md).
+
+The subsequent geometry reconstruction is documented in [ROBOT_RECONSTRUCTION.md](ROBOT_RECONSTRUCTION.md). It retains the same public Site and domain. Spaceship auto-renew for `superintel.site` was switched off and verified off on 12 September 2026; the domain remains registered through 12 September 2027.

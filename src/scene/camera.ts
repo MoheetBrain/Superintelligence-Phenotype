@@ -48,7 +48,7 @@ export function fitCamera(
           Math.abs(corner.dot(up)) / Math.tan(fov) + depth,
         );
       }
-  distance *= 1.18;
+  distance *= state.hostView === 'host-a' || state.hostView === 'host-b' ? 1.12 : 1.18;
   controls.target.copy(center);
   camera.position.copy(center).addScaledVector(direction, distance);
   controls.update();

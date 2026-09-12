@@ -111,7 +111,10 @@ test('settled simulation shares with new contexts and host presets retain inspec
   await page.getByRole('button', { name: 'Inspect hands', exact: true }).click();
   await expect(page).toHaveURL(/cap=embodiment/);
   await expect(page).toHaveURL(/isolate=1/);
-  await page.screenshot({ path: 'docs/screenshots/dual-host/hand-inspection.png', fullPage: true });
+  await page.screenshot({
+    path: 'docs/screenshots/reconstruction/mobility/hand-inspection.png',
+    fullPage: true,
+  });
 });
 for (const viewport of [
   { width: 1440, height: 1000 },
@@ -134,19 +137,19 @@ for (const viewport of [
       true,
     );
     await page.screenshot({
-      path: `docs/screenshots/dual-host/${viewport.width}x${viewport.height}.png`,
+      path: `docs/screenshots/reconstruction/mobility/${viewport.width}x${viewport.height}.png`,
       fullPage: true,
     });
     await page.getByRole('button', { name: 'Migrate A → B', exact: true }).click();
     await expect(page.getByTestId('host-b-status')).toContainText('ACTIVE');
     await page.screenshot({
-      path: `docs/screenshots/dual-host/migrated-${viewport.width}x${viewport.height}.png`,
+      path: `docs/screenshots/reconstruction/mobility/migrated-${viewport.width}x${viewport.height}.png`,
       fullPage: true,
     });
     await page.getByRole('button', { name: 'Inspect Substrate Mobility', exact: true }).click();
     await expect(page.getByLabel('Substrate mobility framework')).toBeVisible();
     await page.screenshot({
-      path: `docs/screenshots/dual-host/dossier-${viewport.width}x${viewport.height}.png`,
+      path: `docs/screenshots/reconstruction/mobility/dossier-${viewport.width}x${viewport.height}.png`,
       fullPage: true,
     });
     const result = await new AxeBuilder({ page })

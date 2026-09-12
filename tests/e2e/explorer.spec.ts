@@ -1,22 +1,38 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { PerspectiveCamera, Vector3 } from 'three';
+import { Box3, Mesh, PerspectiveCamera, Vector3 } from 'three';
+import { createRobot } from '../../src/scene/createRobot';
+import { robotSpec, U } from '../../src/scene/robot/robotSpec';
 import { parseState } from '../../src/state/shareState';
 import { capabilities } from '../../src/data/capabilities';
 
-const localPickPoints: readonly (readonly [number, number, number])[] = [
-  [0, 0.2, 0.25],
-  [-0.326, -0.27, 0.107],
-  [0, 0.58, 0.13],
-  [0, 0, 0.1],
-  [0.4, 0.12, 0.4],
-  [-1.02, -0.06, 0.3],
-  [0, 0, 0.2],
-  [-0.4, 0.56, 0.1],
-  [-1.12, -0.085, 0.14],
-  [0, 0, 0.05],
-  [0, 0.27, 0.3],
-  [-1.01, 0.4, 0.16],
+// Project known visible surfaces from the reconstructed geometry, then exercise
+// actual browser raycasting. Concept IDs and expected navigation remain fixed.
+const localPickPoints = (() => {
+  const item = createRobot();
+  item.robot.updateMatrixWorld(true);
+  const points = [...item.registry.values()].map((part) => {
+    const box = new Box3().setFromObject(part.meshes[0]);
+    const point = box.getCenter(new Vector3());
+    point.z = box.max.z;
+    return point.sub(part.assembled).toArray();
+  });
+  const geometries = new Set(),
+    materials = new Set();
+  item.robot.traverse((o) => {
+    if (o instanceof Mesh) {
+      geometries.add(o.geometry);
+      materials.add(o.material);
+    }
+  });
+  for (const geometry of geometries) (geometry as import('three').BufferGeometry).dispose();
+  for (const material of materials) (material as import('three').Material).dispose();
+  return points;
+})();
+const assembledTemple = [
+  -1.85 + U(robotSpec.head.width * 0.488 + 0.0024),
+  U(robotSpec.head.y + 0.011),
+  0,
 ];
 async function ready(page: Page) {
   await expect(page.locator('canvas')).toHaveCount(1);
@@ -27,7 +43,7 @@ async function canvasPoint(page: Page, point: readonly number[]) {
   const box = await page.locator('canvas').boundingBox();
   if (!box) throw new Error('No canvas');
   const state = parseState(new URL(page.url()).hash);
-  const camera = new PerspectiveCamera(34, box.width / box.height, 0.05, 250);
+  const camera = new PerspectiveCamera(robotSpec.cameraFov, box.width / box.height, 0.05, 250);
   camera.position.fromArray(state.camera.position);
   camera.lookAt(new Vector3().fromArray(state.camera.target));
   camera.updateMatrixWorld(true);
@@ -56,7 +72,7 @@ test('real canvas Metacognition journey, evidence, isolate, reset, orbit', async
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/');
   await ready(page);
-  const point = await canvasPoint(page, [-2.176, 5.82, 0.107]);
+  const point = await canvasPoint(page, assembledTemple);
   await page.mouse.click(point.x, point.y);
   await expect(page.getByRole('heading', { name: 'Metacognition', exact: true })).toBeVisible();
   await expect(page.getByText('Hypothetical example · not an observed result')).toBeVisible();
@@ -247,7 +263,7 @@ test('malformed shared links recover without broken controls', async ({ page }) 
 test('multitouch pinching does not select on either finger lift', async ({ page, context }) => {
   await page.goto('/');
   await ready(page);
-  const p = await canvasPoint(page, [-2.176, 5.82, 0.107]);
+  const p = await canvasPoint(page, assembledTemple);
   const cdp = await context.newCDPSession(page);
   await cdp.send('Input.dispatchTouchEvent', {
     type: 'touchStart',
@@ -276,7 +292,7 @@ test('multitouch pinching does not select on either finger lift', async ({ page,
   await ready(page);
   await page.getByRole('button', { name: 'Reset explorer' }).click();
   await ready(page);
-  const tap = await canvasPoint(page, [-2.176, 5.82, 0.107]);
+  const tap = await canvasPoint(page, assembledTemple);
   await cdp.send('Input.dispatchTouchEvent', {
     type: 'touchStart',
     touchPoints: [{ x: tap.x, y: tap.y, id: 3 }],
@@ -344,10 +360,13 @@ test('production entry requests only successful local assets', async ({ page }, 
     body: JSON.stringify({ bytes, resources }, null, 2),
     contentType: 'application/json',
   });
-  await page.screenshot({ path: 'docs/screenshots/dual-host/production-body.png', fullPage: true });
+  await page.screenshot({
+    path: 'docs/screenshots/reconstruction/regression/production-body.png',
+    fullPage: true,
+  });
   await choose(page, 'Metacognition');
   await page.screenshot({
-    path: 'docs/screenshots/dual-host/production-metacognition.png',
+    path: 'docs/screenshots/reconstruction/regression/production-metacognition.png',
     fullPage: true,
   });
 });
@@ -369,7 +388,7 @@ for (const viewport of [
       true,
     );
     await page.screenshot({
-      path: `docs/screenshots/dual-host/regression/${viewport.width}x${viewport.height}.png`,
+      path: `docs/screenshots/reconstruction/regression/regression/${viewport.width}x${viewport.height}.png`,
       fullPage: true,
     });
     await choose(page, 'Metacognition');
@@ -478,7 +497,9 @@ test('subtopics, Back and old/new shared links restore the same reading level', 
       .getByTestId('inspector')
       .getByRole('heading', { name: 'Cross-domain transfer', exact: true }),
   ).toBeVisible();
-  await other.screenshot({ path: 'docs/screenshots/dual-host/regression/restored-subtopic.png' });
+  await other.screenshot({
+    path: 'docs/screenshots/reconstruction/regression/regression/restored-subtopic.png',
+  });
   await other.close();
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
@@ -525,7 +546,9 @@ test('strength tasks and precision steps change the visible mechanical context',
   ).toBeVisible();
   await page.getByRole('button', { name: 'Next stage', exact: true }).click();
   await expect(page.locator('canvas')).toHaveAttribute('data-context', 'self-improvement');
-  await page.screenshot({ path: 'docs/screenshots/dual-host/regression/precision.png' });
+  await page.screenshot({
+    path: 'docs/screenshots/reconstruction/regression/regression/precision.png',
+  });
 });
 
 test('remote, migration and copying show execution states and conditional failure', async ({
@@ -579,5 +602,7 @@ test('remote, migration and copying show execution states and conditional failur
     })
     .check();
   await page.locator('.inspector-content').evaluate((e) => (e.scrollTop = 0));
-  await page.screenshot({ path: 'docs/screenshots/dual-host/regression/copying.png' });
+  await page.screenshot({
+    path: 'docs/screenshots/reconstruction/regression/regression/copying.png',
+  });
 });

@@ -10,7 +10,8 @@ import { discoveryNodes } from '../data/discovery';
 import { mechanicalContext } from '../data/illustrations';
 import { createDiscovery, disposeGroup } from './createDiscovery';
 import { projected } from './discoveryLayout';
-import { createRobotPair } from './createRobot';
+import { createRobotPair, syncRobotPresentation } from './createRobot';
+import { robotSpec } from './robot/robotSpec';
 import { createOperationalState } from './createOperationalState';
 import { applyExplosion } from './explosionLayout';
 import { fitCamera, readCamera } from './camera';
@@ -185,9 +186,10 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       applying = false,
       cameraTimer: ReturnType<typeof setTimeout> | undefined;
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-    renderer.setClearColor('#e7eceb', 0);
+    renderer.setClearColor('#eeefea', 0);
     renderer.outputColorSpace = T.SRGBColorSpace;
     renderer.toneMapping = T.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.85;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = T.PCFSoftShadowMap;
     el.appendChild(renderer.domElement);
@@ -198,7 +200,7 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       'Two original humanoid hosts. Drag to orbit; scroll or pinch to zoom. Use the operational-state control or action buttons to compare execution arrangements.',
     );
     const scene = new T.Scene(),
-      camera = new T.PerspectiveCamera(34, 1, 0.05, 250),
+      camera = new T.PerspectiveCamera(robotSpec.cameraFov, 1, 0.05, 250),
       controls = new OrbitControls(camera, canvas);
     controls.enableDamping = false;
     controls.minDistance = 0.3;
@@ -214,6 +216,29 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       for (const [key, p] of item.registry) allRegistry.set(`${id}:${key}`, p);
     const operational = createOperationalState();
     scene.add(operational.group);
+    let debug: { prepare: () => void; dispose: () => void } | undefined;
+    if (import.meta.env.DEV && new URLSearchParams(location.search).get('robotDebug') === '1') {
+      import('./robot/debug/RobotDebugOverlay').then(({ createRobotDebug }) => {
+        if (disposed) return;
+        debug = createRobotDebug(
+          el,
+          pair,
+          (direction) => {
+            fitCamera(camera, controls, allRegistry, {
+              ...latest.current.state,
+              camera: {
+                position: direction.toArray() as [number, number, number],
+                target: [0, 0, 0],
+              },
+            });
+            commitCamera();
+            invalidate();
+          },
+          invalidate,
+        );
+        invalidate();
+      });
+    }
     let nodes = discoveryNodes(latest.current.state.group),
       clouds = createDiscovery(nodes, !latest.current.state.group);
     scene.add(clouds.group);
@@ -221,11 +246,11 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       room = new RoomEnvironment(),
       env = pmrem.fromScene(room, 0.05);
     scene.environment = env.texture;
-    scene.environmentIntensity = 0.8;
+    scene.environmentIntensity = 0.95;
     room.dispose();
     pmrem.dispose();
-    scene.add(new T.HemisphereLight('#f0f6ff', '#899b9d', 1.6));
-    const key = new T.DirectionalLight('#fff6e9', 3.1);
+    scene.add(new T.HemisphereLight('#f6f7f2', '#89938c', 0.9));
+    const key = new T.DirectionalLight('#fff8ed', 2.4);
     key.position.set(-3, 10, 6);
     key.target.position.set(0, 3, 0);
     key.castShadow = true;
@@ -240,7 +265,7 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
     });
     key.shadow.normalBias = 0.03;
     scene.add(key, key.target);
-    const rim = new T.DirectionalLight('#cdeaff', 2.3);
+    const rim = new T.DirectionalLight('#e3ecf1', 1.8);
     rim.position.set(5, 6, -4);
     scene.add(rim);
     const fill = new T.DirectionalLight('#ffffff', 0.8);
@@ -259,20 +284,20 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       }),
     );
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = 0.06;
+    floor.position.y = -0.006;
     floor.receiveShadow = true;
     stage.add(floor);
     const grid = new T.GridHelper(32, 64, '#9caaa8', '#b9c6c2');
-    grid.position.y = 0.065;
+    grid.position.y = -0.005;
     (grid.material as T.Material).transparent = true;
-    (grid.material as T.Material).opacity = 0.17;
+    (grid.material as T.Material).opacity = 0.09;
     stage.add(grid);
     const podiums = [-1, 1].map((side) => {
       const mesh = new T.Mesh(
         new T.CylinderGeometry(1.3, 1.34, 0.045, 64),
         new T.MeshStandardMaterial({ color: '#cbd5d1', roughness: 0.4, metalness: 0.32 }),
       );
-      mesh.position.set(side * 1.85, 0.038, 0);
+      mesh.position.set(side * 1.85, -0.028, 0);
       mesh.receiveShadow = true;
       stage.add(mesh);
       return mesh;
@@ -355,6 +380,8 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         }
         for (const mesh of clouds.meshes)
           if (mesh.geometry instanceof T.TorusGeometry) mesh.quaternion.copy(camera.quaternion);
+        debug?.prepare();
+        if (debug) operational.group.visible = clouds.group.visible = false;
         renderer.render(scene, camera);
         canvas.dataset.renderCount = String(Number(canvas.dataset.renderCount ?? 0) + 1);
         canvas.dataset.triangles = String(renderer.info.render.triangles);
@@ -474,16 +501,20 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         item.decoration.visible =
           robotVisible && !s.isolate && s.explode === 0 && s.visible.length === 12;
         applyExplosion(item.registry, s.explode, camera.aspect);
+        syncRobotPresentation(item, s.explode > 0);
         highlightParts(item.registry, s.selected, null, s.finish, context);
         const snap = sceneHosts(s)[i];
+        const seenMaterials = new Set<T.Material>();
         for (const p of item.registry.values())
           for (const mesh of p.meshes) {
             const mat = mesh.material as T.MeshStandardMaterial;
             const unavailable = s.illustration === 'execution' && !s.bodyAvailable;
+            mesh.castShadow = !unavailable;
+            if (seenMaterials.has(mat)) continue;
+            seenMaterials.add(mat);
             mat.transparent = unavailable;
             mat.depthWrite = !unavailable;
             mat.opacity = unavailable ? 0.2 : 1;
-            mesh.castShadow = !unavailable;
             if (snap.status === 'inactive' || (i === 0 && latest.current.drag)) {
               mat.color.multiplyScalar(0.62);
               mat.emissiveIntensity = 0;
@@ -647,6 +678,7 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       for (const [name, listener] of Object.entries(listeners))
         canvas.removeEventListener(name, listener as EventListener);
       canvas.removeEventListener('webglcontextlost', lost);
+      debug?.dispose();
       const geometries = new Set<T.BufferGeometry>(),
         materials = new Set<T.Material>();
       scene.traverse((o) => {

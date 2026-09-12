@@ -24,9 +24,12 @@ export function highlightParts(
   const ids = context.length
     ? [...registry.values()].filter((p) => context.includes(p.domain)).map((p) => p.id)
     : (capabilities.find((c) => c.id === selected)?.viewCoordinates.body.partIds ?? []);
+  const seen = new Set<MeshStandardMaterial>();
   for (const part of registry.values())
     for (const mesh of part.meshes) {
       const material = mesh.material as MeshStandardMaterial;
+      if (seen.has(material)) continue;
+      seen.add(material);
       material.color.set(
         ids.includes(part.id)
           ? '#8de6ec'

@@ -1,0 +1,135 @@
+[
+  {
+    "name": "final-dual-front",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=0.00000%2C3.69703%2C16.04498&target=0.00000%2C3.37731%2C0.05898&host=dual&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "4",
+      "triangles": "303298",
+      "geometries": "193",
+      "hostView": "dual",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "0.7718588397550872"
+    }
+  },
+  {
+    "name": "final-host-a-front",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=0.60848%2C3.83366%2C15.27090&target=0.00000%2C3.37731%2C0.05898&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "6",
+      "triangles": "154154",
+      "geometries": "193",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "0.8132163781245966"
+    }
+  },
+  {
+    "name": "final-host-a-three-quarter",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=-8.072389153242762%2C3.62731%2C12.974802645188417&target=0%2C3.37731%2C0.05898&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "7",
+      "triangles": "154154",
+      "geometries": "193",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "0.8387703528438163"
+    }
+  },
+  {
+    "name": "final-host-a-close",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=-3.3%2C4.85%2C6.8&target=0%2C4.85%2C0&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "8",
+      "triangles": "85914",
+      "geometries": "193",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "1.8076770817058558"
+    }
+  },
+  {
+    "name": "final-mobile-390x844",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=0.64415%2C3.86042%2C16.16283&target=0.00000%2C3.37731%2C0.05898&host=dual&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "2",
+      "triangles": "300770",
+      "geometries": "186",
+      "hostView": "dual",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "0.7704103752602718"
+    }
+  },
+  {
+    "name": "detail-review-upper",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:3016/?robotDebug=1#v=3&view=body&layers=all&isolate=0&explode=0&pos=-3.3,4.85,6.8&target=0,4.85,0&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "4",
+      "triangles": "81610",
+      "geometries": "192",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "",
+      "bodyHeightRatio": "1.8076770817058558"
+    }
+  },
+  {
+    "name": "detail-review-hands",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:3016/?robotDebug=1#v=3&view=body&layers=all&isolate=0&explode=0&pos=-1.7%2C2.55%2C3.4&target=-0.6%2C2.55%2C0&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "5",
+      "triangles": "85682",
+      "geometries": "192",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "",
+      "bodyHeightRatio": "4.076548805556774"
+    }
+  }
+]
