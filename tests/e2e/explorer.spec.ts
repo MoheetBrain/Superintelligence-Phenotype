@@ -413,7 +413,9 @@ test('former profile content now opens through the spatial hierarchy and List vi
   await expect(page.locator('.list-profiles button')).toHaveCount(15);
 });
 
-test('landing identity, qualified date and real 3D cloud selection', async ({ page }) => {
+test('landing identity, attributed student prediction and real 3D cloud selection', async ({
+  page,
+}) => {
   await page.goto('/');
   await ready(page);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('ARTIFICIAL SUPERINTELLIGENCE');
@@ -422,9 +424,13 @@ test('landing identity, qualified date and real 3D cloud selection', async ({ pa
   expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 2)).toBe(
     true,
   );
-  await page.getByRole('button', { name: /Possible arrival: 2030–2035/ }).click();
+  await page.getByRole('button', { name: /IT IS HERE ALREADY!/ }).click();
   await expect(
-    page.getByRole('dialog').getByText(/Arrival could be earlier, later, or fail/),
+    page
+      .getByRole('dialog')
+      .getByText(
+        /As an AI student, my prediction is that artificial superintelligence is already here/,
+      ),
   ).toBeVisible();
   await page.keyboard.press('Escape');
   const point = await canvasPoint(page, [-2.6, 4.9, 0.1]);

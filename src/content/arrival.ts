@@ -1,9 +1,10 @@
 export const arrivalScenario = {
-  window: '2030–2035',
-  label: 'Possible arrival',
-  status: 'Project scenario · speculative',
+  headline: 'IT IS HERE ALREADY!',
+  status: 'My prediction as an AI student',
+  quote: 'As an AI student, my prediction is that artificial superintelligence is already here.',
+  attribution: 'The creator of ASI Atlas',
   provenance:
-    'Project creator’s proposed scenario, supplied in the immersive atlas brief. No probability, forecasting methodology or supporting citation was supplied.',
+    'Personal prediction supplied by the project creator, an AI student. Updated at their request on 12 September 2026.',
   explanation:
-    'This atlas explores a possible 2030–2035 arrival scenario for artificial superintelligence. The window is a project hypothesis, not a confirmed timeline. Arrival could be earlier, later, or fail to occur within this period. The illustrated robot and individual capabilities do not share a guaranteed release date.',
+    'This is the creator’s personal prediction, not an established scientific finding. The atlas continues to distinguish observed results from hypotheses; this prediction does not mean every illustrated capability has been demonstrated.',
 } as const;

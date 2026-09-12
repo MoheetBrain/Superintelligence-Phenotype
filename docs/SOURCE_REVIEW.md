@@ -13,3 +13,7 @@ NIST's AI Risk Management Framework remains contextual reading from the earlier 
 The main dossier mechanisms, worked scenarios, physical profiles and local illustrations are editorial conceptual explanations. The Evidence tab separates them from observations and gives evaluated scope, limitations, source links and review dates. Cards without reviewed observations say so explicitly. Every project measurement remains null, displayed as **Not measured for this project.**
 
 The 2030–2035 date comes from the project creator's supplied scenario. It has no supplied probability, forecasting method or supporting citation. Its source and exact qualification are editable in `src/content/arrival.ts`; it is not inferred from these papers. It does not promise the robot or any individual capability by that date.
+
+## Creator prediction updated — 12 September 2026
+
+The creator explicitly replaced the earlier 2030–2035 window with **IT IS HERE ALREADY!**, attributed as **My prediction as an AI student**. The dialog quotes their personal prediction and identifies the creator of ASI Atlas as its source. This statement is not an established scientific finding; it does not reclassify the atlas's empirical claims or certify every illustrated capability. The earlier source-review record above describes the superseded arrival-window framing.

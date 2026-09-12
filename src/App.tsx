@@ -194,9 +194,7 @@ export default function App() {
           </p>
         </div>
         <button className="arrival-badge" onClick={() => setTimeline(true)}>
-          <strong>
-            {arrivalScenario.label}: {arrivalScenario.window}
-          </strong>
+          <strong>{arrivalScenario.headline}</strong>
           <span>
             {arrivalScenario.status}
             <ArrowUpRight size={14} />
@@ -420,9 +418,13 @@ export default function App() {
         </Modal>
       )}
       {timeline && (
-        <Modal label="Arrival scenario" onClose={() => setTimeline(false)}>
-          <h2>Possible arrival: {arrivalScenario.window}</h2>
+        <Modal label="Creator’s prediction" onClose={() => setTimeline(false)}>
+          <h2>{arrivalScenario.headline}</h2>
           <p className="scenario-tag">{arrivalScenario.status}</p>
+          <blockquote className="creator-prediction">
+            <p>“{arrivalScenario.quote}”</p>
+            <cite>— {arrivalScenario.attribution}</cite>
+          </blockquote>
           <p>{arrivalScenario.explanation}</p>
           <p className="muted">Provenance: {arrivalScenario.provenance}</p>
         </Modal>

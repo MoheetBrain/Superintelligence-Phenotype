@@ -1852,3 +1852,17 @@ h3,
   color: #d4bde8;
   line-height: 1.5;
 }
+.creator-prediction {
+  margin: 22px 0;
+  padding: 2px 0 2px 18px;
+  border-left: 3px solid #d8a9ee;
+}
+.creator-prediction p {
+  color: #f1dcfc;
+  font-size: 1.1rem;
+}
+.creator-prediction cite {
+  color: #c4ced7;
+  font-size: 0.85rem;
+  font-style: normal;
+}

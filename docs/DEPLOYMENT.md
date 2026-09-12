@@ -1,6 +1,6 @@
 # Deployment runbook
 
-**Deployment blocked: no destination hosting project/account and publication authorisation have been established.** The local application and static build do not require those prerequisites.
+**Update — 12 September 2026:** The creator has requested publication and a Sites destination is registered in `.openai/hosting.json`. The current workflow uses Sites with owner-private access by default; see [PUBLISHING.md](PUBLISHING.md). The Vercel-specific guidance below remains an alternative hosting runbook. Registration alone is not proof of a successful deployment.
 
 **Publishing code on GitHub and publishing the running website are separate steps.** A Git branch or repository URL is not a live website.
 
@@ -26,13 +26,13 @@ npm run size
 
 ## Static hosting configuration
 
-| Setting | Value |
-| --- | --- |
-| Framework | Vite |
-| Project root | Repository root containing `package.json` |
-| Install command | `npm ci` |
-| Build command | `npm run build` |
-| Output directory | `dist` |
+| Setting          | Value                                     |
+| ---------------- | ----------------------------------------- |
+| Framework        | Vite                                      |
+| Project root     | Repository root containing `package.json` |
+| Install command  | `npm ci`                                  |
+| Build command    | `npm run build`                           |
+| Output directory | `dist`                                    |
 
 The checked-in `vercel.json` contains exactly these four settings. Do not set the root to `app/` or `web/`. There is no backend, environment secret, account feature, model API or database to configure. Hash-based views do not need SPA path rewrites. Deploy at the hostname root; deploying to a GitHub Pages subdirectory would require a separately tested Vite base-path change.
 

@@ -4,7 +4,7 @@ An explorable portrait of possible superintelligence: its capabilities, limits a
 
 ![Immersive ASI Atlas](docs/screenshots/after-immersive/1440x900.png)
 
-The **2030–2035** arrival window is the creator's speculative project scenario, not a confirmed timeline or a promise about this robot. All project measurements remain **Not measured for this project.** AI need not be humanoid, and abstract capabilities do not occupy physical organs.
+**IT IS HERE ALREADY!** is prominently attributed as the creator's personal prediction as an AI student. It replaces the earlier arrival window and is not presented as an established scientific finding. All project measurements remain **Not measured for this project.** AI need not be humanoid, and abstract capabilities do not occupy physical organs.
 
 ## Run
 
@@ -68,6 +68,6 @@ All robot, cloud and host geometry is original project code. No stock references
 
 The [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) record implemented behaviour, actual checks and remaining limits. Screenshots compare [before](docs/screenshots/before-immersive/) and [after](docs/screenshots/after-immersive/) at desktop, mobile and landscape sizes.
 
-Public hosting has not been performed: no destination or running-site publication authorisation is established. The local `dist` output and [deployment runbook](docs/DEPLOYMENT.md) are ready for an authorised destination. No purchases or plan changes were made.
+Publication was requested on 12 September 2026. The atlas is configured for Sites using its existing static Vite build, with owner-private access by default. See [publishing notes](docs/PUBLISHING.md); deployment success and the production URL are reported by Sites. No purchases or plan changes were made.
 
 Physical-device, Safari/Firefox, manual screen-reader and participant testing remain unperformed. The [ten-person usability protocol](docs/USABILITY_TEST.md) contains no invented results. Network/Evolution views and empirical ASI measurements remain deferred. The original research introduction is preserved in [ORIGINAL_README.md](docs/ORIGINAL_README.md).
