@@ -1,6 +1,6 @@
 import * as T from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { U } from '../robotSpec';
+import { U, type ShellProfile } from '../robotSpec';
 export type Station = readonly [y: number, width: number, depth: number, z?: number];
 /** Smoothly lofted superellipse sections, with an optional curved front-only skin. */
 export function shellGeometry(
@@ -8,6 +8,7 @@ export function shellGeometry(
   exponent = 2.6,
   frontOnly = false,
   fine = true,
+  frontScale = 1,
 ) {
   const positions: number[] = [],
     indices: number[] = [],
@@ -48,14 +49,16 @@ export function shellGeometry(
   sections.push(stations[stations.length - 1]);
   for (const [y, width, depth, z = 0] of sections) {
     for (let j = 0; j <= sides; j++) {
-      const theta = frontOnly ? 0.15 + (j / sides) * (Math.PI - 0.3) : (j / sides) * Math.PI * 2;
+      const theta = frontOnly ? 0.28 + (j / sides) * (Math.PI - 0.56) : (j / sides) * Math.PI * 2;
       const c = Math.cos(theta),
         s = Math.sin(theta),
         p = 2 / exponent;
       positions.push(
         U((Math.sign(c) * Math.abs(c) ** p * width) / 2),
         U(y),
-        U((Math.sign(s) * Math.abs(s) ** p * depth) / 2 + z),
+        U(
+          (Math.sign(s) * Math.abs(s) ** p * depth * (s > 0 ? frontScale : 2 - frontScale)) / 2 + z,
+        ),
       );
     }
   }
@@ -84,6 +87,82 @@ export function shellGeometry(
     }
   }
   geometry.computeBoundingBox();
+  return geometry;
+}
+/** Flat central faces, controlled hems and an asymmetric front/rear volume. */
+export function engineeredShell(profile: ShellProfile, frontScale = 0.93) {
+  const {
+    length: h,
+    proximalWidth: top,
+    midWidth: mid,
+    distalWidth: bottom,
+    depth: d,
+    edgeRadius: r,
+  } = profile;
+  return shellGeometry(
+    [
+      [-h / 2, 0.0001, 0.0001],
+      [-h / 2 + 0.0005, bottom - 2 * r, d * 0.65],
+      [-h / 2 + r, bottom, d * 0.72],
+      [-h * 0.24, bottom * 0.6 + mid * 0.4, d * 0.83, -0.001],
+      [h * 0.02, mid, d * 0.94, -0.002],
+      [h * 0.32, top, d, -0.002],
+      [h / 2 - r, top * 0.98, d * 0.92],
+      [h / 2 - 0.0005, top * 0.98 - 2 * r, d * 0.86],
+      [h / 2, 0.0001, 0.0001],
+    ],
+    4.2,
+    false,
+    false,
+    frontScale,
+  );
+}
+/** Open-front ankle arch: lift the lower front hem continuously around the bearing.
+ * The rear calf remains deep; no invented internal drive is filled into the opening. */
+export function shinShell(profile: ShellProfile) {
+  const geometry = engineeredShell(profile, 0.79);
+  const positions = geometry.getAttribute('position');
+  const bottom = -profile.length / 2;
+  for (let i = 0; i < positions.count; i++) {
+    const x = positions.getX(i) / U(1),
+      y = positions.getY(i) / U(1),
+      z = positions.getZ(i) / U(1);
+    if (z <= 0 || Math.abs(x) >= 0.016 || y > bottom + 0.038) continue;
+    const arch = 0.026 * Math.sqrt(1 - (x / 0.016) ** 2);
+    const influence = Math.max(0, 1 - (y - bottom) / 0.038);
+    positions.setY(i, U(y + arch * influence));
+  }
+  // The lower loft fan would close the ankle pocket with a sloping grey face.
+  // Remove that end cap so the hem exposes the separate dark bearing behind it.
+  geometry.setIndex(Array.from(geometry.index!.array).slice(geometry.userData.loft.sides * 6 * 3));
+  geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  return geometry;
+}
+/** Bevelled XY outline extruded in depth. Holes remain real openings. */
+export function outlinePlate(
+  points: readonly (readonly [number, number])[],
+  depth: number,
+  bevel = 0.0015,
+  hole?: readonly (readonly [number, number])[],
+) {
+  const path = (vertices: readonly (readonly [number, number])[], target: T.Shape | T.Path) => {
+    vertices.forEach(([x, y], i) => (i ? target.lineTo(x, y) : target.moveTo(x, y)));
+    target.closePath();
+    return target;
+  };
+  const shape = path(points, new T.Shape()) as T.Shape;
+  if (hole) shape.holes.push(path(hole, new T.Path()));
+  const geometry = new T.ExtrudeGeometry(shape, {
+    depth,
+    bevelEnabled: true,
+    bevelSize: bevel,
+    bevelThickness: bevel,
+    bevelSegments: 3,
+    steps: 1,
+  });
+  geometry.translate(0, 0, -depth / 2);
+  geometry.scale(U(1), U(1), U(1));
   return geometry;
 }
 export function taperedShell(
@@ -122,24 +201,26 @@ export function jointDisc(radius: number, depth: number) {
       new T.Vector2(radius * 0.78, depth / 2),
       new T.Vector2(0, depth / 2),
     ],
-    radius < 0.01 ? 16 : 40,
+    radius < 0.01 ? 16 : 36,
   );
   shape.scale(U(1), U(1), U(1));
   return shape;
 }
 export function footShell(length: number, width: number, height: number) {
-  // Horizontal shoe loft: rounded toe, low vamp, distinct higher heel.
+  // Low technical wedge with a defined heel and bevelled toe.
   const g = shellGeometry(
     [
-      [-length / 2, 0.0001, 0.0001, height * 0.06],
-      [-length * 0.46, width * 0.73, height * 0.62, height * 0.03],
-      [-length * 0.29, width, height, 0],
-      [length * 0.04, width * 0.97, height * 0.77, height * 0.09],
-      [length * 0.32, width * 0.89, height * 0.57, height * 0.18],
-      [length * 0.46, width * 0.63, height * 0.37, height * 0.24],
-      [length / 2, 0.0001, 0.0001, height * 0.265],
+      [-length / 2, 0.0001, 0.0001, height * 0.12],
+      [-length * 0.49, width * 0.76, height * 0.48, height * 0.12],
+      [-length * 0.43, width * 0.96, height * 0.62, height * 0.05],
+      [-length * 0.25, width, height, -height * 0.06],
+      [-length * 0.04, width * 0.96, height * 0.93, -height * 0.02],
+      [length * 0.23, width * 0.83, height * 0.56, height * 0.17],
+      [length * 0.43, width * 0.66, height * 0.31, height * 0.29],
+      [length * 0.49, width * 0.61, height * 0.28, height * 0.3],
+      [length / 2, 0.0001, 0.0001, height * 0.3],
     ],
-    3.0,
+    4.3,
   );
   g.rotateX(Math.PI / 2);
   return g;

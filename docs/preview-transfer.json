@@ -5,9 +5,9 @@
         "width": 1440,
         "height": 900
       },
-      "triangles": 303298,
-      "geometries": 193,
-      "projectedBodyBoundsHeightRatio": 0.7704103752602719,
+      "triangles": 296322,
+      "geometries": 217,
+      "projectedBodyBoundsHeightRatio": 0.7704277137551502,
       "idleAdditionalRenders": 0,
       "idleObservationMs": 500
     },
@@ -16,21 +16,21 @@
         "width": 390,
         "height": 844
       },
-      "triangles": 300770,
-      "geometries": 193,
-      "projectedBodyBoundsHeightRatio": 0.7704103752602718,
+      "triangles": 295970,
+      "geometries": 217,
+      "projectedBodyBoundsHeightRatio": 0.7380414629431151,
       "idleAdditionalRenders": 0,
       "idleObservationMs": 500
     }
   ],
-  "measuredAt": "2026-09-12T15:27:43.328Z",
+  "measuredAt": "2026-09-12T20:18:32.541Z",
   "browser": "153.0.8010.12",
   "viewport": {
     "width": 1440,
     "height": 900
   },
   "origin": "http://127.0.0.1:4173",
-  "totalTransferBytes": 277953,
+  "totalTransferBytes": 280581,
   "measurements": [
     {
       "url": "http://127.0.0.1:4173/",
@@ -39,16 +39,16 @@
       "decodedBodyBytes": 784
     },
     {
-      "url": "http://127.0.0.1:4173/assets/index-BWrsTFUM.css",
-      "transferBytes": 9357,
-      "encodedBodyBytes": 9057,
-      "decodedBodyBytes": 38236
+      "url": "http://127.0.0.1:4173/assets/index-Ctha37-R.js",
+      "transferBytes": 269949,
+      "encodedBodyBytes": 269649,
+      "decodedBodyBytes": 967426
     },
     {
-      "url": "http://127.0.0.1:4173/assets/index-CEprk6Zk.js",
-      "transferBytes": 267512,
-      "encodedBodyBytes": 267212,
-      "decodedBodyBytes": 959865
+      "url": "http://127.0.0.1:4173/assets/index-BUT6kFXC.css",
+      "transferBytes": 9548,
+      "encodedBodyBytes": 9248,
+      "decodedBodyBytes": 39317
     }
   ],
   "failures": [],

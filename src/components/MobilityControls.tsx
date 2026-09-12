@@ -12,9 +12,13 @@ import { MobilityImplications } from './SubstrateMobility';
 export function HostCameraControls({
   value,
   dispatch,
+  annotationsHidden = false,
+  onToggleAnnotations,
 }: {
   value: HostView;
   dispatch: (a: Action) => void;
+  annotationsHidden?: boolean;
+  onToggleAnnotations?: () => void;
 }) {
   return (
     <div className="host-camera-controls" role="group" aria-label="Host camera presets">
@@ -56,6 +60,11 @@ export function HostCameraControls({
           ))}
         </div>
       </details>
+      {onToggleAnnotations && (
+        <button aria-pressed={annotationsHidden} onClick={onToggleAnnotations}>
+          {annotationsHidden ? 'Show annotations' : 'Hide annotations'}
+        </button>
+      )}
     </div>
   );
 }

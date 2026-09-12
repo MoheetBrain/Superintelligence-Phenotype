@@ -11,7 +11,7 @@ import { mechanicalContext } from '../data/illustrations';
 import { createDiscovery, disposeGroup } from './createDiscovery';
 import { projected } from './discoveryLayout';
 import { createRobotPair, syncRobotPresentation } from './createRobot';
-import { robotSpec } from './robot/robotSpec';
+import { robotSpec, U } from './robot/robotSpec';
 import { createOperationalState } from './createOperationalState';
 import { applyExplosion } from './explosionLayout';
 import { fitCamera, readCamera } from './camera';
@@ -74,9 +74,10 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
   const [drag, setDrag] = useState<Drag | null>(null),
     [error, setError] = useState(''),
     [info, setInfo] = useState(false),
+    [annotationsHidden, setAnnotationsHidden] = useState(false),
     [gestureStatus, setGestureStatus] = useState('');
-  const latest = useRef({ state, dispatch, onChoose, onNavigate, drag });
-  latest.current = { state, dispatch, onChoose, onNavigate, drag };
+  const latest = useRef({ state, dispatch, onChoose, onNavigate, drag, annotationsHidden });
+  latest.current = { state, dispatch, onChoose, onNavigate, drag, annotationsHidden };
   const update = useRef<() => void>(() => {}),
     hoverCloud = useRef<(key: string | null) => void>(() => {});
   const demo = sceneMobility(state),
@@ -111,9 +112,9 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
   const dropEligible = (x: number, y: number) => {
     const target = stateButtons.current.get('host-b');
     if (!target || target.hidden) return false;
-    const r = target.getBoundingClientRect(),
-      radius = Math.max(48, r.width * 0.8);
-    return Math.hypot(x - r.x - r.width / 2, y - r.y - r.height / 2) < radius;
+    const r = target.getBoundingClientRect();
+    // Match the rectangular callout, with a small touch tolerance.
+    return x >= r.left - 8 && x <= r.right + 8 && y >= r.top - 8 && y <= r.bottom + 8;
   };
   const endDrag = (cancelled = false) => {
     const d = dragRef.current;
@@ -203,9 +204,12 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       camera = new T.PerspectiveCamera(robotSpec.cameraFov, 1, 0.05, 250),
       controls = new OrbitControls(camera, canvas);
     controls.enableDamping = false;
-    controls.minDistance = 0.3;
-    controls.maxDistance = 150;
-    controls.maxPolarAngle = Math.PI * 0.94;
+    const comparison =
+      import.meta.env.DEV && new URLSearchParams(location.search).has('robotDebug');
+    controls.minDistance = comparison ? 0.3 : 2;
+    controls.maxDistance = comparison ? 150 : 40;
+    controls.minPolarAngle = comparison ? 0 : T.MathUtils.degToRad(55);
+    controls.maxPolarAngle = comparison ? Math.PI : T.MathUtils.degToRad(120);
     const pair = createRobotPair();
     scene.add(pair.a.robot, pair.b.robot);
     const allRegistry: PartRegistry = new Map();
@@ -235,6 +239,7 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
             invalidate();
           },
           invalidate,
+          (value) => latest.current.dispatch({ type: 'host-view', value }),
         );
         invalidate();
       });
@@ -246,11 +251,11 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       room = new RoomEnvironment(),
       env = pmrem.fromScene(room, 0.05);
     scene.environment = env.texture;
-    scene.environmentIntensity = 0.95;
+    scene.environmentIntensity = 0.85;
     room.dispose();
     pmrem.dispose();
     scene.add(new T.HemisphereLight('#f6f7f2', '#89938c', 0.9));
-    const key = new T.DirectionalLight('#fff8ed', 2.4);
+    const key = new T.DirectionalLight('#fff8ed', 2.1);
     key.position.set(-3, 10, 6);
     key.target.position.set(0, 3, 0);
     key.castShadow = true;
@@ -265,7 +270,7 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
     });
     key.shadow.normalBias = 0.03;
     scene.add(key, key.target);
-    const rim = new T.DirectionalLight('#e3ecf1', 1.8);
+    const rim = new T.DirectionalLight('#e3ecf1', 1.4);
     rim.position.set(5, 6, -4);
     scene.add(rim);
     const fill = new T.DirectionalLight('#ffffff', 0.8);
@@ -302,6 +307,30 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       stage.add(mesh);
       return mesh;
     });
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = shadowCanvas.height = 64;
+    const shadowContext = shadowCanvas.getContext('2d')!;
+    const gradient = shadowContext.createRadialGradient(32, 32, 3, 32, 32, 32);
+    gradient.addColorStop(0, '#24353188');
+    gradient.addColorStop(0.45, '#24353155');
+    gradient.addColorStop(1, '#24353100');
+    shadowContext.fillStyle = gradient;
+    shadowContext.fillRect(0, 0, 64, 64);
+    const contactTexture = new T.CanvasTexture(shadowCanvas);
+    const contacts = [pair.a, pair.b].map(() => {
+      const group = new T.Group();
+      for (const side of [-1, 1]) {
+        const mesh = new T.Mesh(
+          new T.PlaneGeometry(0.62, 1.02),
+          new T.MeshBasicMaterial({ map: contactTexture, transparent: true, depthWrite: false }),
+        );
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.set(side * U(robotSpec.leg.hipX), -0.003, U(robotSpec.leg.footForward));
+        group.add(mesh);
+      }
+      stage.add(group);
+      return group;
+    });
     const tooltip = document.createElement('div');
     tooltip.className = 'part-tooltip';
     tooltip.hidden = true;
@@ -318,6 +347,15 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
     }
     const visibleBounds = new T.Box3(),
       anchors = [new T.Vector3(), new T.Vector3()];
+    const leaders = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    leaders.classList.add('state-leaders');
+    leaders.setAttribute('aria-hidden', 'true');
+    const leaderLines = anchors.map(() => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      leaders.appendChild(path);
+      return path;
+    });
+    el.appendChild(leaders);
     let phaseStart = 0,
       lastPhase = '',
       lastWidth = 0,
@@ -374,6 +412,11 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         operational.target.visible = operational.target.visible && pair.b.robot.visible;
         operational.path.visible =
           operational.path.visible && pair.a.robot.visible && pair.b.robot.visible;
+        operational.group.visible =
+          !latest.current.annotationsHidden &&
+          !s.isolate &&
+          s.explode === 0 &&
+          s.visible.length === 12;
         if (legacy && !s.recoveryAvailable) {
           operational.a.visible = operational.b.visible = false;
           operational.path.visible = false;
@@ -385,6 +428,9 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         renderer.render(scene, camera);
         canvas.dataset.renderCount = String(Number(canvas.dataset.renderCount ?? 0) + 1);
         canvas.dataset.triangles = String(renderer.info.render.triangles);
+        canvas.dataset.drawCalls = String(renderer.info.render.calls);
+        canvas.dataset.polarAngle = String(controls.getPolarAngle());
+        canvas.dataset.cameraDistance = String(controls.getDistance());
         canvas.dataset.geometries = String(renderer.info.memory.geometries);
         canvas.dataset.hostView = s.hostView;
         canvas.dataset.transferPhase = m.phase;
@@ -394,16 +440,44 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         ]
           .filter(Boolean)
           .join(',');
-        const hide = s.explode > 0 || s.isolate || s.visible.length !== 12;
+        const hide =
+          s.explode > 0 || s.isolate || s.visible.length !== 12 || latest.current.annotationsHidden;
+        leaders.style.display = hide || debug ? 'none' : '';
+        leaders.setAttribute('viewBox', `0 0 ${el.clientWidth} ${el.clientHeight}`);
         for (const [i, id] of (['host-a', 'host-b'] as const).entries()) {
           const item = i === 0 ? pair.a : pair.b;
           const labelAnchor = item.robot.position.clone().add(new T.Vector3(0, 6.55, 0));
           place(hostLabels.current.get(id), labelAnchor, item.robot.visible && !hide);
           const orb = i === 0 ? operational.a : operational.b;
-          place(
-            stateButtons.current.get(id),
-            i === 0 ? orb.position : anchors[1],
-            item.robot.visible && !hide && (i === 1 || orb.visible),
+          const button = stateButtons.current.get(id);
+          const active = item.robot.visible && !hide && (i === 1 || orb.visible);
+          const anchor = projected(anchors[i], camera, el.clientWidth, el.clientHeight);
+          const floorPoint = projected(
+            item.robot.position.clone(),
+            camera,
+            el.clientWidth,
+            el.clientHeight,
+          );
+          const side = anchor.x < el.clientWidth / 2 ? -1 : 1;
+          const narrow = el.clientWidth < 620;
+          const position =
+            i === 0 && d
+              ? projected(orb.position, camera, el.clientWidth, el.clientHeight)
+              : {
+                  x: narrow ? el.clientWidth * (i === 0 ? 0.25 : 0.75) : anchor.x + side * 148,
+                  y: narrow ? floorPoint.y + 35 : anchor.y - 12,
+                };
+          const x = T.MathUtils.clamp(position.x, 80, el.clientWidth - 80);
+          const y = T.MathUtils.clamp(position.y, 35, el.clientHeight - 27);
+          if (button) {
+            button.hidden = !active || !anchor.visible;
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+          }
+          leaderLines[i].style.display = active && anchor.visible && !(i === 0 && d) ? '' : 'none';
+          leaderLines[i].setAttribute(
+            'd',
+            `M${anchor.x},${anchor.y} L${narrow ? anchor.x : x},${narrow ? y - 25 : anchor.y} L${x},${y}`,
           );
         }
         place(
@@ -470,7 +544,11 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         clouds = createDiscovery(nodes, !s.group);
         scene.add(clouds.group);
       }
-      clouds.group.visible = s.explode === 0 && !s.isolate && s.illustration !== 'execution';
+      clouds.group.visible =
+        s.explode === 0 &&
+        !s.isolate &&
+        s.illustration !== 'execution' &&
+        !latest.current.annotationsHidden;
       for (const button of nodeElements.current.values()) button.hidden = !clouds.group.visible;
       const m = sceneMobility(s),
         phaseKey = `${m.revision}:${m.phase}`;
@@ -533,6 +611,8 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
         podiums[i].position.x = item.robot.position.x;
         podiums[i].position.z = item.robot.position.z;
         podiums[i].visible = robotVisible;
+        contacts[i].position.copy(item.robot.position);
+        contacts[i].visible = robotVisible;
       }
       stage.visible = !s.isolate && s.explode < 0.25 && s.visible.length > 0;
       operational.group.visible = !s.isolate && s.explode === 0 && s.visible.length === 12;
@@ -540,6 +620,7 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       for (const p of allRegistry.values())
         if (p.group.visible) visibleBounds.union(new T.Box3().setFromObject(p.group));
       controls.enabled = !latest.current.drag;
+      controls.maxDistance = comparison ? 150 : s.explode > 0 ? 120 : 40;
       if (revision !== s.cameraRevision || !lastState) {
         clearTimeout(cameraTimer);
         revision = s.cameraRevision;
@@ -692,19 +773,26 @@ export function RobotScene({ state, dispatch, onChoose, onNavigate = dispatch }:
       for (const m of materials) m.dispose();
       key.shadow.dispose();
       env.dispose();
+      contactTexture.dispose();
       renderer.dispose();
       canvas.remove();
       tooltip.remove();
+      leaders.remove();
       for (const l of labels.values()) l.remove();
     };
   }, []);
-  useEffect(() => update.current(), [state, drag]);
+  useEffect(() => update.current(), [state, drag, annotationsHidden]);
   return (
     <div
       className={`robot-scene dual-host-scene ${error ? 'scene-unavailable' : ''}`}
       data-testid="robot-scene"
     >
-      <HostCameraControls value={state.hostView} dispatch={onNavigate} />
+      <HostCameraControls
+        value={state.hostView}
+        dispatch={onNavigate}
+        annotationsHidden={annotationsHidden}
+        onToggleAnnotations={() => setAnnotationsHidden((v) => !v)}
+      />
       <div className="canvas-host" ref={host}>
         {error ? (
           <div className="scene-error" role="status">

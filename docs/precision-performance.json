@@ -1,0 +1,25 @@
+{
+  "measuredAt": "2026-09-12T20:19:02.379Z",
+  "browser": "153.0.8010.12",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "triangles": 296322,
+  "drawCalls": 412,
+  "geometries": 217,
+  "bodyHeightRatio": 0.7704277137551502,
+  "idleAdditionalRenders": 1,
+  "idleObservationMs": 500,
+  "animationFrameSample": {
+    "samples": 90,
+    "meanIntervalMs": 92.40222222222224,
+    "p95IntervalMs": 166.79999999999927,
+    "approximateCallbacksPerSecond": 10.822250547124888
+  },
+  "jsHeapBytes": {
+    "before": 16119664,
+    "after": 18175812
+  },
+  "limits": "Local headless Chromium, no throttling. requestAnimationFrame callbacks during scripted orbit measure browser scheduling, not GPU frame time or physical-device FPS. Heap is one process snapshot, not a retained-memory/leak measurement."
+}

@@ -58,7 +58,7 @@ node scripts/measure-preview.mjs
 
 The renderer runs on changes and during the finite transfer animation, without automatic orbit or an idle animation loop. Default camera fitting uses visible body bounds, excluding the floor and discovery nodes. Scene and inspector occupy separate layout regions. Geometry, materials, environment textures, shadows, observers, controls and listeners are disposed on unmount. Optional feature-detected WebMCP tools use the same selection reducer.
 
-The reconstructed hosts share 148,120-triangle geometry per body. A single H = 1 specification controls the pod head, continuous chest, compact waist, horizontal pelvis, tapered limbs, articulated hands and shoe-shaped feet. Development builds expose five reference views, staged clay/material comparison and normalized landmarks at `?robotDebug=1`; this code is excluded from production.
+The reconstructed hosts share 144,628-triangle geometry per body. A single H = 1 specification controls the pod head, continuous chest, compact waist, horizontal pelvis, tapered limbs, articulated hands and shoe-shaped feet. Development builds expose six reference views, staged clay/material comparison and normalized landmarks at `?robotDebug=1`; this code is excluded from production.
 
 ## Content and provenance
 
@@ -70,7 +70,7 @@ All robot, cloud and host geometry is original project code. No stock references
 
 ## Handoff
 
-The latest [robot reconstruction report](docs/ROBOT_RECONSTRUCTION.md) contains before/after screenshots, parameters, the staged visual correction loop, triangle counts, file responsibilities, tests and specific remaining mismatches. The [dual-host implementation report](docs/DUAL_HOST_HANDOFF.md), [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) preserve earlier implementation history.
+The latest [precision reconstruction report](docs/ROBOT_PRECISION_REPORT.md) contains before/after screenshots, parameters, the staged visual correction loop, triangle counts, file responsibilities, tests and specific remaining mismatches. The [dual-host implementation report](docs/DUAL_HOST_HANDOFF.md), [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) preserve earlier implementation history.
 
 The atlas is public at **[superintel.site](https://superintel.site)**, with HTTPS and no sign-in required. Public access was explicitly requested on 12 September 2026. The existing static Vite build is hosted by Sites. See [publishing notes](docs/PUBLISHING.md); deployment success and the production URL are reported by Sites. No purchases or plan changes were made.
 

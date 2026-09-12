@@ -6,12 +6,18 @@ export function createRobotDebug(
   pair: { a: AtlasRobot; b: AtlasRobot },
   view: (direction: T.Vector3) => void,
   redraw: () => void,
+  selectHost: (host: 'host-a' | 'host-b') => void,
 ) {
   let mode = 'clay',
     stage = 1,
     showGuides = true;
   const originals = new Map<T.Mesh, T.Material | T.Material[]>(),
-    clay = new T.MeshStandardMaterial({ color: '#9b9d9c', roughness: 0.8, metalness: 0 });
+    clay = new T.MeshStandardMaterial({
+      color: '#686e72',
+      roughness: 0.95,
+      metalness: 0,
+      envMapIntensity: 0.2,
+    });
   const panel = document.createElement('section');
   panel.className = 'robot-debug';
   panel.setAttribute('aria-label', 'Development robot comparison');
@@ -32,8 +38,9 @@ export function createRobotDebug(
   for (const [label, dir] of [
     ['FRONT', [0, 0, 1]],
     ['3/4 LEFT', [-0.66, 0.025, 1]],
-    ['SIDE', [-1, 0.02, 0.02]],
+    ['LEFT SIDE', [-1, 0, 0.001]],
     ['BACK', [0, 0.02, -1]],
+    ['RIGHT SIDE', [1, 0, 0.001]],
     ['3/4 RIGHT', [0.66, 0.025, 1]],
   ] as const)
     button(label, () => view(new T.Vector3(...dir)));
@@ -52,6 +59,14 @@ export function createRobotDebug(
     ['Materials', 'pbr', 4],
   ] as const)
     button(label, () => setMode(next, n));
+  button('GRAPHITE', () => {
+    selectHost('host-a');
+    setMode('pbr', 4);
+  });
+  button('PEARL', () => {
+    selectHost('host-b');
+    setMode('pbr', 4);
+  });
   button('Guides', () => {
     showGuides = !showGuides;
     redraw();
@@ -64,10 +79,13 @@ export function createRobotDebug(
   panel.append(values);
   const axes = [
     ['head top', 1],
+    ['head bottom', 1 - robotSpec.head.height],
     ['shoulder', robotSpec.arm.shoulderY],
     ['elbow', robotSpec.arm.elbowY],
     ['wrist', robotSpec.arm.wristY],
+    ['torso bottom', robotSpec.torso.bottom],
     ['pelvis', robotSpec.pelvis.y],
+    ['hip axis', robotSpec.leg.hipY],
     ['knee', robotSpec.leg.kneeY],
     ['ankle', robotSpec.leg.ankleY],
     ['floor', 0],
@@ -84,6 +102,17 @@ export function createRobotDebug(
     const guide = new T.Group();
     guides.push(guide);
     item.robot.add(guide);
+    guide.add(
+      new T.Line(
+        new T.BufferGeometry().setFromPoints([new T.Vector3(0, 0, 0), new T.Vector3(0, U(1), 0)]),
+        new T.LineBasicMaterial({
+          color: '#a89979',
+          transparent: true,
+          opacity: 0.4,
+          depthTest: false,
+        }),
+      ),
+    );
     for (const [, y] of axes) {
       const geometry = new T.BufferGeometry().setFromPoints([
         new T.Vector3(U(-0.19), U(y), 0.03),
@@ -104,9 +133,14 @@ export function createRobotDebug(
   }
   el.append(panel);
   el.setAttribute('data-robot-debug', 'true');
+  document.body.classList.add('robot-comparison');
   const style = document.createElement('style');
-  style.textContent =
-    '[data-robot-debug] .floating-host-label,[data-robot-debug] .operational-handle,[data-robot-debug] .operational-target,[data-robot-debug] .part-label{display:none!important}';
+  style.textContent = `.robot-comparison .app-header,.robot-comparison .title-row,.robot-comparison .atlas-breadcrumb,.robot-comparison .mobility-controls,.robot-comparison .site-footer,.robot-comparison .scene-heading,.robot-comparison .scene-footer,.robot-comparison .host-camera-controls,.robot-comparison .cloud-navigation{display:none!important}
+    .robot-comparison .atlas-stage-footer,.robot-comparison .compact-footer{display:none!important}
+    .robot-comparison .app-shell,.robot-comparison .atlas-stage{margin:0!important;padding:0!important;max-width:none!important;height:100vh!important;min-height:0!important}
+    .robot-comparison .scene-panel{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;border:0!important;border-radius:0!important;z-index:100}
+    .robot-comparison .robot-scene,.robot-comparison .canvas-host{height:100%!important;min-height:0!important}
+    [data-robot-debug] .floating-host-label,[data-robot-debug] .operational-handle,[data-robot-debug] .operational-target,[data-robot-debug] .communication-label,[data-robot-debug] .part-label{display:none!important}`;
   panel.append(style);
   phase.textContent = 'CLAY · checkpoint 1';
   function prepare() {
@@ -120,7 +154,7 @@ export function createRobotDebug(
             triangles +=
               (mesh.geometry.index?.count ?? mesh.geometry.getAttribute('position').count) / 3;
         }
-    clay.color.set('#9b9d9c');
+    clay.color.set('#686e72');
     clay.emissive.set('#000000');
     clay.emissiveIntensity = 0;
     for (const guide of guides) guide.visible = showGuides;
@@ -142,6 +176,7 @@ export function createRobotDebug(
       }
       panel.remove();
       el.removeAttribute('data-robot-debug');
+      document.body.classList.remove('robot-comparison');
     },
   };
 }

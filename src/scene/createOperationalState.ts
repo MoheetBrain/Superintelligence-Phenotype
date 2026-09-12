@@ -77,6 +77,10 @@ export function createOperationalState() {
       from = pa;
       to = pb;
       const [ha, hb] = hostSnapshots(s);
+      const scale = drag || isTransferring(s) ? 1 : 0.28;
+      a.scale.setScalar(scale);
+      b.scale.setScalar(scale);
+      target.scale.setScalar(drag ? 1 : 0.3);
       a.visible = !!ha.state || !!drag || isTransferring(s);
       b.visible = !!hb.state;
       a.position.copy(drag ?? pa);

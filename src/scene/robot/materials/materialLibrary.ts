@@ -1,6 +1,7 @@
 import { MeshPhysicalMaterial } from 'three';
 export type Surface =
   | 'shell'
+  | 'panel'
   | 'secondary'
   | 'joint'
   | 'flex'
@@ -10,8 +11,9 @@ export type Surface =
   | 'seam';
 export const palette = {
   graphite: {
-    shell: '#555b60',
-    secondary: '#8a9093',
+    shell: '#454c51',
+    panel: '#394247',
+    secondary: '#687178',
     joint: '#171b1d',
     flex: '#111415',
     visor: '#030405',
@@ -20,8 +22,9 @@ export const palette = {
     seam: '#131719',
   },
   pearl: {
-    shell: '#e7e8e5',
-    secondary: '#bac0bd',
+    shell: '#dcded7',
+    panel: '#c8cdc7',
+    secondary: '#c6ccc8',
     joint: '#171b1d',
     flex: '#111415',
     visor: '#030405',
@@ -33,20 +36,27 @@ export const palette = {
 export function createMaterial(surface: Surface, finish: keyof typeof palette = 'graphite') {
   const color = palette[finish][surface];
   const settings = {
-    shell: { metalness: finish === 'graphite' ? 0.78 : 0.38, roughness: 0.32 },
-    secondary: { metalness: 0.78, roughness: 0.3 },
-    joint: { metalness: 0.45, roughness: 0.44 },
-    flex: { metalness: 0, roughness: 0.74 },
-    visor: { metalness: 0.2, roughness: 0.11 },
+    panel: { metalness: finish === 'graphite' ? 0.36 : 0.1, roughness: 0.56 },
+    shell: {
+      metalness: finish === 'graphite' ? 0.42 : 0.12,
+      roughness: finish === 'graphite' ? 0.48 : 0.52,
+    },
+    secondary: {
+      metalness: finish === 'graphite' ? 0.55 : 0.25,
+      roughness: finish === 'graphite' ? 0.43 : 0.48,
+    },
+    joint: { metalness: 0.25, roughness: 0.5 },
+    flex: { metalness: 0, roughness: 0.82 },
+    visor: { metalness: 0.12, roughness: 0.08 },
     sensor: { metalness: 0.3, roughness: 0.18 },
-    hand: { metalness: 0.36, roughness: 0.45 },
+    hand: { metalness: 0.18, roughness: 0.5 },
     seam: { metalness: 0.2, roughness: 0.58 },
   }[surface];
   return new MeshPhysicalMaterial({
     color,
     ...settings,
-    clearcoat: surface === 'visor' ? 1 : 0.22,
-    clearcoatRoughness: surface === 'visor' ? 0.08 : 0.3,
+    clearcoat: surface === 'visor' ? 1 : surface === 'shell' || surface === 'secondary' ? 0.05 : 0,
+    clearcoatRoughness: surface === 'visor' ? 0.08 : 0.45,
     emissive: surface === 'sensor' ? color : '#000000',
     emissiveIntensity: surface === 'sensor' ? 0.18 : 0,
   });

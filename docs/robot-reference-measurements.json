@@ -1,0 +1,25 @@
+{
+  "method": "Manual projected landmark estimates from the user-supplied standing screenshot; no claim of exact 3D dimensions.",
+  "primary": {
+    "image": "Screenshot 2026-09-12 at 20.38.52.png",
+    "imageSize": [1086, 1836],
+    "floorY": 1695,
+    "headTopY": 165,
+    "heightPixels": 1530,
+    "centerlineX": 655,
+    "pixelUncertainty": [4, 12],
+    "landmarksY": {"headBottom": 362, "torsoTop": 400, "shoulder": 480, "elbow": 710, "wrist": 911, "torsoBottom": 792, "pelvis": 909, "hip": 974, "knee": 1242, "ankle": 1600},
+    "widthPixels": {"head": 124, "shoulderOuter": 384, "torsoMaximum": 210, "torsoLower": 194, "pelvis": 308, "thigh": 110, "knee": 106, "shinUpper": 95, "shinLower": 67, "ankle": 46, "footFrontProjected": 112},
+    "ratios": {"headHeight": 0.129, "headWidth": 0.081, "shoulderOuterWidth": 0.251, "torsoHeight": 0.256, "torsoWidth": 0.137, "torsoLowerWidth": 0.127, "pelvisWidth": 0.201, "upperArmProjected": 0.150, "forearmProjected": 0.131, "handProjected": 0.115, "thighJointLength": 0.175, "shinJointLength": 0.234}
+  },
+  "secondary": {"image": "Screenshot 2026-09-12 at 20.39.34.png", "use": "Satin pearl/black distribution only. Covered torso variant, articulated pose and foreshortening exclude it from standing geometry averages."},
+  "supplementary": [
+    {"url": "https://www.blessthisstuff.com/imagens/stuff/figure-02-humanoid-robot-2.jpg", "use": "Same underlying front photograph; not independent measurement."},
+    {"url": "https://www.blessthisstuff.com/imagens/stuff/figure-02-humanoid-robot-3.jpg", "use": "Torso side cavity, shoulder integration and satin surfaces."},
+    {"url": "https://www.blessthisstuff.com/imagens/stuff/figure-02-humanoid-robot-4.jpg", "use": "Head profile, visor wrap and articulated hand pose."},
+    {"url": "https://www.blessthisstuff.com/imagens/stuff/figure-02-humanoid-robot-5.jpg", "use": "Hand phalanges and wrist opening."},
+    {"url": "https://www.blessthisstuff.com/imagens/stuff/figure-02-humanoid-robot-7.jpg", "use": "Shoe side layers, ankle connection and sole."},
+    {"url": "https://www.blessthisstuff.com/imagens/stuff/figure-02-humanoid-robot-8.jpg", "use": "Hip, knee and shin depth; low camera prevents direct height-ratio averaging."}
+  ],
+  "inferred": ["Rear service-shell arrangement", "hidden joint clearance", "absolute depth from perspective views", "unseen internal mechanisms omitted"]
+}

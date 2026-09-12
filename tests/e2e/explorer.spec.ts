@@ -30,9 +30,9 @@ const localPickPoints = (() => {
   return points;
 })();
 const assembledTemple = [
-  -1.85 + U(robotSpec.head.width * 0.488 + 0.0024),
-  U(robotSpec.head.y + 0.011),
-  0,
+  -1.85 + U(robotSpec.head.width * 0.496 + 0.0007),
+  U(robotSpec.head.y + 0.009),
+  -U(0.004),
 ];
 async function ready(page: Page) {
   await expect(page.locator('canvas')).toHaveCount(1);
@@ -361,12 +361,12 @@ test('production entry requests only successful local assets', async ({ page }, 
     contentType: 'application/json',
   });
   await page.screenshot({
-    path: 'docs/screenshots/reconstruction/regression/production-body.png',
+    path: 'docs/screenshots/precision/regression/explorer/production-body.png',
     fullPage: true,
   });
   await choose(page, 'Metacognition');
   await page.screenshot({
-    path: 'docs/screenshots/reconstruction/regression/production-metacognition.png',
+    path: 'docs/screenshots/precision/regression/explorer/production-metacognition.png',
     fullPage: true,
   });
 });
@@ -388,7 +388,7 @@ for (const viewport of [
       true,
     );
     await page.screenshot({
-      path: `docs/screenshots/reconstruction/regression/regression/${viewport.width}x${viewport.height}.png`,
+      path: `docs/screenshots/precision/regression/explorer/${viewport.width}x${viewport.height}.png`,
       fullPage: true,
     });
     await choose(page, 'Metacognition');
@@ -498,7 +498,7 @@ test('subtopics, Back and old/new shared links restore the same reading level', 
       .getByRole('heading', { name: 'Cross-domain transfer', exact: true }),
   ).toBeVisible();
   await other.screenshot({
-    path: 'docs/screenshots/reconstruction/regression/regression/restored-subtopic.png',
+    path: 'docs/screenshots/precision/regression/explorer/restored-subtopic.png',
   });
   await other.close();
   await page.keyboard.press('Escape');
@@ -547,7 +547,7 @@ test('strength tasks and precision steps change the visible mechanical context',
   await page.getByRole('button', { name: 'Next stage', exact: true }).click();
   await expect(page.locator('canvas')).toHaveAttribute('data-context', 'self-improvement');
   await page.screenshot({
-    path: 'docs/screenshots/reconstruction/regression/regression/precision.png',
+    path: 'docs/screenshots/precision/regression/explorer/precision.png',
   });
 });
 
@@ -603,6 +603,6 @@ test('remote, migration and copying show execution states and conditional failur
     .check();
   await page.locator('.inspector-content').evaluate((e) => (e.scrollTop = 0));
   await page.screenshot({
-    path: 'docs/screenshots/reconstruction/regression/regression/copying.png',
+    path: 'docs/screenshots/precision/regression/explorer/copying.png',
   });
 });

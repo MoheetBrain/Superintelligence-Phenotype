@@ -10,8 +10,18 @@ describe('Atlas humanoid reconstruction', () => {
       head = item.bones.get('head')!;
     const before = wrist.getWorldPosition(new Vector3()),
       beforeHead = head.getWorldPosition(new Vector3());
-    item.bones.get('elbow_L')!.rotation.z = 0.3;
-    expect(wrist.getWorldPosition(new Vector3()).distanceTo(before)).toBeGreaterThan(0.25);
+    const elbow = item.bones.get('elbow_L')!;
+    const pivot = elbow.getWorldPosition(new Vector3());
+    const radius = Math.hypot(before.x - pivot.x, before.y - pivot.y);
+    elbow.rotation.z = 0.3;
+    expect(wrist.getWorldPosition(new Vector3()).distanceTo(before)).toBeCloseTo(
+      2 * radius * Math.sin(0.15),
+      7,
+    );
+    expect(wrist.getWorldPosition(new Vector3()).distanceTo(pivot)).toBeCloseTo(
+      before.distanceTo(pivot),
+      7,
+    );
     expect(head.getWorldPosition(new Vector3()).distanceTo(beforeHead)).toBeLessThan(1e-8);
     expect(wrist.parent?.name).toBe('forearm_L');
     expect(item.bones.get('head')!.parent?.name).toBe('neck');

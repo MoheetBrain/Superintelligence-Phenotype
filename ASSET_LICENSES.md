@@ -15,4 +15,4 @@ The dual-host exhibit uses one original graphite/titanium humanoid platform with
 
 No generated-image asset, external robot model, BodyParts3D file, anatomy catalogue, binary geometry bundle, commissioned artwork or purchased asset is shipped. Human Atlas exists only in the ignored inspection checkout and is not an application asset. The robot is an original conceptual navigation device and does not imply a branded robot's endorsement.
 
-The hard-shell reconstruction's reference-photo provenance and remaining geometric approximations are recorded in [ROBOT_RECONSTRUCTION.md](docs/ROBOT_RECONSTRUCTION.md). Public reference photographs were viewed for silhouette and surface hierarchy; none are redistributed in the application or screenshot set.
+The hard-shell reconstruction's reference-photo provenance and remaining geometric approximations are recorded in [ROBOT_PRECISION_REPORT.md](docs/ROBOT_PRECISION_REPORT.md). Public reference photographs were viewed for silhouette and surface hierarchy; none are redistributed in the application or screenshot set.

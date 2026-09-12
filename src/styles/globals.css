@@ -2627,3 +2627,66 @@ h3,
     padding: 8px;
   }
 }
+
+/* Operational state lives in a projected callout, leaving the shell readable. */
+.state-leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+.state-leaders path {
+  fill: none;
+  stroke: #568c8a99;
+  stroke-width: 1;
+}
+.dual-host-scene .operational-handle,
+.dual-host-scene .operational-target {
+  width: 150px;
+  height: 46px;
+  border: 1px solid #a6c7c1;
+  border-radius: 8px;
+  background: #f2faf5ee;
+  padding: 5px 8px;
+  grid-template-columns: 18px 1fr;
+  gap: 5px;
+}
+.dual-host-scene .state-handle-ring,
+.dual-host-scene .operational-target > span {
+  width: 14px;
+  height: 14px;
+}
+.dual-host-scene .state-handle-label,
+.dual-host-scene .operational-target small {
+  position: static;
+  transform: none;
+  width: auto;
+  max-width: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.61rem;
+}
+.dual-host-scene .state-handle-label small {
+  font-size: 0.52rem;
+}
+.dual-host-scene .operational-handle.dragging {
+  box-shadow: 0 0 0 5px #69c6b933;
+}
+.dual-host-scene .operational-target.eligible {
+  background: #d2efe6;
+  border: 2px solid #217f76;
+}
+@media (max-width: 600px) {
+  .dual-host-scene .operational-handle,
+  .dual-host-scene .operational-target {
+    width: min(144px, calc(50% - 14px));
+    height: 44px;
+  }
+  .host-camera-controls {
+    flex-wrap: wrap;
+  }
+}
