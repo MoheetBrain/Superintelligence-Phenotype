@@ -1,10 +1,14 @@
-# Artificial Superintelligence · ASI Atlas
+# Superintel · Independent AI Research
+
+Five research sections: **Superintelligence Map**, **State Vector Framework**, **AI Safety Timeline**, **Forecasting / Models**, and **Research Notes / Preprints**. The existing interactive atlas remains the default route. Research sections use explicit `?section=` links so static hosting and legacy atlas hash links both work without a routing dependency.
+
+The research question is: **Can catastrophic-risk claims about advanced AI be transformed into explicit mathematical models whose assumptions can be inspected, falsified, and empirically updated?**
 
 An explorable portrait of possible superintelligence: its capabilities, limits and forms. Two original industrial humanoid hosts demonstrate migration, copying, forking and remote control. Five discovery groups connect the exhibit to the full capability atlas. Choose a capability, follow a subtopic, try an illustrative scenario or inspect the evidence behind a claim.
 
 ![Immersive ASI Atlas](docs/screenshots/reconstruction/final-dual-front.png)
 
-**IT IS HERE ALREADY!** is prominently attributed as the creator's personal belief as an AI undergraduate at **U O W · University of Westminster**. It replaces the earlier arrival window and is not presented as an established scientific finding. All project measurements remain **Not measured for this project.** AI need not be humanoid, and abstract capabilities do not occupy physical organs.
+The state-space framework is a proposal, with no fitted model or empirical claim of sufficiency. The downloadable working note is explicitly preliminary. Forecasting results are separate conditional Monte Carlo outputs from a pinned public calculator revision; they do not validate the framework or establish an arrival date. Original source dates are linked in the timeline. Earlier public writing is marked as an incomplete archive until the original artifacts can be verified. See [research provenance and reproduction](docs/RESEARCH_PORTFOLIO.md).
 
 ## Run
 

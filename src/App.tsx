@@ -140,7 +140,7 @@ export default function App() {
       >
         Skip to capability catalogue
       </a>
-      <header className="app-header">
+      <div className="app-header">
         <a
           className="brand"
           href="#"
@@ -153,7 +153,7 @@ export default function App() {
           <span className="brand-mark">
             A<span>·</span>
           </span>
-          <span>SUPER INTELLIGENCE INC.</span>
+          <span>ASI ATLAS / INTERACTIVE MAP</span>
         </a>
         <div className="atlas-actions">
           <Button
@@ -185,10 +185,10 @@ export default function App() {
             <span>Share</span>
           </Button>
         </div>
-      </header>
+      </div>
       <div className="title-row immersive-title">
         <div>
-          <h1>ARTIFICIAL SUPERINTELLIGENCE</h1>
+          <h1>Superintelligence Map</h1>
           <p>
             <strong>ASI Atlas</strong>
             <span>Explore its possible capabilities, limits, and forms.</span>
@@ -441,7 +441,7 @@ export default function App() {
         </Modal>
       )}
       {timeline && (
-        <Modal label="Creator’s belief" onClose={() => setTimeline(false)}>
+        <Modal label="Research question" onClose={() => setTimeline(false)}>
           <h2>{arrivalScenario.headline}</h2>
           <p className="scenario-tag">{arrivalScenario.status}</p>
           <blockquote className="creator-prediction">

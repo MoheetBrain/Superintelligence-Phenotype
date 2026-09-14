@@ -37,9 +37,13 @@ const assembledTemple = [
 async function ready(page: Page) {
   await expect(page.locator('canvas')).toHaveCount(1);
   await expect.poll(() => new URL(page.url()).hash).toContain('pos=');
+  // The research masthead precedes the map. Bring the canvas into view before
+  // calculating viewport coordinates for raw pointer gestures.
+  await page.locator('canvas').scrollIntoViewIfNeeded();
   await page.waitForTimeout(250);
 }
 async function canvasPoint(page: Page, point: readonly number[]) {
+  await page.locator('canvas').scrollIntoViewIfNeeded();
   const box = await page.locator('canvas').boundingBox();
   if (!box) throw new Error('No canvas');
   const state = parseState(new URL(page.url()).hash);
@@ -437,12 +441,10 @@ test('former profile content now opens through the spatial hierarchy and List vi
   await expect(page.locator('.list-profiles button')).toHaveCount(15);
 });
 
-test('landing identity, attributed undergraduate belief and real 3D cloud selection', async ({
-  page,
-}) => {
+test('landing research question and real 3D cloud selection', async ({ page }) => {
   await page.goto('/');
   await ready(page);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('ARTIFICIAL SUPERINTELLIGENCE');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Superintelligence Map');
   await expect(page.getByTestId('inspector')).toHaveCount(0);
   await expect(page.locator('.profile-card-grid,.forms-grid,.phenotype-overview')).toHaveCount(0);
   expect(
@@ -450,12 +452,12 @@ test('landing identity, attributed undergraduate belief and real 3D cloud select
   ).toBeGreaterThan(0.6);
   await expect(page.getByRole('button', { name: 'Inspect Host A graphite' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Inspect Host B pearl' })).toBeVisible();
-  await page.getByRole('button', { name: /IT IS HERE ALREADY!/ }).click();
+  await page.getByRole('button', { name: /A RESEARCH QUESTION/ }).click();
   await expect(
     page
       .getByRole('dialog')
       .getByText(
-        /As an AI undergraduate at U O W — University of Westminster, my belief is that artificial superintelligence is already here/,
+        /Can catastrophic-risk claims about advanced AI be transformed into explicit mathematical models/,
       ),
   ).toBeVisible();
   await page.keyboard.press('Escape');

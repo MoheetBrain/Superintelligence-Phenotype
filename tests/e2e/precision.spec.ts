@@ -23,6 +23,7 @@ test('public orbit clamps at both polar limits and keeps a working camera', asyn
   const canvas = page.locator('canvas');
   await expect.poll(() => canvas.getAttribute('data-polar-angle')).not.toBeNull();
   await page.getByRole('button', { name: 'Hide annotations', exact: true }).click();
+  await canvas.scrollIntoViewIfNeeded();
   const box = (await canvas.boundingBox())!;
   const start = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
   for (const delta of [-1500, 1500]) {

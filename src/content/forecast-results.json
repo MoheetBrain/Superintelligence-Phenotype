@@ -1,0 +1,260 @@
+{
+  "runDate": "2026-09-14",
+  "sourceCommit": "a33ad3e9bf798580907ea39d21a93cb523f40a46",
+  "simulationsPerScenario": 100000,
+  "seed": 42,
+  "status": "Conditional model outputs; not calibrated arrival probabilities.",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "scipy": "1.17.1",
+    "pyyaml": "6.0.3"
+  },
+  "scenarios": [
+    {
+      "id": "baseline",
+      "label": "Published input set",
+      "description": "Original fast-takeoff inputs, unchanged.",
+      "targets": [
+        {
+          "target": "agi",
+          "p05_index": 24355,
+          "p05_month": "2029-08",
+          "p10_index": 24359,
+          "p10_month": "2029-12",
+          "p25_index": 24367,
+          "p25_month": "2030-08",
+          "p50_index": 24378,
+          "p50_month": "2031-07",
+          "p75_index": 24395,
+          "p75_month": "2032-12",
+          "p90_index": 24585,
+          "p90_month": "2048-10",
+          "p95_index": 24682,
+          "p95_month": "2056-11",
+          "median_month": "2031-07",
+          "interval_50": "2030-08 to 2032-12",
+          "interval_90": "2029-08 to 2056-11"
+        },
+        {
+          "target": "internal_asi",
+          "p05_index": 24383,
+          "p05_month": "2031-12",
+          "p10_index": 24388,
+          "p10_month": "2032-05",
+          "p25_index": 24398,
+          "p25_month": "2033-03",
+          "p50_index": 24412,
+          "p50_month": "2034-05",
+          "p75_index": 24433,
+          "p75_month": "2036-02",
+          "p90_index": 24618,
+          "p90_month": "2051-07",
+          "p95_index": 24715,
+          "p95_month": "2059-08",
+          "median_month": "2034-05",
+          "interval_50": "2033-03 to 2036-02",
+          "interval_90": "2031-12 to 2059-08"
+        },
+        {
+          "target": "public_asi",
+          "p05_index": 24400,
+          "p05_month": "2033-05",
+          "p10_index": 24405,
+          "p10_month": "2033-10",
+          "p25_index": 24416,
+          "p25_month": "2034-09",
+          "p50_index": 24430,
+          "p50_month": "2035-11",
+          "p75_index": 24451,
+          "p75_month": "2037-08",
+          "p90_index": 24636,
+          "p90_month": "2053-01",
+          "p95_index": 24734,
+          "p95_month": "2061-03",
+          "median_month": "2035-11",
+          "interval_50": "2034-09 to 2037-08",
+          "interval_90": "2033-05 to 2061-03"
+        }
+      ]
+    },
+    {
+      "id": "double-cognitive-lags",
+      "label": "2\u00d7 cognitive lags",
+      "description": "Double low, mode, high, mean and standard deviation for all three cognitive transition lags; other inputs unchanged.",
+      "targets": [
+        {
+          "target": "agi",
+          "p05_index": 24355,
+          "p05_month": "2029-08",
+          "p10_index": 24359,
+          "p10_month": "2029-12",
+          "p25_index": 24367,
+          "p25_month": "2030-08",
+          "p50_index": 24378,
+          "p50_month": "2031-07",
+          "p75_index": 24395,
+          "p75_month": "2032-12",
+          "p90_index": 24585,
+          "p90_month": "2048-10",
+          "p95_index": 24682,
+          "p95_month": "2056-11",
+          "median_month": "2031-07",
+          "interval_50": "2030-08 to 2032-12",
+          "interval_90": "2029-08 to 2056-11"
+        },
+        {
+          "target": "internal_asi",
+          "p05_index": 24388,
+          "p05_month": "2032-05",
+          "p10_index": 24393,
+          "p10_month": "2032-10",
+          "p25_index": 24404,
+          "p25_month": "2033-09",
+          "p50_index": 24418,
+          "p50_month": "2034-11",
+          "p75_index": 24439,
+          "p75_month": "2036-08",
+          "p90_index": 24624,
+          "p90_month": "2052-01",
+          "p95_index": 24721,
+          "p95_month": "2060-02",
+          "median_month": "2034-11",
+          "interval_50": "2033-09 to 2036-08",
+          "interval_90": "2032-05 to 2060-02"
+        },
+        {
+          "target": "public_asi",
+          "p05_index": 24404,
+          "p05_month": "2033-09",
+          "p10_index": 24410,
+          "p10_month": "2034-03",
+          "p25_index": 24421,
+          "p25_month": "2035-02",
+          "p50_index": 24436,
+          "p50_month": "2036-05",
+          "p75_index": 24458,
+          "p75_month": "2038-03",
+          "p90_index": 24643,
+          "p90_month": "2053-08",
+          "p95_index": 24740,
+          "p95_month": "2061-09",
+          "median_month": "2036-05",
+          "interval_50": "2035-02 to 2038-03",
+          "interval_90": "2033-09 to 2061-09"
+        }
+      ]
+    },
+    {
+      "id": "double-infrastructure",
+      "label": "2\u00d7 infrastructure delay",
+      "description": "Double low, mode, high, mean and standard deviation of infrastructure friction; other inputs unchanged.",
+      "targets": [
+        {
+          "target": "agi",
+          "p05_index": 24355,
+          "p05_month": "2029-08",
+          "p10_index": 24359,
+          "p10_month": "2029-12",
+          "p25_index": 24367,
+          "p25_month": "2030-08",
+          "p50_index": 24378,
+          "p50_month": "2031-07",
+          "p75_index": 24395,
+          "p75_month": "2032-12",
+          "p90_index": 24585,
+          "p90_month": "2048-10",
+          "p95_index": 24682,
+          "p95_month": "2056-11",
+          "median_month": "2031-07",
+          "interval_50": "2030-08 to 2032-12",
+          "interval_90": "2029-08 to 2056-11"
+        },
+        {
+          "target": "internal_asi",
+          "p05_index": 24403,
+          "p05_month": "2033-08",
+          "p10_index": 24409,
+          "p10_month": "2034-02",
+          "p25_index": 24421,
+          "p25_month": "2035-02",
+          "p50_index": 24439,
+          "p50_month": "2036-08",
+          "p75_index": 24469,
+          "p75_month": "2039-02",
+          "p90_index": 24646,
+          "p90_month": "2053-11",
+          "p95_index": 24744,
+          "p95_month": "2062-01",
+          "median_month": "2036-08",
+          "interval_50": "2035-02 to 2039-02",
+          "interval_90": "2033-08 to 2062-01"
+        },
+        {
+          "target": "public_asi",
+          "p05_index": 24420,
+          "p05_month": "2035-01",
+          "p10_index": 24426,
+          "p10_month": "2035-07",
+          "p25_index": 24439,
+          "p25_month": "2036-08",
+          "p50_index": 24457,
+          "p50_month": "2038-02",
+          "p75_index": 24488,
+          "p75_month": "2040-09",
+          "p90_index": 24664,
+          "p90_month": "2055-05",
+          "p95_index": 24763,
+          "p95_month": "2063-08",
+          "median_month": "2038-02",
+          "interval_50": "2036-08 to 2040-09",
+          "interval_90": "2035-01 to 2063-08"
+        }
+      ]
+    }
+  ],
+  "drivers": [
+    {
+      "target": "internal_asi",
+      "input_variable": "agent_time_horizon_doubling_months",
+      "spearman_correlation": 0.4457033159414441,
+      "absolute_rank": 1,
+      "interpretation": "Higher `agent_time_horizon_doubling_months` is associated with later internal_asi in this simulation."
+    },
+    {
+      "target": "internal_asi",
+      "input_variable": "infrastructure_friction_months",
+      "spearman_correlation": 0.3714597275788114,
+      "absolute_rank": 2,
+      "interpretation": "Higher `infrastructure_friction_months` is associated with later internal_asi in this simulation."
+    },
+    {
+      "target": "internal_asi",
+      "input_variable": "effective_compute_growth_x_per_year",
+      "spearman_correlation": -0.3201889797483549,
+      "absolute_rank": 3,
+      "interpretation": "Higher `effective_compute_growth_x_per_year` is associated with earlier internal_asi in this simulation."
+    },
+    {
+      "target": "internal_asi",
+      "input_variable": "algorithmic_efficiency_x_per_year",
+      "spearman_correlation": -0.28119245748316246,
+      "absolute_rank": 4,
+      "interpretation": "Higher `algorithmic_efficiency_x_per_year` is associated with earlier internal_asi in this simulation."
+    },
+    {
+      "target": "internal_asi",
+      "input_variable": "current_agent_task_horizon_hours",
+      "spearman_correlation": -0.2469486391536662,
+      "absolute_rank": 5,
+      "interpretation": "Higher `current_agent_task_horizon_hours` is associated with earlier internal_asi in this simulation."
+    }
+  ],
+  "convergence": {
+    "target": "internal_asi_month_index",
+    "batches": 10,
+    "overall_median_month": "2034-05",
+    "batch_median_range_months": 2.0,
+    "converged_under_one_month": false
+  }
+}
