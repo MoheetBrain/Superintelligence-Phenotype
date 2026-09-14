@@ -7,7 +7,7 @@ test('research navigation, original artifact links and downloadable note', async
 }) => {
   await page.goto('/?section=framework');
   const nav = page.getByRole('navigation', { name: 'Research sections' });
-  await expect(nav.getByRole('link')).toHaveCount(5);
+  await expect(nav.getByRole('link')).toHaveCount(6);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('State Vector Framework');
   await expect(
     page.getByText(

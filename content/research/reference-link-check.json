@@ -1,0 +1,586 @@
+{
+  "checkedAt": "2026-09-14T23:36:25.780Z",
+  "scope": "HTTP reachability of linked manuscript and historical references. Does not verify authors, titles, dates, relevance, peer review, or claim accuracy. Access restrictions and timeouts are not proof of a broken reference.",
+  "results": [
+    {
+      "url": "https://aiwatch.issarice.com/?organization=Center+for+AI+Safety&utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 202,
+      "finalUrl": "https://aiwatch.issarice.com/?organization=Center+for+AI+Safety&utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/1607.07730",
+      "pages": [
+        "/research/papers/updating-hazard-model",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/1607.07730",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/1912.01683",
+      "pages": [
+        "/research/papers/control-frontier",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/1912.01683",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2206.11831",
+      "pages": [
+        "/research/papers/control-frontier",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2206.11831",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2206.13353",
+      "pages": [
+        "/research/papers/control-frontier",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2206.13353",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2312.06942",
+      "pages": [
+        "/research/papers/control-frontier"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2312.06942",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2312.06942v5",
+      "pages": [
+        "/research/notes/state-space-framework"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2312.06942v5",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2402.08797",
+      "pages": [
+        "/research/papers/correlated-lineage-resilience",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2402.08797",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2403.04471",
+      "pages": [
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2403.04471",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2405.10986",
+      "pages": [
+        "/research/papers/hazardous-inference-frontier"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2405.10986",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2409.07985",
+      "pages": [
+        "/research/papers/control-frontier",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2409.07985",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2410.21572",
+      "pages": [
+        "/research/papers/capability-iteration-outruns-assurance"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2410.21572",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2412.17618",
+      "pages": [
+        "/research/papers/capability-iteration-outruns-assurance",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2412.17618",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2502.06656",
+      "pages": [
+        "/research/papers/correlated-lineage-resilience",
+        "/research/papers/updating-hazard-model",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2502.06656",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2503.04744",
+      "pages": [
+        "/research/papers/capability-iteration-outruns-assurance",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2503.04744",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2506.16499",
+      "pages": [
+        "/research/papers/closing-the-loop"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2506.16499",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2507.21839",
+      "pages": [
+        "/research/papers/correlated-lineage-resilience"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2507.21839",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2512.08723",
+      "pages": [
+        "/research/papers/updating-hazard-model",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2512.08723",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2604.21964",
+      "pages": [
+        "/research/papers/capability-iteration-outruns-assurance"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2604.21964",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2605.27202",
+      "pages": [
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2605.27202",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2606.11998",
+      "pages": [
+        "/research/papers/control-frontier"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2606.11998",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2607.07663",
+      "pages": [
+        "/research/papers/closing-the-loop",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2607.07663",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2607.25886",
+      "pages": [
+        "/research/papers/closing-the-loop",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2607.25886",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.04003",
+      "pages": [
+        "/research/papers/closing-the-loop"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2608.04003",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.20318",
+      "pages": [
+        "/research/papers/closing-the-loop",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2608.20318",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2609.03178",
+      "pages": [
+        "/research/papers/updating-hazard-model",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2609.03178",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2609.11873",
+      "pages": [
+        "/research/papers/closing-the-loop",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2609.11873",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://chatgpt.com/c/6aa67811-abd0-83eb-96a5-48c34eeeb4d3",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "result": "Conversation export URL; may require the original account. Not a public citation."
+    },
+    {
+      "url": "https://chatgpt.com/c/6aa6b1c3-84bc-83eb-bc9e-156648343cc0",
+      "pages": [
+        "/research/history/evolution-and-strategy"
+      ],
+      "result": "Conversation export URL; may require the original account. Not a public citation."
+    },
+    {
+      "url": "https://darioamodei.com/post/we-must-pace-the-frontier?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://darioamodei.com/post/we-must-pace-the-frontier?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://deepmind.google/blog/securing-the-future-of-ai-agents/",
+      "pages": [
+        "/research/papers/control-frontier"
+      ],
+      "status": 200,
+      "finalUrl": "https://deepmind.google/blog/securing-the-future-of-ai-agents/",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://deepmind.google/frontier-safety/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://deepmind.google/frontier-safety/?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://deepmind.google/research/publications/78150/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://deepmind.google/research/publications/78150/?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://deploymentsafety.openai.com/gpt-6-astra?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://deploymentsafety.openai.com/gpt-6-astra?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://digital-strategy.ec.europa.eu/en/news/commission-selects-europa-consortium-winner-frontier-ai-grand-challenge-project-build-european-open?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://digital-strategy.ec.europa.eu/en/news/commission-selects-europa-consortium-winner-frontier-ai-grand-challenge-project-build-european-open?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://doi.org/10.1007/s00146-026-03294-1",
+      "pages": [
+        "/research/papers/recursive-epistemic-dependence"
+      ],
+      "status": 200,
+      "finalUrl": "https://link.springer.com/article/10.1007/s00146-026-03294-1",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://doi.org/10.1257/aer.101.6.2590",
+      "pages": [
+        "/research/papers/recursive-epistemic-dependence"
+      ],
+      "status": 403,
+      "finalUrl": "https://pubs.aeaweb.org/doi/10.1257/aer.101.6.2590",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://github.com/goodfire-ai?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://github.com/goodfire-ai?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://github.com/haizelabs?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://github.com/haizelabs?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://github.com/MoheetBrain/ASI-Arrival-Calculator/tree/a33ad3e9bf798580907ea39d21a93cb523f40a46",
+      "pages": [
+        "/research/notes/state-space-framework"
+      ],
+      "status": 200,
+      "finalUrl": "https://github.com/MoheetBrain/ASI-Arrival-Calculator/tree/a33ad3e9bf798580907ea39d21a93cb523f40a46",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://metr.org/blog/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://metr.org/blog/?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/",
+      "pages": [
+        "/research/notes/state-space-framework"
+      ],
+      "status": 200,
+      "finalUrl": "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://metr.org/risk-assessment/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://metr.org/risk-assessment/?utm_source=chatgpt.com",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://openai.com/hugging-face-incident-and-misalignment/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 403,
+      "finalUrl": "https://openai.com/hugging-face-incident-and-misalignment/?utm_source=chatgpt.com",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://openai.com/index/pacing-model-development-cyber-capabilities/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 403,
+      "finalUrl": "https://openai.com/index/pacing-model-development-cyber-capabilities/?utm_source=chatgpt.com",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://openai.com/index/path-to-astra/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 403,
+      "finalUrl": "https://openai.com/index/path-to-astra/?utm_source=chatgpt.com",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://openai.com/index/safety-overview-gpt-6-astra/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 403,
+      "finalUrl": "https://openai.com/index/safety-overview-gpt-6-astra/?utm_source=chatgpt.com",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://openai.com/index/weak-to-strong-generalization/",
+      "pages": [
+        "/research/papers/recursive-epistemic-dependence",
+        "/research/papers/control-frontier"
+      ],
+      "status": 403,
+      "finalUrl": "https://openai.com/index/weak-to-strong-generalization/",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://openreview.net/forum?id=GFsMJKt9Kp",
+      "pages": [
+        "/research/papers/hazardous-inference-frontier",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://openreview.net/challenge?redirect=%2Fforum%3Fid%3DGFsMJKt9Kp",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://openreview.net/pdf?id=Bmvsb4r7wr",
+      "pages": [
+        "/research/papers/capability-iteration-outruns-assurance",
+        "/research/novelty"
+      ],
+      "status": 403,
+      "finalUrl": "https://openreview.net/pdf?id=Bmvsb4r7wr",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6150268",
+      "pages": [
+        "/research/novelty"
+      ],
+      "status": 403,
+      "finalUrl": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6150268",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7248205",
+      "pages": [
+        "/research/papers/recursive-epistemic-dependence",
+        "/research/novelty"
+      ],
+      "status": 403,
+      "finalUrl": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7248205",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://proceedings.iclr.cc/paper_files/paper/2025/hash/801a6708014185e951a95108b8cc8349-Abstract-Conference.html",
+      "pages": [
+        "/research/papers/hazardous-inference-frontier",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://proceedings.iclr.cc/paper_files/paper/2025/hash/801a6708014185e951a95108b8cc8349-Abstract-Conference.html",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://proceedings.mlr.press/v235/li24bc.html",
+      "pages": [
+        "/research/papers/hazardous-inference-frontier"
+      ],
+      "status": 200,
+      "finalUrl": "https://proceedings.mlr.press/v235/li24bc.html",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://proceedings.mlr.press/v267/goel25b.html",
+      "pages": [
+        "/research/papers/capability-iteration-outruns-assurance",
+        "/research/papers/recursive-epistemic-dependence",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://proceedings.mlr.press/v267/goel25b.html",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/899511e37a8e01e1bd6f6f1d377cc250-Abstract-Conference.html",
+      "pages": [
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/899511e37a8e01e1bd6f6f1d377cc250-Abstract-Conference.html",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://ssrn.com/abstract=6150268",
+      "pages": [
+        "/research/papers/capability-iteration-outruns-assurance"
+      ],
+      "status": 403,
+      "finalUrl": "https://www.ssrn.com/abstract=6150268",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://www.anthropic.com/institute/recursive-self-improvement",
+      "pages": [
+        "/research/papers/capability-iteration-outruns-assurance",
+        "/research/papers/closing-the-loop",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://www.anthropic.com/institute/recursive-self-improvement",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://www.anthropic.com/news/position-open-weights-models",
+      "pages": [
+        "/research/papers/correlated-lineage-resilience",
+        "/research/novelty"
+      ],
+      "status": 200,
+      "finalUrl": "https://www.anthropic.com/news/position-open-weights-models",
+      "result": "Reachable"
+    },
+    {
+      "url": "https://www.axios.com/2026/09/01/openai-astras-cyber-critical?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 403,
+      "finalUrl": "https://www.axios.com/2026/09/01/openai-astras-cyber-critical?utm_source=chatgpt.com",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://www.forbes.com/sites/rashishrivastava/2026/05/28/this-ai-startups-army-of-15000-hackers-pressure-test-claude-gpt-5-and-gemini/?utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 403,
+      "finalUrl": "https://www.forbes.com/sites/rashishrivastava/2026/05/28/this-ai-startups-army-of-15000-hackers-pressure-test-claude-gpt-5-and-gemini/?utm_source=chatgpt.com",
+      "result": "Not verified by automated request"
+    },
+    {
+      "url": "https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/?_bhlid=8f87c252690b4842c5f63c2563bebc40686efd8f&query-11-page=9&trk=article-ssr-frontend-pulse_little-text-block&utm_source=chatgpt.com",
+      "pages": [
+        "/research/history/generalization-risks"
+      ],
+      "status": 200,
+      "finalUrl": "https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/?_bhlid=8f87c252690b4842c5f63c2563bebc40686efd8f&query-11-page=9&trk=article-ssr-frontend-pulse_little-text-block&utm_source=chatgpt.com",
+      "result": "Reachable"
+    }
+  ]
+}

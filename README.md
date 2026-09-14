@@ -1,6 +1,8 @@
 # Superintel · Independent AI Research
 
-Five research sections: **Superintelligence Map**, **State Vector Framework**, **AI Safety Timeline**, **Forecasting / Models**, and **Research Notes / Preprints**. The existing interactive atlas remains the default route. Research sections use explicit `?section=` links so static hosting and legacy atlas hash links both work without a routing dependency.
+Six navigation destinations: **Superintelligence Map**, **State Vector Framework**, **AI Safety Timeline**, **Forecasting / Models**, **Research Notes / Preprints**, and **Research**. The interactive atlas remains the default route. The five existing sections retain their `?section=` and legacy hash links. The [research archive](https://superintel.site/research) adds complete static HTML manuscripts, a searchable 68-thesis Atlas, provenance, and a source/version record.
+
+The archive publishes seven v0.1 working papers/protocols and supporting research across 20 indexable routes. It renders mathematics with KaTeX and retains unrun experiments as proposals. See [archive architecture, integrity and verification](docs/RESEARCH_ARCHIVE.md). Research text has its own [attribution and rights notice](content/research/LICENSE.md); the implementation remains MIT-licensed.
 
 The research question is: **Can catastrophic-risk claims about advanced AI be transformed into explicit mathematical models whose assumptions can be inspected, falsified, and empirically updated?**
 
@@ -21,6 +23,7 @@ npm run dev
 npm run check
 npm test
 npm run build
+npm run test:research
 npm run preview
 # http://127.0.0.1:4173
 ```
@@ -48,17 +51,17 @@ node scripts/measure-preview.mjs
 
 ## Architecture
 
-| Concern                                                           | Location                                              |
-| ----------------------------------------------------------------- | ----------------------------------------------------- |
-| Twelve stable records, evidence and source scope                  | `src/data/capabilities.ts`, `schema.ts`, `sources.ts` |
-| Discovery groups and profile links                                | `src/data/discovery.ts`, `profile.ts`                 |
-| Main dossier depth and connected subtopics                        | `src/data/dossiers.ts`                                |
-| Illustration steps and conditional execution state                | `src/data/illustrations.ts`                           |
-| Arrival scenario and provenance                                   | `src/content/arrival.ts`                              |
-| Unified selection, navigation, URL migration and history          | `src/state/`                                          |
-| Original body, orbs, hosts, picking, fitting and label placement  | `src/scene/`                                          |
-| Normalized humanoid specification, shells, real joint rig and PBR materials | `src/scene/robot/` |
-| Accessible catalogue, inspector, illustrations and modal controls | `src/components/`                                     |
+| Concern                                                                     | Location                                              |
+| --------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Twelve stable records, evidence and source scope                            | `src/data/capabilities.ts`, `schema.ts`, `sources.ts` |
+| Discovery groups and profile links                                          | `src/data/discovery.ts`, `profile.ts`                 |
+| Main dossier depth and connected subtopics                                  | `src/data/dossiers.ts`                                |
+| Illustration steps and conditional execution state                          | `src/data/illustrations.ts`                           |
+| Arrival scenario and provenance                                             | `src/content/arrival.ts`                              |
+| Unified selection, navigation, URL migration and history                    | `src/state/`                                          |
+| Original body, orbs, hosts, picking, fitting and label placement            | `src/scene/`                                          |
+| Normalized humanoid specification, shells, real joint rig and PBR materials | `src/scene/robot/`                                    |
+| Accessible catalogue, inspector, illustrations and modal controls           | `src/components/`                                     |
 
 The renderer runs on changes and during the finite transfer animation, without automatic orbit or an idle animation loop. Default camera fitting uses visible body bounds, excluding the floor and discovery nodes. Scene and inspector occupy separate layout regions. Geometry, materials, environment textures, shadows, observers, controls and listeners are disposed on unmount. Optional feature-detected WebMCP tools use the same selection reducer.
 

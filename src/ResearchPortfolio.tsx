@@ -2,18 +2,13 @@ import { lazy, Suspense, useEffect } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Forecasting, ResearchNotes, Timeline } from './components/ResearchPages';
 import './styles/research.css';
+import navigation from './content/research-navigation.json';
 
 const Atlas = lazy(() => import('./App'));
 export const researchQuestion =
   'Can catastrophic-risk claims about advanced AI be transformed into explicit mathematical models whose assumptions can be inspected, falsified, and empirically updated?';
-export const sections = [
-  ['map', 'Superintelligence Map'],
-  ['framework', 'State Vector Framework'],
-  ['timeline', 'AI Safety Timeline'],
-  ['forecasting', 'Forecasting / Models'],
-  ['research', 'Research Notes / Preprints'],
-] as const;
-export const sectionHref = (id: string) => (id === 'map' ? '/' : `/?section=${id}`);
+export const sections = navigation.filter(([id]) => id !== 'publications');
+export const sectionHref = (id: string) => navigation.find(([key]) => key === id)?.[2] ?? '/';
 
 export default function ResearchPortfolio() {
   const requested = new URLSearchParams(location.search).get('section');
@@ -42,7 +37,7 @@ export default function ResearchPortfolio() {
           </a>
         </div>
         <nav className="research-nav" aria-label="Research sections">
-          {sections.map(([id, label], index) => (
+          {navigation.map(([id, label], index) => (
             <a
               key={id}
               href={sectionHref(id)}

@@ -1,0 +1,163 @@
+{
+  "edition_date": "2026-09-15",
+  "files": [
+    {
+      "original": "AI-Safety-Generalization-Risks.md",
+      "bytes": 448102,
+      "sha256": "d7a88b64ec96a27a26e03b7afada2998d3eeb6aaf9a97c6fd288407b08cd1054",
+      "published_source": "AI-Safety-Generalization-Risks-research-extract.md",
+      "mode": "research extracts",
+      "included_line_ranges": [
+        [
+          1,
+          107
+        ],
+        [
+          122,
+          215
+        ],
+        [
+          228,
+          745
+        ],
+        [
+          776,
+          778
+        ]
+      ],
+      "omission_reason": "Personal account administration, trading instructions and unrelated stock-selection discussions; originals retained locally.",
+      "published_sha256": "38123b769a200f21b13115532b825791a64cac104f0cf863a8ebefcff9d71ec9"
+    },
+    {
+      "original": "CLUSTERING_MATRIX.md",
+      "bytes": 12111,
+      "sha256": "90d1af472ada6475c84415c05234ee59aeb2b58a0dea81d2121f2c77d2fc20fe",
+      "published_source": "CLUSTERING_MATRIX.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "90d1af472ada6475c84415c05234ee59aeb2b58a0dea81d2121f2c77d2fc20fe"
+    },
+    {
+      "original": "INDEX.md",
+      "bytes": 2568,
+      "sha256": "04a4d84ddac3d24630575643bd11b6a82b20eafbe583a1a6a43490c56b9e0439",
+      "published_source": "INDEX.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "04a4d84ddac3d24630575643bd11b6a82b20eafbe583a1a6a43490c56b9e0439"
+    },
+    {
+      "original": "Improve-Game-Theory-Phrase.md",
+      "bytes": 507620,
+      "sha256": "2246d01929d925559714e78b572226d365b8a5e47c4a293bcf2a17076183f7d9",
+      "published_source": "Improve-Game-Theory-Phrase-research-extract.md",
+      "mode": "research extracts",
+      "included_line_ranges": [
+        [
+          1,
+          99
+        ],
+        [
+          165,
+          183
+        ],
+        [
+          213,
+          398
+        ],
+        [
+          478,
+          1582
+        ]
+      ],
+      "omission_reason": "Personal account administration, trading instructions and unrelated stock-selection discussions; originals retained locally.",
+      "published_sha256": "1b6a355ab36651aea00c3a37373bc48fb98ae00eda7789ef09519845476ca893"
+    },
+    {
+      "original": "NOVELTY_AUDIT.md",
+      "bytes": 17809,
+      "sha256": "3095307d7130f9c17869912f52b05963fa9b1a0b0bcbb3ed03de277d475002da",
+      "published_source": "NOVELTY_AUDIT.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "3095307d7130f9c17869912f52b05963fa9b1a0b0bcbb3ed03de277d475002da"
+    },
+    {
+      "original": "P1_when_capability_iteration_outruns_assurance.md",
+      "bytes": 34434,
+      "sha256": "c2f8b5a78e85bda889678a597bf29509e7a80aa3c1998774fe8f86ce858d79c6",
+      "published_source": "P1_when_capability_iteration_outruns_assurance.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "c2f8b5a78e85bda889678a597bf29509e7a80aa3c1998774fe8f86ce858d79c6"
+    },
+    {
+      "original": "P2_hazardous_inference_frontier.md",
+      "bytes": 26127,
+      "sha256": "d1df649a8d5b4696616299f47eb926e0bcfe1a73f0708fbac9164125a4c5a36d",
+      "published_source": "P2_hazardous_inference_frontier.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "d1df649a8d5b4696616299f47eb926e0bcfe1a73f0708fbac9164125a4c5a36d"
+    },
+    {
+      "original": "P3_recursive_epistemic_dependence.md",
+      "bytes": 25441,
+      "sha256": "2c4c5f92e040d93e2d0ac297407f304ef824f2bb9ad77a89955ba5face424d92",
+      "published_source": "P3_recursive_epistemic_dependence.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "2c4c5f92e040d93e2d0ac297407f304ef824f2bb9ad77a89955ba5face424d92"
+    },
+    {
+      "original": "P4_control_frontier.md",
+      "bytes": 24845,
+      "sha256": "aa131ab0d91a34196c5e5e31baf3632d7fa2ba80f33020790c176617bddc424c",
+      "published_source": "P4_control_frontier.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "aa131ab0d91a34196c5e5e31baf3632d7fa2ba80f33020790c176617bddc424c"
+    },
+    {
+      "original": "P5_closing_the_loop.md",
+      "bytes": 21077,
+      "sha256": "6cfc1f8e23bbaf69a6a043a8aa5d3603620a10235c8c7b54aa9096a75265432c",
+      "published_source": "P5_closing_the_loop.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "6cfc1f8e23bbaf69a6a043a8aa5d3603620a10235c8c7b54aa9096a75265432c"
+    },
+    {
+      "original": "P6_correlated_lineage_resilience.md",
+      "bytes": 21765,
+      "sha256": "1e159612d64c5d8cb07a1ef80c8a77722a76764b5ab8ad97fb865f280af42ba9",
+      "published_source": "P6_correlated_lineage_resilience.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "1e159612d64c5d8cb07a1ef80c8a77722a76764b5ab8ad97fb865f280af42ba9"
+    },
+    {
+      "original": "P7_updating_hazard_model.md",
+      "bytes": 19183,
+      "sha256": "9be5d33b453d79c8975148dcc78da0c53d0b32c3354ea0cae2d5251ab036d8a4",
+      "published_source": "P7_updating_hazard_model.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "9be5d33b453d79c8975148dcc78da0c53d0b32c3354ea0cae2d5251ab036d8a4"
+    },
+    {
+      "original": "PROGRAMME_OVERVIEW.md",
+      "bytes": 10658,
+      "sha256": "d345f1868713c2683f020f4b710b6f92c7dc170b598952e83d962091302633b9",
+      "published_source": "PROGRAMME_OVERVIEW.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "d345f1868713c2683f020f4b710b6f92c7dc170b598952e83d962091302633b9"
+    },
+    {
+      "original": "RELEASE_ORDER.md",
+      "bytes": 5799,
+      "sha256": "d8fd0f36989e2cb6be82a85d070d9911201cab04c01aca77ff6897cc72d286ca",
+      "published_source": "RELEASE_ORDER.md",
+      "mode": "complete, byte-identical",
+      "published_sha256": "d8fd0f36989e2cb6be82a85d070d9911201cab04c01aca77ff6897cc72d286ca"
+    },
+    {
+      "original": "SUPERINTELLIGENCE_RESEARCH_ATLAS.csv",
+      "bytes": 35744,
+      "sha256": "4ece832f232e831c89139684d3c2402c249ef45c69c07009f4ae5234aefb49e7",
+      "published_source": "SUPERINTELLIGENCE_RESEARCH_ATLAS.csv",
+      "mode": "complete, byte-identical",
+      "published_sha256": "4ece832f232e831c89139684d3c2402c249ef45c69c07009f4ae5234aefb49e7"
+    }
+  ]
+}

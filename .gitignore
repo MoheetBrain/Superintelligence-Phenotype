@@ -7,3 +7,12 @@ playwright-report/
 .env*
 !.env.example
 .DS_Store
+
+# Generated static research pages (sources in content/research and scripts/research)
+public/research/**/index.html
+public/research/index.html
+public/research/assets/
+public/research/sources/
+public/sitemap.xml
+public/robots.txt
+public/llms.txt

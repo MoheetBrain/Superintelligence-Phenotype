@@ -8,13 +8,15 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "vite --host 127.0.0.1 --port 3016 --strictPort",
+    "dev": "npm run research:build && vite --host 127.0.0.1 --port 3016 --strictPort",
     "check": "tsc --noEmit",
     "test": "vitest run",
-    "build": "npm run check && vite build",
+    "build": "npm run check && npm run research:build && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
     "test:e2e": "playwright test",
-    "size": "node scripts/measure-build.mjs"
+    "size": "node scripts/measure-build.mjs",
+    "research:build": "node scripts/build-research.mjs",
+    "test:research": "node --test tests/research/*.test.mjs"
   },
   "dependencies": {
     "class-variance-authority": "0.7.1",
@@ -35,7 +37,13 @@
     "@types/react-dom": "19.2.3",
     "@types/three": "0.183.1",
     "@vitejs/plugin-react": "6.0.2",
+    "csv-parse": "^7.0.2",
     "jsdom": "^28.1.0",
+    "katex": "^0.18.7",
+    "markdown-it": "^15.0.2",
+    "markdown-it-anchor": "^10.0.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-texmath": "^1.0.0",
     "prettier": "3.8.1",
     "typescript": "5.9.3",
     "vite": "^8.3.0",

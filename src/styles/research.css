@@ -74,6 +74,7 @@
 }
 .research-nav {
   display: flex;
+  flex-wrap: wrap;
   max-width: 1600px;
   margin: auto;
   padding: 0 40px;

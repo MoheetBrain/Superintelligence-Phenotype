@@ -1,0 +1,8 @@
+[
+  ["map", "Superintelligence Map", "/"],
+  ["framework", "State Vector Framework", "/?section=framework"],
+  ["timeline", "AI Safety Timeline", "/?section=timeline"],
+  ["forecasting", "Forecasting / Models", "/?section=forecasting"],
+  ["research", "Research Notes / Preprints", "/?section=research"],
+  ["publications", "Research", "/research"]
+]
