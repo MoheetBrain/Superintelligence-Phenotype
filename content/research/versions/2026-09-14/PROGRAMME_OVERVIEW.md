@@ -1,8 +1,8 @@
 # Publication Programme Overview
 
 **Author:** Moheet Khawaja  
-**Version:** v0.2 — 15 September 2026 (original v0.1 retained below and in the version archive)  
-**Scope:** 8 Core Technical Papers: the original seven-paper programme distilled from 68 thesis/proposal records, plus P8 and later extensions T69–T72.
+**Version:** v0.1 — 14 September 2026  
+**Scope:** Seven-paper AI-safety programme distilled from 68 thesis/proposal records.
 
 ## Programme design rule
 
@@ -17,8 +17,6 @@ The programme clusters ideas by shared causal mechanism, mathematical object, em
 | **5** | **Closing the Loop: Measuring Human Causal Dependence in Recursive AI R&D** | At which R&D stages does successor improvement still causally depend on human judgment? | 17, 18, 40 | A stage-wise causal human-dependence estimator across agenda selection, experiment design, implementation, evaluation, and successor selection; any scalar loop-closure index is conditional on predictive validation. | Anthropic *When AI builds itself*; *The Last AI Built by Humans*; RSI surveys; PAST-Bench; RSIBench-Data; AI4AI-Bench. | Causal ablations, factorial experiments, Amdahl-style bottleneck analysis, repeated improvement loops. | Multi-round safe R&D environment; human baselines; stage replacement/ablation; successor-quality metric. | **Medium** | It measures *how closed the R&D loop is*; P1 instead assumes an arrival process and asks whether assurance keeps up. |
 | **6** | **Can Advanced AI Development Be Stopped? A Correlated-Reliability Model of Distributed Capability Lineages** | How resilient is continued advanced-AI development when lineages share correlated global dependencies? | 22, 30–34 | A correlated reliability/dependency-graph formulation with common factors, probabilistic cut sets, and intervention sensitivity. “Open weights are irreversible” is treated as established background. | Open-weight governance; compute governance; supply-chain concentration; AI-race/game-theory literature. | Reliability theory, graphical models/hypergraphs, correlated Bernoulli/factor models, cut-set optimization, Monte Carlo. | Public dependency graph; operational threshold/horizon; calibrated or elicited probabilities; substitution sensitivity. | **Medium** | It studies *system resilience across actors and dependencies*, distinct from single-system control or deployment assurance. |
 | **7** | **An Updating Hazard Model for Advanced-AI Loss of Control: A Pre-Registered Risk Ledger** | Can a dynamic AI-risk model earn trust by making and scoring intermediate predictions before being used for catastrophic-tail estimates? | 36–39, 41 | A version-preserving, preregistered, model-averaged risk ledger whose credibility is updated via proper scores on resolved intermediate forecasts. Generic Bayesian x-risk modeling is not claimed as new. | ASI pathway/fault-tree models; frontier-AI risk management; Bayesian risk models; 2026 open-problems literature on validation/evidence integration. | State-space/Bayesian models, survival/hazard analysis, Bayesian model averaging, proper scoring/calibration. | 20–50 preregistered intermediate forecasts; baselines; resolved outcomes; versioned update log. | **Medium over time** | It is the programme's *integration/forecast-validation layer*, not a substitute for mechanism-specific papers. |
-| **8 — later extension** | **[The Embodiment Threshold](/research/papers/embodiment-threshold)** | When does a persistent digital controller gain replaceable physical agency? | 69–72 (later extension) | Embodiment-control graph, re-embodiment time, actuation overhang, standardization tradeoff and embodiment-only delay bound. | Embodied-AI safety; cross-embodiment transfer; the embodiment gap; agent-hardware standards. | Time-varying bipartite graph, illustrative waiting-time model, conditional delay inequality. | Authorized adaptation/restoration measurements, fleet and safety tests; scenario analysis. All proposed. | **Theory/model v0.1; empirical work pending** | Physical interfaces for a persistent controller, distinct from P4 strategic control and P6 development-lineage resilience. |
-
 
 ## Duplicated mechanisms that were deliberately merged
 
@@ -30,7 +28,7 @@ The programme clusters ideas by shared causal mechanism, mathematical object, em
 6. **Bayesian extinction/control-loss curves, the 2029 ledger, robust action, access inequality, and timestamped predictions** were merged into **P7**; personal decision theory becomes an application/appendix rather than a separate safety paper.
 7. **Evaluation lag, temporary pacing, and social adaptation lag** were merged into **P1** because they are all consequences or policy responses to temporal mismatch between capability change and assurance capacity.
 
-## Why the seven-paper structure is preferable to a larger package — original clustering rationale
+## Why the seven-paper structure is preferable to a larger package
 
 - It minimizes duplicate mechanism papers.
 - Each paper has a different primary mathematical/empirical object: queue, inference frontier, recursive persuasion/dependence, minimax control frontier, R&D causal loop, correlated reliability graph, and Bayesian validation ledger.
@@ -65,18 +63,3 @@ where the assumptions are explicit and separately empirical. If a future result 
 - **RN4 — Institutions & Education:** theses 27 and 66.
 
 These notes are preserved, versioned, and available for future paper promotion if stronger data or formal results appear.
-
-
-## Later research extension — 15 September 2026
-
-**8 Core Technical Papers.** The original programme clustered T1–T68 into P1–P7. Paper 8 was developed after the original 68-thesis clustering and is recorded as a later research extension rather than retroactively inserted into the historical corpus.
-
-| Paper | Research object | Primary records | Candidate contribution | Evidence and limits |
-|---|---|---|---|---|
-| **P8 — [The Embodiment Threshold](/research/papers/embodiment-threshold)** | Persistent controllers and replaceable physical actuation | [T69](/research/atlas#T69), [T70](/research/atlas#T70), [T71](/research/atlas#T71), [T72](/research/atlas#T72) | Embodiment-control graph; re-embodiment time; actuation-overhang index; standardization tradeoff; embodiment-only delay bound | MODEL + PROPOSED EMPIRICAL PROGRAMME. The delay bound is a conditional theorem; no numerical risk or adaptation result is reported. |
-
-P4 studies strategic control across capability and defender resources. P6 studies resilience of development lineages. P8 studies the mapping from persistent digital controllers into interchangeable physical actuation. The objects remain mathematically distinct, and P1–P7 retain their existing order and text.
-
-Original conversation corpus: **68 theses/proposals (T1–T68)**. Later research extensions: **T69–T72**. Current Atlas: **72 entries**. All four additions carry O→F provenance, recording user-originated intuition and subsequent collaborative formalization, not priority over existing literature.
-
-[Original programme v0.1, 14 September 2026](/research/sources/versions/2026-09-14/PROGRAMME_OVERVIEW.md).

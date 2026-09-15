@@ -10,27 +10,36 @@ import { renderer } from '../../scripts/research/render.mjs';
 const read = (file) => readFileSync(file, 'utf8');
 const manifest = JSON.parse(read('content/research/source-manifest.json'));
 const routes = JSON.parse(read('public/research/sources/routes.json'));
-const atlas = parse(read('content/research/documents/SUPERINTELLIGENCE_RESEARCH_ATLAS.csv'), {
-  columns: true,
-});
+const originalAtlas = parse(
+  read('content/research/documents/SUPERINTELLIGENCE_RESEARCH_ATLAS.csv'),
+  {
+    columns: true,
+  },
+);
+const extensions = JSON.parse(read('content/research/documents/ATLAS_EXTENSIONS.json'));
+const atlas = [...originalAtlas, ...extensions];
 const pages = new Map(
   routes.map((r) => [r.route, new JSDOM(read(`public${r.route}/index.html`)).window.document]),
 );
 const hash = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 
-test('all 15 published sources preserve audited bytes and 13 complete originals', () => {
-  assert.equal(manifest.files.length, 15);
-  assert.equal(manifest.files.filter((f) => f.mode === 'complete, byte-identical').length, 13);
+test('audited originals and dated extensions preserve their separate source hashes', () => {
+  assert.equal(manifest.files.length, 17);
+  assert.equal(manifest.files.filter((f) => f.mode === 'complete, byte-identical').length, 10);
   for (const f of manifest.files) {
     assert.equal(hash(`content/research/documents/${f.published_source}`), f.published_sha256);
     assert.equal(hash(`public/research/sources/${f.published_source}`), f.published_sha256);
+    if (f.original_version_source) {
+      assert.equal(hash(`content/research/${f.original_version_source}`), f.sha256);
+      assert.equal(hash(`public/research/sources/${f.original_version_source}`), f.sha256);
+    }
     if (f.mode === 'complete, byte-identical') assert.equal(f.published_sha256, f.sha256);
   }
 });
 
 test('every route has indexable HTML, exact author attribution, and honest canonical metadata', () => {
-  assert.equal(routes.length, 20);
-  assert.equal(new Set(routes.map((r) => r.route)).size, 20);
+  assert.equal(routes.length, 21);
+  assert.equal(new Set(routes.map((r) => r.route)).size, 21);
   for (const { route, title } of routes) {
     const doc = pages.get(route);
     assert.equal(doc.querySelectorAll('h1').length, 1, route);
@@ -96,7 +105,7 @@ test('every Atlas field and all primary/secondary mappings survive in static HTM
   const rows = [...doc.querySelectorAll('[data-thesis]')];
   assert.deepEqual(
     rows.map((r) => r.id),
-    Array.from({ length: 68 }, (_, i) => `T${i + 1}`),
+    Array.from({ length: 72 }, (_, i) => `T${i + 1}`),
   );
   for (const record of atlas) {
     const row = doc.getElementById('T' + record.id);
@@ -108,7 +117,7 @@ test('every Atlas field and all primary/secondary mappings survive in static HTM
       assert.ok(row.textContent.includes(record[key]), `T${record.id} ${key}`);
     const refs = [
       ...new Set(
-        (record.primary_destination + ' ' + record.secondary_links).match(/\bP[1-7]\b/g) ?? [],
+        (record.primary_destination + ' ' + record.secondary_links).match(/\bP[1-8]\b/g) ?? [],
       ),
     ];
     for (const id of refs)
@@ -237,4 +246,62 @@ $$`,
   assert.equal(result.env.mathCount, 2);
   assert.equal(doc.querySelectorAll('h1').length, 0);
   assert.ok(doc.body.textContent.includes('Text after math.'));
+});
+
+test('P8 extends rather than rewrites the original corpus and includes a conditional theorem with proof', () => {
+  assert.equal(originalAtlas.length, 68);
+  assert.equal(
+    hash('content/research/documents/SUPERINTELLIGENCE_RESEARCH_ATLAS.csv'),
+    '4ece832f232e831c89139684d3c2402c249ef45c69c07009f4ae5234aefb49e7',
+  );
+  const originalPaperHashes = [
+    'c2f8b5a78e85bda889678a597bf29509e7a80aa3c1998774fe8f86ce858d79c6',
+    'd1df649a8d5b4696616299f47eb926e0bcfe1a73f0708fbac9164125a4c5a36d',
+    '2c4c5f92e040d93e2d0ac297407f304ef824f2bb9ad77a89955ba5face424d92',
+    'aa131ab0d91a34196c5e5e31baf3632d7fa2ba80f33020790c176617bddc424c',
+    '6cfc1f8e23bbaf69a6a043a8aa5d3603620a10235c8c7b54aa9096a75265432c',
+    '1e159612d64c5d8cb07a1ef80c8a77722a76764b5ab8ad97fb865f280af42ba9',
+    '9be5d33b453d79c8975148dcc78da0c53d0b32c3354ea0cae2d5251ab036d8a4',
+  ];
+  papers
+    .slice(0, 7)
+    .forEach((p, i) =>
+      assert.equal(hash(`content/research/documents/${p.file}`), originalPaperHashes[i]),
+    );
+  assert.deepEqual(
+    extensions.map((r) => r.id),
+    ['69', '70', '71', '72'],
+  );
+  assert.deepEqual(
+    extensions.map((r) => r.epistemic_status),
+    ['MODEL', 'MODEL', 'HYPOTHESIS', 'THEOREM'],
+  );
+  const atlasPage = pages.get('/research/atlas');
+  for (const row of atlas)
+    assert.equal(
+      atlasPage.getElementById('T' + row.id).dataset.corpus,
+      Number(row.id) <= 68 ? 'Original conversation corpus' : 'Later research extension',
+    );
+  for (const row of extensions) assert.equal(row.provenance, 'O→F');
+  assert.ok(atlasPage.body.textContent.includes('68 theses/proposals (T1–T68)'));
+  assert.ok(atlasPage.body.textContent.includes('T69–T72'));
+  const combined = parse(read('public/research/sources/ATLAS_CURRENT.csv'), { columns: true });
+  assert.equal(combined.length, 72);
+  originalAtlas.forEach((r, i) =>
+    Object.entries(r).forEach(([k, v]) => assert.equal(combined[i][k], v)),
+  );
+  const p8 = pages.get('/research/papers/embodiment-threshold');
+  const text = p8.querySelector('.manuscript').textContent;
+  assert.ok(text.includes('Proof by cases'));
+  assert.ok(text.includes('Case 1:'));
+  assert.ok(text.includes('Case 2:'));
+  assert.ok(text.includes('finite, nonnegative times'));
+  assert.ok(text.includes('NO EXPERIMENTS RUN'));
+  assert.ok(text.includes('not inherently safety-negative'));
+  assert.equal(p8.querySelectorAll('.manuscript h3[id^="proposed-experiment-"]').length, 5);
+  assert.ok(p8.querySelector('a[href="/research/papers/control-frontier"]'));
+  assert.ok(p8.querySelector('a[href="/research/papers/correlated-lineage-resilience"]'));
+  for (const route of ['/research', '/research/papers'])
+    assert.equal(pages.get(route).querySelectorAll('.paper-card').length, 8);
+  assert.ok(read('public/llms.txt').includes(origin + '/research/papers/embodiment-threshold'));
 });

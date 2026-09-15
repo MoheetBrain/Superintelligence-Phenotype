@@ -6,6 +6,8 @@ from pathlib import Path
 import base64, hashlib, json, re, shutil
 root = Path.home() / 'Desktop/SUPERINTEL'
 out = Path('content/research')
+if (out/'documents/ATLAS_EXTENSIONS.json').exists():
+ raise ValueError('Later research editions exist. Import into a separate staging directory and review the versioned merge; do not overwrite current publications.')
 selections = {
  'AI-Safety-Generalization-Risks.md': [(1,107),(122,215),(228,745),(776,778)],
  'Improve-Game-Theory-Phrase.md': [(1,99),(165,183),(213,398),(478,1582)],

@@ -581,6 +581,95 @@
       "status": 200,
       "finalUrl": "https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/?_bhlid=8f87c252690b4842c5f63c2563bebc40686efd8f&query-11-page=9&trk=article-ssr-frontend-pulse_little-text-block&utm_source=chatgpt.com",
       "result": "Reachable"
+    },
+    {
+      "url": "https://arxiv.org/abs/2605.02900",
+      "pages": [
+        "/research/papers/embodiment-threshold"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2605.02900",
+      "result": "Reachable",
+      "checkedAt": "2026-09-15T00:06:02.603Z",
+      "bibliographyReview": "Primary publication record and page reviewed for title, author attribution, date and relevance; not a certification of novelty."
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.18433",
+      "pages": [
+        "/research/papers/embodiment-threshold"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2608.18433",
+      "result": "Reachable",
+      "checkedAt": "2026-09-15T00:06:02.597Z",
+      "bibliographyReview": "Primary publication record and page reviewed for title, author attribution, date and relevance; not a certification of novelty."
+    },
+    {
+      "url": "https://arxiv.org/abs/2601.09163",
+      "pages": [
+        "/research/papers/embodiment-threshold"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2601.09163",
+      "result": "Reachable",
+      "checkedAt": "2026-09-15T00:06:02.932Z",
+      "bibliographyReview": "Primary publication record and page reviewed for title, author attribution, date and relevance; not a certification of novelty."
+    },
+    {
+      "url": "https://arxiv.org/abs/2406.01968",
+      "pages": [
+        "/research/papers/embodiment-threshold"
+      ],
+      "status": 200,
+      "finalUrl": "https://arxiv.org/abs/2406.01968",
+      "result": "Reachable",
+      "checkedAt": "2026-09-15T00:06:02.603Z",
+      "bibliographyReview": "Primary publication record and page reviewed for title, author attribution, date and relevance; not a certification of novelty."
+    },
+    {
+      "url": "https://publications.ri.cmu.edu/re-embodiment-and-co-embodiment-exploration-of-social-presence-for-robots-and-conversational-agents",
+      "pages": [
+        "/research/papers/embodiment-threshold"
+      ],
+      "status": 200,
+      "finalUrl": "https://publications.ri.cmu.edu/re-embodiment-and-co-embodiment-exploration-of-social-presence-for-robots-and-conversational-agents",
+      "result": "Reachable",
+      "checkedAt": "2026-09-15T00:06:03.250Z",
+      "bibliographyReview": "Primary publication record and page reviewed for title, author attribution, date and relevance; not a certification of novelty."
+    },
+    {
+      "url": "https://www.anthropic.com/research/claude-plays-robotics",
+      "pages": [
+        "/research/papers/embodiment-threshold"
+      ],
+      "status": 200,
+      "finalUrl": "https://www.anthropic.com/research/claude-plays-robotics",
+      "result": "Reachable",
+      "checkedAt": "2026-09-15T00:06:02.901Z",
+      "bibliographyReview": "Primary publication record and page reviewed for title, author attribution, date and relevance; not a certification of novelty."
+    },
+    {
+      "url": "https://www.anthropic.com/research/project-pilot",
+      "pages": [
+        "/research/papers/embodiment-threshold"
+      ],
+      "status": 200,
+      "finalUrl": "https://www.anthropic.com/research/project-pilot",
+      "result": "Reachable",
+      "checkedAt": "2026-09-15T00:06:02.763Z",
+      "bibliographyReview": "Primary publication record and page reviewed for title, author attribution, date and relevance; not a certification of novelty."
+    },
+    {
+      "url": "https://www.anthropic.com/news/model-hardware-standard-research-preview",
+      "pages": [
+        "/research/papers/embodiment-threshold"
+      ],
+      "status": 200,
+      "finalUrl": "https://www.anthropic.com/news/model-hardware-standard-research-preview",
+      "result": "Reachable",
+      "checkedAt": "2026-09-15T00:06:02.837Z",
+      "bibliographyReview": "Primary publication record and page reviewed for title, author attribution, date and relevance; not a certification of novelty."
     }
-  ]
+  ],
+  "extensionCheckedAt": "2026-09-15T00:06:03.250Z"
 }

@@ -1,8 +1,8 @@
 # Superintel · Independent AI Research
 
-Six navigation destinations: **Superintelligence Map**, **State Vector Framework**, **AI Safety Timeline**, **Forecasting / Models**, **Research Notes / Preprints**, and **Research**. The interactive atlas remains the default route. The five existing sections retain their `?section=` and legacy hash links. The [research archive](https://superintel.site/research) adds complete static HTML manuscripts, a searchable 68-thesis Atlas, provenance, and a source/version record.
+Six navigation destinations: **Superintelligence Map**, **State Vector Framework**, **AI Safety Timeline**, **Forecasting / Models**, **Research Notes / Preprints**, and **Research**. The interactive atlas remains the default route. The five existing sections retain their `?section=` and legacy hash links. The [research archive](https://superintel.site/research) adds complete static HTML manuscripts, a searchable 72-entry Atlas (68 original records plus four later extensions), provenance, and a source/version record.
 
-The archive publishes seven v0.1 working papers/protocols and supporting research across 20 indexable routes. It renders mathematics with KaTeX and retains unrun experiments as proposals. See [archive architecture, integrity and verification](docs/RESEARCH_ARCHIVE.md). Research text has its own [attribution and rights notice](content/research/LICENSE.md); the implementation remains MIT-licensed.
+The archive publishes eight v0.1 working papers/protocols and supporting research across 21 indexable routes. It renders mathematics with KaTeX and retains unrun experiments as proposals. See [archive architecture, integrity and verification](docs/RESEARCH_ARCHIVE.md). Research text has its own [attribution and rights notice](content/research/LICENSE.md); the implementation remains MIT-licensed.
 
 The research question is: **Can catastrophic-risk claims about advanced AI be transformed into explicit mathematical models whose assumptions can be inspected, falsified, and empirically updated?**
 

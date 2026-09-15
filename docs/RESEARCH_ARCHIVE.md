@@ -8,7 +8,13 @@ existing navigation destinations remain available. Research is the sixth destina
 
 All 15 files under `~/Desktop/SUPERINTEL` were read completely. The folder contains
 research, not another website checkout. Seven papers, five supporting Markdown
-documents and the 68-row CSV are copied byte for byte into `content/research/documents`.
+documents and the 68-row CSV were initially copied byte for byte into `content/research/documents`.
+P1–P7 and the original CSV remain unchanged. The programme, novelty audit and release
+plan now have dated v0.2 extensions; their byte-identical v0.1 copies are preserved
+in `content/research/versions/2026-09-14`. P8 is a new v0.1 manuscript. Its four
+O→F Atlas records are in `ATLAS_EXTENSIONS.json`, separate from the original CSV.
+The builder merges them into 72 static records and a current CSV download without
+changing any original field. The manifest records both editions and their hashes.
 Two conversation exports are published as explicitly marked research extracts.
 The manifest records original/published SHA-256 hashes and inclusive original line
 ranges. All Desktop originals remain unchanged.
@@ -34,10 +40,10 @@ then builds the existing Vite app into `dist`. Generated files are ignored by Gi
 sources, renderer, templates and shared navigation are committed. Vite development
 and preview middleware resolve clean research paths to their static index files.
 
-All 68 Atlas records are present without JavaScript. The small enhancement script
-adds text search, ID/provenance/status/destination filters, reset, shareable query
+All 72 Atlas records are present without JavaScript. The small enhancement script
+adds text search, ID/corpus/provenance/status/destination filters, reset, shareable query
 parameters, and thesis fragment links. Assumptions, falsifiers, prior art and version
-are in each record's native disclosure. Primary and secondary mappings come from the CSV.
+are in each record's native disclosure. Primary and secondary mappings come from the original CSV and separate extension JSON.
 
 Each page includes author attribution near its title and at the end, canonical and
 social metadata, and CreativeWork or ScholarlyArticle JSON-LD. Paper pages add
@@ -56,6 +62,7 @@ peer-review claim or executable research repository is fabricated.
 - `/research/papers/closing-the-loop`
 - `/research/papers/correlated-lineage-resilience`
 - `/research/papers/updating-hazard-model`
+- `/research/papers/embodiment-threshold`
 - `/research/atlas`
 - `/research/programme`
 - `/research/novelty`
@@ -70,7 +77,7 @@ peer-review claim or executable research repository is fabricated.
 
 The sitemap, robots file and `llms.txt` include discoverable research routes. Source
 downloads, hashes, a route index and rendering report are under `/research/sources/`.
-The earlier working-note PDF remains available; no P1–P7 PDFs were supplied or created.
+The earlier working-note PDF remains available; no P1–P8 PDFs were supplied or created.
 
 ## Deliberately preserved ambiguities
 
@@ -92,16 +99,18 @@ The earlier working-note PDF remains available; no P1–P7 PDFs were supplied or
   14 September; the archive's first HTML publication date is 15 September 2026.
 - Embedded references are preserved as supplied. The dated HTTP audit found 48
   reachable URLs, 12 access-denied responses and two account-specific conversation
-  URLs. Reachability does not certify bibliographic accuracy or historical claims.
+  URLs. P8 adds eight successfully resolved references; primary records were also
+  reviewed for citation details and appropriate use. Reachability alone does not
+  certify bibliographic accuracy or historical claims.
 
 ## Verification
 
-The archive adds eight integrity tests and 23 browser tests. Integrity checks cover
+The archive has nine integrity tests and 25 browser tests. Integrity checks cover
 source hashes, full manuscript rendering, all Atlas fields and mappings, every
 internal target/anchor/asset, mathematical delimiters, scholarly metadata, and the
-sitemap. Browser tests inspect all 20 routes with JavaScript disabled at mobile width,
+sitemap. Browser tests inspect all 21 routes with JavaScript disabled at mobile width,
 exercise filtering/reset/reload/deep links, and audit representative templates with
-axe on desktop and mobile. KaTeX renders 573 expressions with no parse errors.
+axe on desktop and mobile. KaTeX renders 663 manuscript expressions with no parse errors.
 
 Reproduction:
 
@@ -120,3 +129,8 @@ checks. Canonical manuscript/CSV bytes are intentionally excluded from formattin
 Publishing reuses `.openai/hosting.json` and the existing public Sites destination.
 Only the validated static build is packaged. Historical private originals and test
 artifacts are not part of the deployment or source commit.
+
+P8 separates MODEL, HYPOTHESIS, PROPOSITION and conditional THEOREM from proposed
+experiments. The theorem proof includes fixed digital-pathway, finite-time and
+common-threshold assumptions. No P8 empirical result, risk number, DOI or PDF is
+claimed. The original P1–P7 hashes and all 68 original CSV fields are regression-tested.

@@ -2,7 +2,7 @@ const form = document.querySelector('#atlas-filters');
 if (form instanceof HTMLFormElement) {
   const rows = Array.from(document.querySelectorAll('[data-thesis]'));
   const searchable = new Map(rows.map((row) => [row, row.textContent.toLowerCase()]));
-  const fields = ['id', 'provenance', 'epistemic_status', 'primary_destination'];
+  const fields = ['id', 'corpus', 'provenance', 'epistemic_status', 'primary_destination'];
   const params = new URLSearchParams(location.search);
   const input = (name) => form.elements.namedItem(name);
   for (const name of ['search', ...fields]) {

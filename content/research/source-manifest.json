@@ -76,8 +76,9 @@
       "bytes": 17809,
       "sha256": "3095307d7130f9c17869912f52b05963fa9b1a0b0bcbb3ed03de277d475002da",
       "published_source": "NOVELTY_AUDIT.md",
-      "mode": "complete, byte-identical",
-      "published_sha256": "3095307d7130f9c17869912f52b05963fa9b1a0b0bcbb3ed03de277d475002da"
+      "mode": "v0.2 with dated P8 extension; original v0.1 preserved",
+      "published_sha256": "3f7980e230fe08823c17b2503361c3f1db1ff92a42a151b18a5edc321c56313b",
+      "original_version_source": "versions/2026-09-14/NOVELTY_AUDIT.md"
     },
     {
       "original": "P1_when_capability_iteration_outruns_assurance.md",
@@ -140,16 +141,18 @@
       "bytes": 10658,
       "sha256": "d345f1868713c2683f020f4b710b6f92c7dc170b598952e83d962091302633b9",
       "published_source": "PROGRAMME_OVERVIEW.md",
-      "mode": "complete, byte-identical",
-      "published_sha256": "d345f1868713c2683f020f4b710b6f92c7dc170b598952e83d962091302633b9"
+      "mode": "v0.2 with dated P8 extension; original v0.1 preserved",
+      "published_sha256": "ce5070d12684192565b7448fb22101e7eb712e859b9bf32e213a0686bec0c199",
+      "original_version_source": "versions/2026-09-14/PROGRAMME_OVERVIEW.md"
     },
     {
       "original": "RELEASE_ORDER.md",
       "bytes": 5799,
       "sha256": "d8fd0f36989e2cb6be82a85d070d9911201cab04c01aca77ff6897cc72d286ca",
       "published_source": "RELEASE_ORDER.md",
-      "mode": "complete, byte-identical",
-      "published_sha256": "d8fd0f36989e2cb6be82a85d070d9911201cab04c01aca77ff6897cc72d286ca"
+      "mode": "v0.2 with dated P8 extension; original v0.1 preserved",
+      "published_sha256": "1d7bd0d8362fe8931e5dfd2b470776f5735d4a888071a7a0d77c6abebc91ed99",
+      "original_version_source": "versions/2026-09-14/RELEASE_ORDER.md"
     },
     {
       "original": "SUPERINTELLIGENCE_RESEARCH_ATLAS.csv",
@@ -158,6 +161,35 @@
       "published_source": "SUPERINTELLIGENCE_RESEARCH_ATLAS.csv",
       "mode": "complete, byte-identical",
       "published_sha256": "4ece832f232e831c89139684d3c2402c249ef45c69c07009f4ae5234aefb49e7"
+    },
+    {
+      "original": "P8_embodiment_threshold.md",
+      "bytes": 31047,
+      "sha256": "0f38b06b769e482c62be8efa6774483a1102fff7e5bf0c77f6bf584f13f70fe4",
+      "published_source": "P8_embodiment_threshold.md",
+      "mode": "new research extension — 2026-09-15",
+      "published_sha256": "0f38b06b769e482c62be8efa6774483a1102fff7e5bf0c77f6bf584f13f70fe4"
+    },
+    {
+      "original": "ATLAS_EXTENSIONS.json",
+      "bytes": 4712,
+      "sha256": "7692605edb59c8f8106e548b6cc761cbd551a044dda80b3bef66d1808a962ff2",
+      "published_source": "ATLAS_EXTENSIONS.json",
+      "mode": "new research extension — 2026-09-15",
+      "published_sha256": "7692605edb59c8f8106e548b6cc761cbd551a044dda80b3bef66d1808a962ff2"
     }
-  ]
+  ],
+  "atlas_corpora": {
+    "original": {
+      "count": 68,
+      "ids": "T1–T68",
+      "source": "SUPERINTELLIGENCE_RESEARCH_ATLAS.csv"
+    },
+    "later_extension": {
+      "count": 4,
+      "ids": "T69–T72",
+      "source": "ATLAS_EXTENSIONS.json"
+    },
+    "current_count": 72
+  }
 }

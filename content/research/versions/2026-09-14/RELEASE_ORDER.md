@@ -1,6 +1,6 @@
 # Release Order and Publication Readiness
 
-**Version:** v0.2 — 15 September 2026 (original v0.1 retained below and in the version archive)  
+**Version:** v0.1 — 14 September 2026  
 **Author:** Moheet Khawaja
 
 ## Governing rule
@@ -81,16 +81,3 @@ Every public version should preserve:
 - falsified predictions/results.
 
 Never overwrite a historical claim so that it appears more qualified than it was at the time. Add a superseding version and link backward.
-
-
-## P8 — Later release-plan extension, 15 September 2026
-
-**[The Embodiment Threshold](/research/papers/embodiment-threshold): THEORY/MODEL WORKING PAPER — publishable as v0.1 if clearly labelled; empirical validation remains proposed work.**
-
-P8 is appended after the original seven-paper programme without changing the earlier ranking. Its definitions, explicitly labelled toy model and Embodiment-Only Delay Bound can be published now as a model working paper. THEOREM applies only to the mathematical implication under the stated assumptions.
-
-Claims about actual values of \(T_D\), \(T_E\), \(g_j\), actuation overhang, safety effectiveness or risk require empirical work. No current numerical risk result exists. The five experiments are proposed designs; no execution, dataset, DOI, arXiv deposit, peer review or completed preregistration is claimed for P8.
-
-Release with T69–T72 clearly labelled as later extensions, all O→F, and preserve the original T1–T68 corpus. The updated Atlas has 72 entries. Publication of the framework does not justify a headline claim that robotics restrictions buy a decade: that depends on the unchanged digital pathway and sufficient embodied delay.
-
-[Original release order v0.1, 14 September 2026](/research/sources/versions/2026-09-14/RELEASE_ORDER.md).

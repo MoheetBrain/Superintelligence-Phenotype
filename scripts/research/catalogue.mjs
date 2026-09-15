@@ -52,13 +52,20 @@ export const papers = [
     'Working paper · Research protocol',
     'Preregistration is proposed; no forecasts have yet been scored and no extinction probability is reported.',
   ],
+  [
+    'P8',
+    'P8_embodiment_threshold.md',
+    'embodiment-threshold',
+    'Working paper · MODEL + PROPOSED EMPIRICAL PROGRAMME',
+    'The delay bound is conditional on the stated model assumptions. All five experiments remain proposed; no numerical risk result exists.',
+  ],
 ].map(([id, file, slug, status, readiness]) => ({
   id,
   file,
   route: `/research/papers/${slug}`,
   status,
   readiness,
-  date: '2026-09-14',
+  date: id === 'P8' ? '2026-09-15' : '2026-09-14',
   version: 'v0.1',
   type: 'paper',
 }));
@@ -72,8 +79,8 @@ export const supporting = [
   file,
   route: `/research/${slug}`,
   status,
-  date: '2026-09-14',
-  version: 'v0.1',
+  date: ['programme', 'novelty', 'release-order'].includes(slug) ? '2026-09-15' : '2026-09-14',
+  version: ['programme', 'novelty', 'release-order'].includes(slug) ? 'v0.2' : 'v0.1',
   type: 'support',
 }));
 export const history = [
