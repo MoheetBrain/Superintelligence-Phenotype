@@ -1,0 +1,185 @@
+import type { Vec3 } from '../../data/schema';
+
+/** All dimensions and landmarks are fractions of standing height H = 1.
+ * Deliberate reconstruction targets, not measured manufacturer specifications. */
+export const robotSpec = {
+  totalHeight: 1,
+  displayHeight: 6.2,
+  cameraFov: 29,
+  head: {
+    height: 0.13,
+    width: 0.081,
+    lowerWidth: 0.052,
+    depth: 0.086,
+    y: 0.935,
+    visorHeight: 0.126,
+    visorWidth: 0.079,
+    visorWrap: 2.58,
+  },
+  neck: { height: 0.039, width: 0.044, y: 0.855 },
+  torso: {
+    height: 0.258,
+    top: 0.849,
+    bottom: 0.591,
+    topWidth: 0.096,
+    upperWidth: 0.135,
+    chestWidth: 0.141,
+    waistWidth: 0.128,
+    depth: 0.102,
+    frontConvexity: 0.003,
+    cornerRadius: 0.009,
+    lowerTaperStart: 0.22,
+  },
+  waist: { height: 0.037, width: 0.057, depth: 0.055, y: 0.552, strutWidth: 0.004 },
+  pelvis: {
+    width: 0.202,
+    height: 0.047,
+    depth: 0.076,
+    y: 0.514,
+    bridgeWidth: 0.119,
+    hipRadius: 0.029,
+    hipDepth: 0.055,
+  },
+  arm: {
+    shoulderRadius: 0.029,
+    shoulderX: 0.098,
+    shoulderY: 0.796,
+    elbowX: 0.117,
+    elbowY: 0.644,
+    wristX: 0.139,
+    wristY: 0.512,
+    upperWidth: 0.055,
+    upperDepth: 0.058,
+    proximalForearmWidth: 0.054,
+    distalForearmWidth: 0.04,
+    forearmDepth: 0.047,
+    handLength: 0.114,
+    palmLength: 0.053,
+    palmWidth: 0.049,
+    palmDepth: 0.02,
+    fingerLengths: [0.057, 0.063, 0.059, 0.047] as const,
+    fingerWidth: 0.01,
+    fingerSpacing: 0.0118,
+    palmInward: 0.94,
+    elbowRadius: 0.023,
+    wristRadius: 0.014,
+  },
+  leg: {
+    hipX: 0.069,
+    hipY: 0.475,
+    kneeY: 0.296,
+    ankleY: 0.063,
+    thighWidth: 0.075,
+    thighDepth: 0.079,
+    proximalShinWidth: 0.064,
+    distalShinWidth: 0.043,
+    shinDepth: 0.072,
+    kneeWidth: 0.07,
+    ankleWidth: 0.037,
+    ankleDepth: 0.04,
+    footLength: 0.112,
+    footWidth: 0.051,
+    footHeight: 0.036,
+    footForward: 0.025,
+    heelWidth: 0.049,
+    toeWidth: 0.033,
+    toeTaper: 0.65,
+  },
+  detail: { seam: 0.0012, fastenerRadius: 0.0018, panelLip: 0.0022 },
+} as const;
+export interface ShellProfile {
+  length: number;
+  proximalWidth: number;
+  midWidth: number;
+  distalWidth: number;
+  depth: number;
+  edgeRadius: number;
+}
+export const shellProfiles = {
+  upperArm: {
+    length: robotSpec.arm.shoulderY - robotSpec.arm.elbowY - 0.035,
+    proximalWidth: robotSpec.arm.upperWidth,
+    midWidth: 0.052,
+    distalWidth: 0.043,
+    depth: robotSpec.arm.upperDepth,
+    edgeRadius: 0.003,
+  },
+  forearm: {
+    length: robotSpec.arm.elbowY - robotSpec.arm.wristY - 0.02,
+    proximalWidth: robotSpec.arm.proximalForearmWidth,
+    midWidth: 0.047,
+    distalWidth: robotSpec.arm.distalForearmWidth,
+    depth: robotSpec.arm.forearmDepth,
+    edgeRadius: 0.0025,
+  },
+  thigh: {
+    length: robotSpec.leg.hipY - robotSpec.leg.kneeY - 0.025,
+    proximalWidth: robotSpec.leg.thighWidth,
+    midWidth: 0.064,
+    distalWidth: 0.054,
+    depth: robotSpec.leg.thighDepth,
+    edgeRadius: 0.003,
+  },
+  shin: {
+    length: robotSpec.leg.kneeY - robotSpec.leg.ankleY - 0.016,
+    proximalWidth: robotSpec.leg.proximalShinWidth,
+    midWidth: 0.054,
+    distalWidth: robotSpec.leg.distalShinWidth,
+    depth: robotSpec.leg.shinDepth,
+    edgeRadius: 0.0025,
+  },
+} satisfies Record<string, ShellProfile>;
+export type RobotSpec = typeof robotSpec;
+export const U = (n: number) => n * robotSpec.displayHeight;
+export const vector = (x: number, y: number, z = 0): Vec3 => [U(x), U(y), U(z)];
+export function robotLandmarks(s: RobotSpec = robotSpec) {
+  return {
+    headTop: [0, 1, 0],
+    headCenter: [0, s.head.y, 0],
+    neckCenter: [0, s.neck.y, 0],
+    torsoCenter: [0, (s.torso.top + s.torso.bottom) / 2, 0],
+    waistCenter: [0, s.waist.y, 0],
+    pelvisCenter: [0, s.pelvis.y, 0],
+    shoulderL: [-s.arm.shoulderX, s.arm.shoulderY, 0],
+    shoulderR: [s.arm.shoulderX, s.arm.shoulderY, 0],
+    elbowL: [-s.arm.elbowX, s.arm.elbowY, 0.004],
+    elbowR: [s.arm.elbowX, s.arm.elbowY, 0.004],
+    wristL: [-s.arm.wristX, s.arm.wristY, 0.012],
+    wristR: [s.arm.wristX, s.arm.wristY, 0.012],
+    hipL: [-s.leg.hipX, s.leg.hipY, 0],
+    hipR: [s.leg.hipX, s.leg.hipY, 0],
+    kneeL: [-s.leg.hipX, s.leg.kneeY, 0.002],
+    kneeR: [s.leg.hipX, s.leg.kneeY, 0.002],
+    ankleL: [-s.leg.hipX, s.leg.ankleY, 0],
+    ankleR: [s.leg.hipX, s.leg.ankleY, 0],
+  } satisfies Record<string, Vec3>;
+}
+export const proportionMetrics = () => ({
+  'head height / H': robotSpec.head.height,
+  'head width / H': robotSpec.head.width,
+  'head depth / H': robotSpec.head.depth,
+  'shoulder width / H': 2 * (robotSpec.arm.shoulderX + robotSpec.arm.shoulderRadius),
+  'torso height / H': robotSpec.torso.height,
+  'torso width / H': robotSpec.torso.chestWidth,
+  'torso upper width / H': robotSpec.torso.upperWidth,
+  'torso lower width / H': robotSpec.torso.waistWidth,
+  'torso depth / H': robotSpec.torso.depth,
+  'waist height / H': robotSpec.waist.height,
+  'pelvis width / H': robotSpec.pelvis.width,
+  'pelvis depth / H': robotSpec.pelvis.depth,
+  'upper arm / H': Math.hypot(
+    robotSpec.arm.elbowX - robotSpec.arm.shoulderX,
+    robotSpec.arm.shoulderY - robotSpec.arm.elbowY,
+  ),
+  'forearm / H': Math.hypot(
+    robotSpec.arm.wristX - robotSpec.arm.elbowX,
+    robotSpec.arm.elbowY - robotSpec.arm.wristY,
+  ),
+  'hand length / H': robotSpec.arm.handLength,
+  'thigh / H': robotSpec.leg.hipY - robotSpec.leg.kneeY,
+  'shin / H': robotSpec.leg.kneeY - robotSpec.leg.ankleY,
+  'knee width / H': robotSpec.leg.kneeWidth,
+  'ankle width / H': robotSpec.leg.ankleWidth,
+  'foot length / H': robotSpec.leg.footLength,
+  'foot width / H': robotSpec.leg.footWidth,
+});

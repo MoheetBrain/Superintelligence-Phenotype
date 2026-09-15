@@ -1,0 +1,156 @@
+[
+  {
+    "name": "final-dual-front",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=0.00000%2C3.69702%2C16.03025&target=0.00000%2C3.37742%2C0.04994&host=dual&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "4",
+      "triangles": "296322",
+      "drawCalls": "412",
+      "polarAngle": "1.550798992821746",
+      "cameraDistance": "15.98350963559923",
+      "geometries": "217",
+      "hostView": "dual",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "0.7718863917390386"
+    }
+  },
+  {
+    "name": "final-host-a-front",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=0.60822%2C3.83359%2C15.25555&target=0.00000%2C3.37742%2C0.04994&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "6",
+      "triangles": "150666",
+      "drawCalls": "214",
+      "polarAngle": "1.5408292716388527",
+      "cameraDistance": "15.22460192534789",
+      "geometries": "217",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "0.8132154022912371"
+    }
+  },
+  {
+    "name": "final-host-a-three-quarter",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=-8.069040662242971%2C3.62742%2C12.960405059588751&target=0%2C3.37742%2C0.04994&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "7",
+      "triangles": "150666",
+      "drawCalls": "214",
+      "polarAngle": "1.5543770480547368",
+      "cameraDistance": "15.226687928232868",
+      "geometries": "217",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "0.8379651817365193"
+    }
+  },
+  {
+    "name": "final-host-a-close",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=-3.3%2C4.85%2C6.8&target=0%2C4.85%2C0&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "8",
+      "triangles": "84738",
+      "drawCalls": "124",
+      "polarAngle": "1.5707963267948966",
+      "cameraDistance": "7.558438992278763",
+      "geometries": "217",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "1.8006256769720124"
+    }
+  },
+  {
+    "name": "final-mobile-390x844",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "http://127.0.0.1:4173/#v=3&view=body&layers=all&isolate=0&explode=0&pos=0.67117%2C3.88080%2C16.82922&target=0.00000%2C3.37742%2C0.04994&host=dual&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "2",
+      "triangles": "295970",
+      "drawCalls": "411",
+      "polarAngle": "1.5408292716388527",
+      "cameraDistance": "16.80024491931031",
+      "geometries": "216",
+      "hostView": "dual",
+      "transferPhase": "ready",
+      "stateHosts": "a",
+      "bodyHeightRatio": "0.738041462943115"
+    }
+  },
+  {
+    "name": "detail-review-upper",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:3016/?robotDebug=1#v=3&view=body&layers=all&isolate=0&explode=0&pos=-3.3%2C4.85%2C6.8&target=0%2C4.85%2C0&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "8",
+      "triangles": "80434",
+      "drawCalls": "113",
+      "polarAngle": "1.5707963267948966",
+      "cameraDistance": "7.558438992278763",
+      "geometries": "221",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "",
+      "bodyHeightRatio": "1.8006256769720126"
+    }
+  },
+  {
+    "name": "detail-review-hands",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "http://127.0.0.1:3016/?robotDebug=1#v=3&view=body&layers=all&isolate=0&explode=0&pos=-1.7%2C2.55%2C3.4&target=-0.6%2C2.55%2C0&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "rendering": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "10",
+      "triangles": "71898",
+      "drawCalls": "115",
+      "polarAngle": "1.5707963267948966",
+      "cameraDistance": "3.5735136770411273",
+      "geometries": "221",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "",
+      "bodyHeightRatio": "4.044855124722957"
+    }
+  }
+]

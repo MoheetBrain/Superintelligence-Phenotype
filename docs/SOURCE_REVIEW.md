@@ -1,0 +1,25 @@
+# Focused source review — 11 September 2026
+
+The immersive refinement rechecked the primary abstract pages behind the three existing paper-reported observations. This is a scoped source check, not experimental reproduction or a current frontier-model survey. No robot performance records or new ASI measurements were added.
+
+| Source                                                                                              | Original date; reviewed version    | Checked scope                                                                                                                                   | Limits of the atlas claim                                                                                                                                            |
+| --------------------------------------------------------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Kadavath et al., Language Models (Mostly) Know What They Know](https://arxiv.org/abs/2207.05221v4) | 11 July 2022; v4, 21 November 2022 | Abstract describes answer self-evaluation with P(True), question knowledge prediction with P(IK), and weaker transfer calibration on new tasks. | Supports the narrow Metacognition observation. Does not establish universal self-knowledge, consciousness or a capability of an ASI. No numerical result reproduced. |
+| [Yao et al., ReAct](https://arxiv.org/abs/2210.03629v3)                                             | 6 October 2022; v3, 10 March 2023  | Abstract describes interleaving reasoning traces and task-specific actions; names HotpotQA, FEVER, ALFWorld and WebShop.                        | Supports the scoped Agency observation. The atlas does not import the paper's performance percentages or generalise them to open-ended autonomous operation.         |
+| [Shinn et al., Reflexion](https://arxiv.org/abs/2303.11366v4)                                       | 20 March 2023; v4, 10 October 2023 | Abstract describes reflective language retained in an episodic memory buffer, rather than that feedback updating model weights.                 | Supports the Memory observation. Does not establish permanent operational continuity, personal identity or general recursive self-improvement.                       |
+
+NIST's AI Risk Management Framework remains contextual reading from the earlier review, not an empirical capability finding. Its existing metadata is retained; no new legal or compliance claim is made.
+
+The main dossier mechanisms, worked scenarios, physical profiles and local illustrations are editorial conceptual explanations. The Evidence tab separates them from observations and gives evaluated scope, limitations, source links and review dates. Cards without reviewed observations say so explicitly. Every project measurement remains null, displayed as **Not measured for this project.**
+
+The 2030–2035 date comes from the project creator's supplied scenario. It has no supplied probability, forecasting method or supporting citation. Its source and exact qualification are editable in `src/content/arrival.ts`; it is not inferred from these papers. It does not promise the robot or any individual capability by that date.
+
+## Creator prediction updated — 12 September 2026
+
+The creator explicitly replaced the earlier 2030–2035 window with **IT IS HERE ALREADY!**, attributed as **My prediction as an AI student**. The dialog quotes their personal prediction and identifies the creator of ASI Atlas as its source. This statement is not an established scientific finding; it does not reclassify the atlas's empirical claims or certify every illustrated capability. The earlier source-review record above describes the superseded arrival-window framing.
+
+## Creator belief and dual-host framing — 12 September 2026
+
+At the creator’s subsequent request, the banner now reads **My belief as an AI undergraduate**, followed by **U O W · University of Westminster**, in charcoal grey. The modal identifies the statement as personal and the affiliation as creator-supplied, without attributing a position to the university. This supersedes the earlier student-prediction wording.
+
+The dual-host operational-state demonstration is a local illustrative state machine. It makes no empirical claim of ASI migration, consciousness preservation or impossible regulation. Its default evidence class is **Theoretically Plausible**. No new empirical source claims were introduced; the reviewed observations above retain their original scope. The industrial humanoids are original procedural designs, with no Figure AI model assets, logos, markings or affiliation.

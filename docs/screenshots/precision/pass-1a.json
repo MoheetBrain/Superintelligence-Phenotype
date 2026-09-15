@@ -1,0 +1,66 @@
+[
+  {
+    "view": "FRONT",
+    "url": "http://127.0.0.1:3016/?robotDebug=1#v=3&view=body&layers=all&isolate=0&explode=0&pos=0.00000%2C3.37866%2C15.18880&target=0.00000%2C3.37866%2C0.05303&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "render": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "9",
+      "triangles": "89870",
+      "geometries": "219",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "",
+      "bodyHeightRatio": "0.8170507711232845"
+    },
+    "debug": "ROBOT QA · H = 1FRONT3/4 LEFTLEFT SIDEBACKRIGHT SIDE3/4 RIGHT\n\nCLAY · checkpoint 1\n\nClayAssemblyDetailsMaterialsGRAPHITEPEARLGuides\nhead height / H       0.130\nhead width / H        0.081\nhead depth / H        0.086\nshoulder width / H    0.254\ntorso height / H      0.258\ntorso width / H       0.141\ntorso upper width / H 0.135\ntorso lower width / H 0.128\ntorso depth / H       0.102\nwaist height / H      0.037\npelvis width / H      0.202\npelvis depth / H      0.076\nupper arm / H         0.153\nforearm / H           0.134\nhand length / H       0.114\nthigh / H             0.179\nshin / H              0.233\nknee width / H        0.070\nankle width / H       0.037\nfoot length / H       0.112\nfoot width / H        0.051\n\nhead top 1.000 · head bottom 0.870 · shoulder 0.796 · elbow 0.644 · wrist 0.512 · torso bottom 0.591 · pelvis 0.514 · hip axis 0.475 · knee 0.296 · ankle 0.063 · floor 0.000\n\nVisible body triangles: 89,612"
+  },
+  {
+    "view": "3/4 LEFT",
+    "url": "http://127.0.0.1:3016/?robotDebug=1#v=3&view=body&layers=all&isolate=0&explode=0&pos=-8.63320%2C3.70567%2C13.13363&target=0.00000%2C3.37866%2C0.05303&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "render": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "10",
+      "triangles": "89870",
+      "geometries": "219",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "",
+      "bodyHeightRatio": "0.8128844836568294"
+    },
+    "debug": "ROBOT QA · H = 1FRONT3/4 LEFTLEFT SIDEBACKRIGHT SIDE3/4 RIGHT\n\nCLAY · checkpoint 1\n\nClayAssemblyDetailsMaterialsGRAPHITEPEARLGuides\nhead height / H       0.130\nhead width / H        0.081\nhead depth / H        0.086\nshoulder width / H    0.254\ntorso height / H      0.258\ntorso width / H       0.141\ntorso upper width / H 0.135\ntorso lower width / H 0.128\ntorso depth / H       0.102\nwaist height / H      0.037\npelvis width / H      0.202\npelvis depth / H      0.076\nupper arm / H         0.153\nforearm / H           0.134\nhand length / H       0.114\nthigh / H             0.179\nshin / H              0.233\nknee width / H        0.070\nankle width / H       0.037\nfoot length / H       0.112\nfoot width / H        0.051\n\nhead top 1.000 · head bottom 0.870 · shoulder 0.796 · elbow 0.644 · wrist 0.512 · torso bottom 0.591 · pelvis 0.514 · hip axis 0.475 · knee 0.296 · ankle 0.063 · floor 0.000\n\nVisible body triangles: 89,612"
+  },
+  {
+    "view": "LEFT SIDE",
+    "url": "http://127.0.0.1:3016/?robotDebug=1#v=3&view=body&layers=all&isolate=0&explode=0&pos=-15.75254%2C3.37866%2C0.06878&target=0.00000%2C3.37866%2C0.05303&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "render": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "11",
+      "triangles": "89870",
+      "geometries": "219",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "",
+      "bodyHeightRatio": "0.8133883882448524"
+    },
+    "debug": "ROBOT QA · H = 1FRONT3/4 LEFTLEFT SIDEBACKRIGHT SIDE3/4 RIGHT\n\nCLAY · checkpoint 1\n\nClayAssemblyDetailsMaterialsGRAPHITEPEARLGuides\nhead height / H       0.130\nhead width / H        0.081\nhead depth / H        0.086\nshoulder width / H    0.254\ntorso height / H      0.258\ntorso width / H       0.141\ntorso upper width / H 0.135\ntorso lower width / H 0.128\ntorso depth / H       0.102\nwaist height / H      0.037\npelvis width / H      0.202\npelvis depth / H      0.076\nupper arm / H         0.153\nforearm / H           0.134\nhand length / H       0.114\nthigh / H             0.179\nshin / H              0.233\nknee width / H        0.070\nankle width / H       0.037\nfoot length / H       0.112\nfoot width / H        0.051\n\nhead top 1.000 · head bottom 0.870 · shoulder 0.796 · elbow 0.644 · wrist 0.512 · torso bottom 0.591 · pelvis 0.514 · hip axis 0.475 · knee 0.296 · ankle 0.063 · floor 0.000\n\nVisible body triangles: 89,612"
+  },
+  {
+    "view": "BACK",
+    "url": "http://127.0.0.1:3016/?robotDebug=1#v=3&view=body&layers=all&isolate=0&explode=0&pos=0.00000%2C3.68197%2C-15.11252&target=0.00000%2C3.37866%2C0.05303&host=host-a&transfer=migrate&phase=ready&finish=Coral",
+    "render": {
+      "engine": "three.js r183",
+      "context": "",
+      "renderCount": "12",
+      "triangles": "89870",
+      "geometries": "219",
+      "hostView": "host-a",
+      "transferPhase": "ready",
+      "stateHosts": "",
+      "bodyHeightRatio": "0.8144557262584485"
+    },
+    "debug": "ROBOT QA · H = 1FRONT3/4 LEFTLEFT SIDEBACKRIGHT SIDE3/4 RIGHT\n\nCLAY · checkpoint 1\n\nClayAssemblyDetailsMaterialsGRAPHITEPEARLGuides\nhead height / H       0.130\nhead width / H        0.081\nhead depth / H        0.086\nshoulder width / H    0.254\ntorso height / H      0.258\ntorso width / H       0.141\ntorso upper width / H 0.135\ntorso lower width / H 0.128\ntorso depth / H       0.102\nwaist height / H      0.037\npelvis width / H      0.202\npelvis depth / H      0.076\nupper arm / H         0.153\nforearm / H           0.134\nhand length / H       0.114\nthigh / H             0.179\nshin / H              0.233\nknee width / H        0.070\nankle width / H       0.037\nfoot length / H       0.112\nfoot width / H        0.051\n\nhead top 1.000 · head bottom 0.870 · shoulder 0.796 · elbow 0.644 · wrist 0.512 · torso bottom 0.591 · pelvis 0.514 · hip axis 0.475 · knee 0.296 · ankle 0.063 · floor 0.000\n\nVisible body triangles: 89,612"
+  }
+]

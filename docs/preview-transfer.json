@@ -1,0 +1,56 @@
+{
+  "rendering": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "triangles": 296322,
+      "geometries": 217,
+      "projectedBodyBoundsHeightRatio": 0.7704277137551502,
+      "idleAdditionalRenders": 0,
+      "idleObservationMs": 500
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "triangles": 295970,
+      "geometries": 217,
+      "projectedBodyBoundsHeightRatio": 0.7380414629431151,
+      "idleAdditionalRenders": 0,
+      "idleObservationMs": 500
+    }
+  ],
+  "measuredAt": "2026-09-12T20:18:32.541Z",
+  "browser": "153.0.8010.12",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "origin": "http://127.0.0.1:4173",
+  "totalTransferBytes": 280581,
+  "measurements": [
+    {
+      "url": "http://127.0.0.1:4173/",
+      "transferBytes": 1084,
+      "encodedBodyBytes": 784,
+      "decodedBodyBytes": 784
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-Ctha37-R.js",
+      "transferBytes": 269949,
+      "encodedBodyBytes": 269649,
+      "decodedBodyBytes": 967426
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-BUT6kFXC.css",
+      "transferBytes": 9548,
+      "encodedBodyBytes": 9248,
+      "decodedBodyBytes": 39317
+    }
+  ],
+  "failures": [],
+  "note": "Cold browser context against local Vite static preview. Includes navigation and resource transfer sizes reported by Resource Timing. No cache reuse or throttling; this is not a real-device performance result."
+}

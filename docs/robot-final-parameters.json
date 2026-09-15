@@ -1,0 +1,256 @@
+{
+  "units": "fractions of H = standing height; reconstruction design targets, not manufacturer specifications",
+  "spec": {
+    "totalHeight": 1,
+    "displayHeight": 6.2,
+    "cameraFov": 29,
+    "head": {
+      "height": 0.13,
+      "width": 0.081,
+      "lowerWidth": 0.052,
+      "depth": 0.086,
+      "y": 0.935,
+      "visorHeight": 0.126,
+      "visorWidth": 0.079,
+      "visorWrap": 2.58
+    },
+    "neck": {
+      "height": 0.039,
+      "width": 0.044,
+      "y": 0.855
+    },
+    "torso": {
+      "height": 0.258,
+      "top": 0.849,
+      "bottom": 0.591,
+      "topWidth": 0.096,
+      "upperWidth": 0.135,
+      "chestWidth": 0.141,
+      "waistWidth": 0.128,
+      "depth": 0.102,
+      "frontConvexity": 0.003,
+      "cornerRadius": 0.009,
+      "lowerTaperStart": 0.22
+    },
+    "waist": {
+      "height": 0.037,
+      "width": 0.057,
+      "depth": 0.055,
+      "y": 0.552,
+      "strutWidth": 0.004
+    },
+    "pelvis": {
+      "width": 0.202,
+      "height": 0.047,
+      "depth": 0.076,
+      "y": 0.514,
+      "bridgeWidth": 0.119,
+      "hipRadius": 0.029,
+      "hipDepth": 0.055
+    },
+    "arm": {
+      "shoulderRadius": 0.029,
+      "shoulderX": 0.098,
+      "shoulderY": 0.796,
+      "elbowX": 0.117,
+      "elbowY": 0.644,
+      "wristX": 0.139,
+      "wristY": 0.512,
+      "upperWidth": 0.055,
+      "upperDepth": 0.058,
+      "proximalForearmWidth": 0.054,
+      "distalForearmWidth": 0.04,
+      "forearmDepth": 0.047,
+      "handLength": 0.114,
+      "palmLength": 0.053,
+      "palmWidth": 0.049,
+      "palmDepth": 0.02,
+      "fingerLengths": [
+        0.057,
+        0.063,
+        0.059,
+        0.047
+      ],
+      "fingerWidth": 0.01,
+      "fingerSpacing": 0.0118,
+      "palmInward": 0.94,
+      "elbowRadius": 0.023,
+      "wristRadius": 0.014
+    },
+    "leg": {
+      "hipX": 0.069,
+      "hipY": 0.475,
+      "kneeY": 0.296,
+      "ankleY": 0.063,
+      "thighWidth": 0.075,
+      "thighDepth": 0.079,
+      "proximalShinWidth": 0.064,
+      "distalShinWidth": 0.043,
+      "shinDepth": 0.072,
+      "kneeWidth": 0.07,
+      "ankleWidth": 0.037,
+      "ankleDepth": 0.04,
+      "footLength": 0.112,
+      "footWidth": 0.051,
+      "footHeight": 0.036,
+      "footForward": 0.025,
+      "heelWidth": 0.049,
+      "toeWidth": 0.033,
+      "toeTaper": 0.65
+    },
+    "detail": {
+      "seam": 0.0012,
+      "fastenerRadius": 0.0018,
+      "panelLip": 0.0022
+    }
+  },
+  "shellProfiles": {
+    "upperArm": {
+      "length": 0.11700000000000002,
+      "proximalWidth": 0.055,
+      "midWidth": 0.052,
+      "distalWidth": 0.043,
+      "depth": 0.058,
+      "edgeRadius": 0.003
+    },
+    "forearm": {
+      "length": 0.112,
+      "proximalWidth": 0.054,
+      "midWidth": 0.047,
+      "distalWidth": 0.04,
+      "depth": 0.047,
+      "edgeRadius": 0.0025
+    },
+    "thigh": {
+      "length": 0.154,
+      "proximalWidth": 0.075,
+      "midWidth": 0.064,
+      "distalWidth": 0.054,
+      "depth": 0.079,
+      "edgeRadius": 0.003
+    },
+    "shin": {
+      "length": 0.21699999999999997,
+      "proximalWidth": 0.064,
+      "midWidth": 0.054,
+      "distalWidth": 0.043,
+      "depth": 0.072,
+      "edgeRadius": 0.0025
+    }
+  },
+  "metrics": {
+    "head height / H": 0.13,
+    "head width / H": 0.081,
+    "head depth / H": 0.086,
+    "shoulder width / H": 0.254,
+    "torso height / H": 0.258,
+    "torso width / H": 0.141,
+    "torso upper width / H": 0.135,
+    "torso lower width / H": 0.128,
+    "torso depth / H": 0.102,
+    "waist height / H": 0.037,
+    "pelvis width / H": 0.202,
+    "pelvis depth / H": 0.076,
+    "upper arm / H": 0.15318289721767245,
+    "forearm / H": 0.13382077566656086,
+    "hand length / H": 0.114,
+    "thigh / H": 0.179,
+    "shin / H": 0.23299999999999998,
+    "knee width / H": 0.07,
+    "ankle width / H": 0.037,
+    "foot length / H": 0.112,
+    "foot width / H": 0.051
+  },
+  "landmarks": {
+    "headTop": [
+      0,
+      1,
+      0
+    ],
+    "headCenter": [
+      0,
+      0.935,
+      0
+    ],
+    "neckCenter": [
+      0,
+      0.855,
+      0
+    ],
+    "torsoCenter": [
+      0,
+      0.72,
+      0
+    ],
+    "waistCenter": [
+      0,
+      0.552,
+      0
+    ],
+    "pelvisCenter": [
+      0,
+      0.514,
+      0
+    ],
+    "shoulderL": [
+      -0.098,
+      0.796,
+      0
+    ],
+    "shoulderR": [
+      0.098,
+      0.796,
+      0
+    ],
+    "elbowL": [
+      -0.117,
+      0.644,
+      0.004
+    ],
+    "elbowR": [
+      0.117,
+      0.644,
+      0.004
+    ],
+    "wristL": [
+      -0.139,
+      0.512,
+      0.012
+    ],
+    "wristR": [
+      0.139,
+      0.512,
+      0.012
+    ],
+    "hipL": [
+      -0.069,
+      0.475,
+      0
+    ],
+    "hipR": [
+      0.069,
+      0.475,
+      0
+    ],
+    "kneeL": [
+      -0.069,
+      0.296,
+      0.002
+    ],
+    "kneeR": [
+      0.069,
+      0.296,
+      0.002
+    ],
+    "ankleL": [
+      -0.069,
+      0.063,
+      0
+    ],
+    "ankleR": [
+      0.069,
+      0.063,
+      0
+    ]
+  }
+}

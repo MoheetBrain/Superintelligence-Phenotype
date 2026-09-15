@@ -1,2 +1,84 @@
-# Superintelligence-Phenotype
-A framework for mapping the emergence of advanced machine intelligence as a multidimensional phenotype: cognition, metacognition, agency, theory of mind, coordination, replication, substrate mobility, embodiment, control, and recursive self-improvement—tracking measurable transitions from AI tool to autonomous technological organism.
+# Superintel · Independent AI Research
+
+Six navigation destinations: **Superintelligence Map**, **State Vector Framework**, **AI Safety Timeline**, **Forecasting / Models**, **Research Notes / Preprints**, and **Research**. The interactive atlas remains the default route. The five existing sections retain their `?section=` and legacy hash links. The [research archive](https://superintel.site/research) adds complete static HTML manuscripts, a searchable 72-entry Atlas (68 original records plus four later extensions), provenance, and a source/version record.
+
+The archive publishes eight v0.1 working papers/protocols and supporting research across 21 indexable routes. It renders mathematics with KaTeX and retains unrun experiments as proposals. See [archive architecture, integrity and verification](docs/RESEARCH_ARCHIVE.md). Research text has its own [attribution and rights notice](content/research/LICENSE.md); the implementation remains MIT-licensed.
+
+The research question is: **Can catastrophic-risk claims about advanced AI be transformed into explicit mathematical models whose assumptions can be inspected, falsified, and empirically updated?**
+
+An explorable portrait of possible superintelligence: its capabilities, limits and forms. Two original industrial humanoid hosts demonstrate migration, copying, forking and remote control. Five discovery groups connect the exhibit to the full capability atlas. Choose a capability, follow a subtopic, try an illustrative scenario or inspect the evidence behind a claim.
+
+![Immersive ASI Atlas](docs/screenshots/reconstruction/final-dual-front.png)
+
+The state-space framework is a proposal, with no fitted model or empirical claim of sufficiency. The downloadable working note is explicitly preliminary. Forecasting results are separate conditional Monte Carlo outputs from a pinned public calculator revision; they do not validate the framework or establish an arrival date. Original source dates are linked in the timeline. Earlier public writing is marked as an incomplete archive until the original artifacts can be verified. See [research provenance and reproduction](docs/RESEARCH_PORTFOLIO.md).
+
+## Run
+
+Node **22.13.0+**; tested with Node 24.18.0 and npm 11.16.0. React, TypeScript, Vite and direct Three.js; no backend, keys, model calls or external visual assets.
+
+```sh
+npm ci
+npm run dev
+# http://127.0.0.1:3016
+npm run check
+npm test
+npm run build
+npm run test:research
+npm run preview
+# http://127.0.0.1:4173
+```
+
+Both servers bind to loopback and use strict ports. Install Chromium once, then test the built preview:
+
+```sh
+npx playwright install chromium
+npm run test:e2e
+E2E_DEV=1 npm run test:e2e
+npm run size
+node scripts/measure-preview.mjs
+```
+
+## Explore
+
+- Drag **Operational State** from Host A into Host B, or use **Migrate A → B**, **Copy A → B**, and **Fork A → B**. Remote control keeps the state on A. Reset begins a new comparison from the same illustrative starting state. **Dual host / Host A / Host B / Transfer view** and **Inspect parts** frame the platform.
+- Choose **Mind**, **Physical capabilities**, **Beyond one body**, **Learning & evolution** or **Resources & control**. The orbs are real Three.js objects; their HTML labels are keyboard-operable and wrap on compact screens.
+- Select robot geometry, a cloud or a result in **Search / List view**. Every route uses the same reducer. The inspector opens beside the scene on desktop and as a bottom sheet on narrow screens.
+- Each of the twelve dossiers has five explorable subtopics, mechanisms, prerequisites, limits, a worked scenario, open questions, source scope and proposed measurement. The overview resets when another capability opens.
+- Try **Strength depends on the body**, step through **Precision is a feedback loop**, or compare **Remote control / Migration / Copying**. These local illustrations highlight context and execution arrangements; they are not validated simulations or external control tools.
+- Use **Back / Escape** one level at a time, or **Reset** to return home with default layers and camera. **Controls** contains camera presets, zoom, conceptual separation, layers and status-accent colours. The graphite and pearl body materials remain distinct.
+- **Share** includes group, capability, profile, subtopic, illustration conditions, layers, filters, finish and camera. Version 3 also restores the chosen host view and completed transfer comparison. Versions 1 and 2 remain readable; in-progress transfers reopen safely at their starting state. Clipboard failure leaves a selectable link.
+- **List view** provides all content without WebGL. Sources and measurements remain HTML. Network and Evolution are explicitly planned future views, available under Controls.
+
+## Architecture
+
+| Concern                                                                     | Location                                              |
+| --------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Twelve stable records, evidence and source scope                            | `src/data/capabilities.ts`, `schema.ts`, `sources.ts` |
+| Discovery groups and profile links                                          | `src/data/discovery.ts`, `profile.ts`                 |
+| Main dossier depth and connected subtopics                                  | `src/data/dossiers.ts`                                |
+| Illustration steps and conditional execution state                          | `src/data/illustrations.ts`                           |
+| Arrival scenario and provenance                                             | `src/content/arrival.ts`                              |
+| Unified selection, navigation, URL migration and history                    | `src/state/`                                          |
+| Original body, orbs, hosts, picking, fitting and label placement            | `src/scene/`                                          |
+| Normalized humanoid specification, shells, real joint rig and PBR materials | `src/scene/robot/`                                    |
+| Accessible catalogue, inspector, illustrations and modal controls           | `src/components/`                                     |
+
+The renderer runs on changes and during the finite transfer animation, without automatic orbit or an idle animation loop. Default camera fitting uses visible body bounds, excluding the floor and discovery nodes. Scene and inspector occupy separate layout regions. Geometry, materials, environment textures, shadows, observers, controls and listeners are disposed on unmount. Optional feature-detected WebMCP tools use the same selection reducer.
+
+The reconstructed hosts share 144,628-triangle geometry per body. A single H = 1 specification controls the pod head, continuous chest, compact waist, horizontal pelvis, tapered limbs, articulated hands and shoe-shaped feet. Development builds expose six reference views, staged clay/material comparison and normalized landmarks at `?robotDebug=1`; this code is excluded from production.
+
+## Content and provenance
+
+The twelve main dossiers contain **3,444 words**, with **2,431 more across 60 subtopics**: about **3,982 net additional overview/subtopic words** compared with the previous inspector. Main dossiers individually contain 270–306 words; evidence, measurement and fourteen qualitative profiles are additional. See [content-depth.json](docs/content-depth.json) for the counting method.
+
+Observed, Extrapolated, Theoretically Plausible and Speculative remain separate. Three narrow observations were rechecked against primary paper abstracts; no experiments or robot records were reproduced. See [source review](docs/SOURCE_REVIEW.md) and the [content guide](docs/CONTENT_GUIDE.md). Memory and Control and Governance remain provisional navigation groupings.
+
+All robot, cloud and host geometry is original project code. No stock references, watermarks, purchased model files or generated flat robot images are shipped. The small Human Atlas MIT PointerTap helper retains its attribution; no anatomy assets or upstream history are distributed. See [asset ledger](ASSET_LICENSES.md), [reference inspection](docs/REFERENCE_INSPECTION.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
+
+## Handoff
+
+The latest [precision reconstruction report](docs/ROBOT_PRECISION_REPORT.md) contains before/after screenshots, parameters, the staged visual correction loop, triangle counts, file responsibilities, tests and specific remaining mismatches. The [dual-host implementation report](docs/DUAL_HOST_HANDOFF.md), [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) preserve earlier implementation history.
+
+The atlas is public at **[superintel.site](https://superintel.site)**, with HTTPS and no sign-in required. Public access was explicitly requested on 12 September 2026. The existing static Vite build is hosted by Sites. See [publishing notes](docs/PUBLISHING.md); deployment success and the production URL are reported by Sites. No purchases or plan changes were made.
+
+Physical-device, Safari/Firefox, manual screen-reader and participant testing remain unperformed. The [ten-person usability protocol](docs/USABILITY_TEST.md) contains no invented results. Network/Evolution views and empirical ASI measurements remain deferred. The original research introduction is preserved in [ORIGINAL_README.md](docs/ORIGINAL_README.md).

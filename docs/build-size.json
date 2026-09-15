@@ -1,0 +1,38 @@
+{
+  "measuredAt": "2026-09-12T20:18:07.414Z",
+  "node": "v24.18.0",
+  "targets": {
+    "initialJsCssGzipBytes": 1000000,
+    "totalInitialTransferBytes": 2000000
+  },
+  "initialJsCssGzipBytes": 278897,
+  "allDistUncompressedBytes": 1028820,
+  "files": [
+    {
+      "path": "dist/assets/index-BUT6kFXC.css",
+      "bytes": 39317,
+      "gzipBytes": 9248
+    },
+    {
+      "path": "dist/assets/index-Ctha37-R.js",
+      "bytes": 967426,
+      "gzipBytes": 269649
+    },
+    {
+      "path": "dist/favicon.svg",
+      "bytes": 209,
+      "gzipBytes": 178
+    },
+    {
+      "path": "dist/index.html",
+      "bytes": 784,
+      "gzipBytes": 462
+    },
+    {
+      "path": "dist/third-party-notices.txt",
+      "bytes": 21084,
+      "gzipBytes": 5535
+    }
+  ],
+  "note": "Gzip measured locally at default zlib level. The static preview may transfer uncompressed files. All-dist size includes optional notices, so it is a conservative transfer upper bound; HTTP headers excluded."
+}
