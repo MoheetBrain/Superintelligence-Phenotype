@@ -1,0 +1,62 @@
+[
+  {
+    "provenance": "O→F",
+    "primary_destination": "P8 — The Embodiment Threshold",
+    "secondary_links": "P4, P6",
+    "current_version": "v0.1 — 2026-09-15; later research extension",
+    "corpus": "Later research extension",
+    "id": "69",
+    "title": "Substrate-Decoupled Embodiment",
+    "epistemic_status": "MODEL",
+    "core_claim": "The computational state implementing an AI policy can be physically separable from a particular robot body, so destruction of one embodiment need not imply termination of the controller.",
+    "assumptions": "Sufficient controller state survives outside the lost body. The representation is architectural, not a claim about consciousness.",
+    "falsifiers": "Weakens where controller state is inherently local to, and destroyed with, each embodiment.",
+    "prior_art": "Cloud robotics; Luria et al. (2019); Domae et al. (2026). Re-embodiment terminology and distributed controllers are established.",
+    "notes": "The underlying idea originated in Moheet Khawaja’s discussion; terminology and mathematical formalization were subsequently developed collaboratively."
+  },
+  {
+    "provenance": "O→F",
+    "primary_destination": "P8 — The Embodiment Threshold",
+    "secondary_links": "P4, P6",
+    "current_version": "v0.1 — 2026-09-15; later research extension",
+    "corpus": "Later research extension",
+    "id": "70",
+    "title": "Re-Embodiment Resilience and Multiplicity",
+    "epistemic_status": "MODEL",
+    "core_claim": "Conditional on controller persistence and genuinely compatible alternative embodiments, increasing the number of usable bodies can reduce expected time to restore physical agency.",
+    "assumptions": "State persists through restoration; alternatives are operational, compatible and authorized. Reciprocal waiting-time scaling additionally assumes independent exponential waits and concurrent establishment.",
+    "falsifiers": "Shared failures, correlated safety gates, costly adaptation, finite availability or resource contention can invalidate the toy scaling or prevent restoration.",
+    "prior_art": "Cross-embodiment learning; Wu et al. (2026); Wang et al. (2024); standard minimum-of-exponentials identity.",
+    "notes": "TOY MODEL / NOT EMPIRICAL RESULT. Installed body count is not a count of independent usable alternatives."
+  },
+  {
+    "provenance": "O→F",
+    "primary_destination": "P8 — The Embodiment Threshold",
+    "secondary_links": "P4, P6",
+    "current_version": "v0.1 — 2026-09-15; later research extension",
+    "corpus": "Later research extension",
+    "id": "71",
+    "title": "Actuation Overhang",
+    "epistemic_status": "HYPOTHESIS",
+    "core_claim": "The existing stock of programmable physical machinery may represent latent future action capacity whose effective usefulness increases as AI cross-embodiment adaptation improves.",
+    "assumptions": "A specified task/capability scale, adaptation budget, legitimate accessibility and safety gates. The weighted sum is a model index, not a risk probability.",
+    "falsifiers": "Slow transfer, morphology-dependent costs, small effective accessibility, poor concurrent scaling, or stronger enforceable safety can weaken consequential overhang.",
+    "prior_art": "Robot foundation models and the embodiment gap (Domae et al., 2026); embodied-AI safety (Li et al., 2026); Model Hardware Standard research preview.",
+    "notes": "Not every existing robot is an available body. Hardware existence does not imply arbitrary AI can operate it."
+  },
+  {
+    "provenance": "O→F",
+    "primary_destination": "P8 — The Embodiment Threshold",
+    "secondary_links": "P4",
+    "current_version": "v0.1 — 2026-09-15; later research extension",
+    "corpus": "Later research extension",
+    "id": "72",
+    "title": "Embodiment-Only Delay Bound",
+    "epistemic_status": "THEOREM",
+    "core_claim": "For \\(\\Delta T=\\min(T_D,T_E')-\\min(T_D,T_E)\\), \\(0\\le\\Delta T\\le(T_D-T_E)_+\\).",
+    "assumptions": "Finite nonnegative pathway times and the same specified threshold. The intervention delays only the embodied pathway: T_E′ ≥ T_E, T_D′ = T_D. Overall arrival is the earlier of the two routes.",
+    "falsifiers": "This conditional implication does not establish empirical times. If a policy changes the digital pathway or the two-route decomposition fails, the theorem does not apply.",
+    "prior_art": "Elementary minimum monotonicity and proof by cases; P4 conditional control framework. No claim of unprecedented algebra.",
+    "notes": "THEOREM status applies only to the mathematical implication. Assumptions and the complete proof are provided in P8; no empirical values of T_D or T_E are proved."
+  }
+]

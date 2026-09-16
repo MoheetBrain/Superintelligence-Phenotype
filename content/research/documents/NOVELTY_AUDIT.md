@@ -1,6 +1,7 @@
 # Adversarial Novelty Audit
 
-**Date:** 2026-09-14  
+**Date:** original audit 2026-09-14; P8 extension 2026-09-15; P9 extension 2026-09-16  
+**Version:** v0.3 — 9 core papers / 78 Atlas entries; earlier audits preserved  
 **Scope:** current literature checked across arXiv, OpenReview, ICLR/ICML/NeurIPS proceedings, frontier-lab safety work, queueing/continuous assurance, AI control, Bayesian risk, compute governance, game theory, epistemic-dependence scholarship and RSI benchmarks.
 
 **Important standard:** Absence from this search is not proof of global priority. The language below therefore uses *candidate contribution* and *apparently underdeveloped object* rather than “first” unless priority is independently established.
@@ -309,3 +310,36 @@ MHS is relevant to both transferability and enforceable safety. The standardizat
 **Provenance:** T69–T72 are later O→F extensions. The original 68-row corpus and P1–P7 audit remain intact above.
 
 [Original novelty audit v0.1, 14 September 2026](/research/sources/versions/2026-09-14/NOVELTY_AUDIT.md).
+
+## P9 — The Embodiment Control Cut: further audit extension, 16 September 2026
+
+**Current programme: 9 core working papers / 78 Atlas entries.** P9 / T73–T78 are a further O→F extension. The earlier P1–P8 audit remains a dated record, not retroactively revised criticism.
+
+### Search method and coverage
+
+A bounded scoping search on **16 September 2026** examined primary records and abstracts, accessible paper sections and official documentation. Search families included “network interdiction Wood 1993”, “Ford Fulkerson 1956 Menger”, “Jain survivable network”, “resilient multi-robot systems”, “multi-robot resilience 2024 2025 2026”, “cloud robotics Kehoe”, “LeBlanc resilient consensus”, “Buldyrev interdependent networks”, “distributed consensus Fischer Lynch Paterson”, “swarm robotics thousand robot”, “Open-RMF fleet adapter”, “ISO 13850 emergency stop”, “ISO 10218 2025”, “humanoid functional safety fail passive” and “AI control games”. Queries were refined to author, institution or official-documentation pages. P9's [18 references](/research/papers/embodiment-control-cut#references) identify the retained sources; current link responses are recorded in the source inventory. This is not an exhaustive systematic search or proof of priority. ISO review covered public scopes only, not paywalled clauses.
+
+### Established prior art and nearest competing objects
+
+| Established field | Primary sources retained in P9 | Consequence for novelty |
+|---|---|---|
+| Min-cut / max-flow and path separators | Menger (1927); Ford & Fulkerson (1956), references 1–2 | Disjoint-support and shared-cut reasoning are classical. |
+| Network interdiction and survivable-network design | Wood (1993); Jain (2001), references 3–4 | Intervention against subsequent optimization and cut constraints already exist. Capability-aware objectives alone do not establish priority. |
+| Fault tolerance and distributed control | Fischer, Lynch & Paterson (1985); LeBlanc et al. (2013), references 5–6 | Conditional distributed-system results do not imply generic physical uncontrollability. |
+| Cloud robotics | Kehoe et al. (2015), reference 7 | Off-body computation and shared robot resources are established. |
+| Multi-robot resilience, swarms and collaboration | Prorok et al. (2021); Schlotfeldt et al. (2018); Karam et al. (2026), references 8–10 | Recovery, redundancy and task-aware collective operation precede P9. |
+| Interdependent infrastructure and fleet integration | Buldyrev et al. (2009 preprint); Open-RMF documentation, references 11–12 | Shared dependencies may retain cuts; vendor diversity does not establish independence. |
+| Cyber-physical and robot safety | ISO 13850:2015; ISO 10218-1:2025; Ding et al. (2026), references 13–15 | Emergency stops and functional safety are prior engineering practice; safe stopping and removing power are not interchangeable claims. |
+| AI control, embodied safety and adaptation | Griffin et al. (2024); Li et al. (2026); Domae et al. (2026), references 16–18 | Minimax control, physical AI risks and transfer constraints are established research directions. |
+
+### Candidate contribution and adversarial verdict
+
+**CANDIDATE SYNTHESIS:** an AI-embodiment-specific minimum control-cut object connecting persistent controller state to physical intervention cost; capability-aware rather than connectivity-only cuts; explicit post-intervention adaptive recovery; conditional architecture scaling; proposed control-cut elasticity; and a matched empirical programme across centralized, replicated, federated and heterogeneous systems.
+
+The nearest challenge is ordinary task-aware network interdiction with adaptive recourse, combined with existing multi-robot resilience. A stronger contribution must demonstrate what the embodiment-specific model predicts or measures beyond those formulations. A new name, a min–max definition, an elementary counting bound or logarithmic elasticity alone is insufficient. No claim of being first is supported by this audit.
+
+**CONDITIONAL THEORY ONLY:** the shared-chokepoint upper bound is a feasible-candidate argument; the disjoint-path result is a classical packing argument; fleet scaling follows from complete bounded-fan-out accounting; the fixed-budget corollary follows from divergence. The manuscript explicitly distinguishes a direct-removal bound from a bound covering all human intervention options. Theorems do not establish those architectural premises for real systems.
+
+**Evidence still required:** verified control-cut bounds, task-specific recovery, partition robustness, actual infrastructure and control-domain independence, comparable scale families, and total verification as well as activation cost. All seven experiments remain proposed. No empirical kappa, elasticity, catastrophic-risk probability or claim of present-day lost control is supplied.
+
+[Read P9](/research/papers/embodiment-control-cut) · [Previous audit v0.2, 15 September 2026](/research/sources/versions/2026-09-15/NOVELTY_AUDIT.md).

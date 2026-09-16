@@ -333,6 +333,10 @@ These are related but mathematically distinct objects and remain separate papers
 
 **Provenance O→F.** The underlying intuition that a cloud/controller can survive a robot's destruction and later use another body originated in Moheet Khawaja's discussion. The terminology, mathematical formalization and manuscript were subsequently developed collaboratively with AI assistance. This records the development of this work, not priority over the literature.
 
+### Related subsequent work
+
+Paper 9, [The Embodiment Control Cut](/research/papers/embodiment-control-cut), develops the controllability question separately by modelling minimum-cost intervention cuts in distributed embodied systems.
+
 ### Publications-page description
 
 A formal model of advanced AI whose computational controller is separable from its physical embodiments, introducing re-embodiment time, actuation overhang, and a bound on how much delay robotics-specific restrictions can provide when a digital route to dangerous agency remains available.

@@ -1,4 +1,4 @@
-# Research archive — 15 September 2026
+# Research archive — 16 September 2026
 
 Extends the existing React 19 / TypeScript / Vite 8 site and Sites deployment at
 `https://superintel.site`. The map, robot exhibit, legacy share URLs and five
@@ -10,11 +10,11 @@ All 15 files under `~/Desktop/SUPERINTEL` were read completely. The folder conta
 research, not another website checkout. Seven papers, five supporting Markdown
 documents and the 68-row CSV were initially copied byte for byte into `content/research/documents`.
 P1–P7 and the original CSV remain unchanged. The programme, novelty audit and release
-plan now have dated v0.2 extensions; their byte-identical v0.1 copies are preserved
+plan now have dated v0.3 extensions; their byte-identical v0.1 copies are preserved
 in `content/research/versions/2026-09-14`. P8 is a new v0.1 manuscript. Its four
 O→F Atlas records are in `ATLAS_EXTENSIONS.json`, separate from the original CSV.
-The builder merges them into 72 static records and a current CSV download without
-changing any original field. The manifest records both editions and their hashes.
+P9 adds six further O→F records (T73–T78), retaining T69–T72 unchanged. The builder merges them into 78 static records and a current CSV download without
+changing any original field. The manifest records all editions and their hashes. The 15 September P8 manuscript, four extension records and three supporting documents are preserved in `content/research/versions/2026-09-15`. P8 receives only the requested related-work cross-link.
 Two conversation exports are published as explicitly marked research extracts.
 The manifest records original/published SHA-256 hashes and inclusive original line
 ranges. All Desktop originals remain unchanged.
@@ -40,7 +40,7 @@ then builds the existing Vite app into `dist`. Generated files are ignored by Gi
 sources, renderer, templates and shared navigation are committed. Vite development
 and preview middleware resolve clean research paths to their static index files.
 
-All 72 Atlas records are present without JavaScript. The small enhancement script
+All 78 Atlas records are present without JavaScript. The small enhancement script
 adds text search, ID/corpus/provenance/status/destination filters, reset, shareable query
 parameters, and thesis fragment links. Assumptions, falsifiers, prior art and version
 are in each record's native disclosure. Primary and secondary mappings come from the original CSV and separate extension JSON.
@@ -63,6 +63,7 @@ peer-review claim or executable research repository is fabricated.
 - `/research/papers/correlated-lineage-resilience`
 - `/research/papers/updating-hazard-model`
 - `/research/papers/embodiment-threshold`
+- `/research/papers/embodiment-control-cut`
 - `/research/atlas`
 - `/research/programme`
 - `/research/novelty`
@@ -77,7 +78,7 @@ peer-review claim or executable research repository is fabricated.
 
 The sitemap, robots file and `llms.txt` include discoverable research routes. Source
 downloads, hashes, a route index and rendering report are under `/research/sources/`.
-The earlier working-note PDF remains available; no P1–P8 PDFs were supplied or created.
+The earlier working-note PDF remains available; no P1–P9 PDFs were supplied or created.
 
 ## Deliberately preserved ambiguities
 
@@ -105,12 +106,12 @@ The earlier working-note PDF remains available; no P1–P8 PDFs were supplied or
 
 ## Verification
 
-The archive has nine integrity tests and 25 browser tests. Integrity checks cover
+The archive has ten integrity tests and 27 browser tests. Integrity checks cover
 source hashes, full manuscript rendering, all Atlas fields and mappings, every
 internal target/anchor/asset, mathematical delimiters, scholarly metadata, and the
-sitemap. Browser tests inspect all 21 routes with JavaScript disabled at mobile width,
+sitemap. Browser tests inspect all 22 routes with JavaScript disabled at mobile width,
 exercise filtering/reset/reload/deep links, and audit representative templates with
-axe on desktop and mobile. KaTeX renders 663 manuscript expressions with no parse errors.
+axe on desktop and mobile. KaTeX renders 791 manuscript expressions with no parse errors.
 
 Reproduction:
 
@@ -134,3 +135,12 @@ P8 separates MODEL, HYPOTHESIS, PROPOSITION and conditional THEOREM from propose
 experiments. The theorem proof includes fixed digital-pathway, finite-time and
 common-threshold assumptions. No P8 empirical result, risk number, DOI or PDF is
 claimed. The original P1–P7 hashes and all 68 original CSV fields are regression-tested.
+
+P9 adds three conditional theorems and a corollary, 18 primary references and seven
+proposed experiments. It makes no empirical control-cost or elasticity claim.
+Its attained/infimum distinction, task-region attainability, full-intervention scope,
+fan-out assumptions and scaling-threshold rule are explicit. Citation metadata
+preserves 15 September for P1–P8 and uses 16 September for P9. Current page updates
+are recorded separately from first publication. The P9 bibliography search and
+HTTP checks are dated separately; official ISO pages restrict automated requests.
+The source audit preserves old checks and logs subsequent checks for shared URLs.

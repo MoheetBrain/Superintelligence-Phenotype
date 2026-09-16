@@ -1,6 +1,7 @@
 export const author = 'Moheet Khawaja';
 export const origin = 'https://superintel.site';
-export const siteDate = '2026-09-15';
+export const siteDate = '2026-09-16';
+export const firstPublicationDate = '2026-09-15';
 export const repo = 'https://github.com/MoheetBrain/Superintelligence-Phenotype';
 export const papers = [
   [
@@ -59,13 +60,27 @@ export const papers = [
     'Working paper · MODEL + PROPOSED EMPIRICAL PROGRAMME',
     'The delay bound is conditional on the stated model assumptions. All five experiments remain proposed; no numerical risk result exists.',
   ],
+  [
+    'P9',
+    'P9_embodiment_control_cut.md',
+    'embodiment-control-cut',
+    'Working paper · THEORY / FORMAL FRAMEWORK + PROPOSED EMPIRICAL PROGRAMME',
+    'Three theorems and a corollary prove conditional implications. All seven experiments remain proposed; no real-world control-cut cost or elasticity is reported.',
+  ],
 ].map(([id, file, slug, status, readiness]) => ({
   id,
   file,
   route: `/research/papers/${slug}`,
   status,
   readiness,
-  date: id === 'P8' ? '2026-09-15' : '2026-09-14',
+  date: id === 'P9' ? siteDate : id === 'P8' ? firstPublicationDate : '2026-09-14',
+  publicationDate: id === 'P9' ? siteDate : firstPublicationDate,
+  modifiedDate: ['P8', 'P9'].includes(id) ? siteDate : firstPublicationDate,
+  shortTitle: { P8: 'The Embodiment Threshold', P9: 'The Embodiment Control Cut' }[id],
+  subtitle: {
+    P8: 'Persistent Controllers, Re-Embodiment, and Actuation Overhang in Advanced AI',
+    P9: 'A Min-Cut Theory of Controllability in Distributed AI–Robot Systems',
+  }[id],
   version: 'v0.1',
   type: 'paper',
 }));
@@ -79,8 +94,8 @@ export const supporting = [
   file,
   route: `/research/${slug}`,
   status,
-  date: ['programme', 'novelty', 'release-order'].includes(slug) ? '2026-09-15' : '2026-09-14',
-  version: ['programme', 'novelty', 'release-order'].includes(slug) ? 'v0.2' : 'v0.1',
+  date: ['programme', 'novelty', 'release-order'].includes(slug) ? siteDate : '2026-09-14',
+  version: ['programme', 'novelty', 'release-order'].includes(slug) ? 'v0.3' : 'v0.1',
   type: 'support',
 }));
 export const history = [

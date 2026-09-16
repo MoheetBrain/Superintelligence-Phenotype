@@ -1,6 +1,6 @@
 # Release Order and Publication Readiness
 
-**Version:** v0.2 — 15 September 2026 (original v0.1 retained below and in the version archive)  
+**Version:** v0.3 — 16 September 2026 (v0.1 and v0.2 retained in the version archive)  
 **Author:** Moheet Khawaja
 
 ## Governing rule
@@ -94,3 +94,17 @@ Claims about actual values of \(T_D\), \(T_E\), \(g_j\), actuation overhang, saf
 Release with T69–T72 clearly labelled as later extensions, all O→F, and preserve the original T1–T68 corpus. The updated Atlas has 72 entries. Publication of the framework does not justify a headline claim that robotics restrictions buy a decade: that depends on the unchanged digital pathway and sufficient embodied delay.
 
 [Original release order v0.1, 14 September 2026](/research/sources/versions/2026-09-14/RELEASE_ORDER.md).
+
+## P9 — Further release-plan extension, 16 September 2026
+
+**[The Embodiment Control Cut](/research/papers/embodiment-control-cut): THEORY / FORMAL WORKING PAPER — v0.1.** The current programme contains **9 core working papers and 78 Atlas entries**; the earlier 72-entry statement records the preceding edition.
+
+Definitions and conditional theorems can be published now. This release is appropriate only with explicit assumptions, correct attribution of classical graph theory and network interdiction, empirical claims labelled as hypotheses, no invented real-world control-cut costs, and proposed experiments kept separate from completed results. P9 is released at that limited status. No PDF, DOI, arXiv deposit, journal acceptance, completed preregistration or peer-review claim is made.
+
+Claims that real multi-vendor robotics ecosystems eliminate low-cost control cuts require empirical evidence. A cost bound limited to direct unit withdrawal cannot establish the absence of a shared stop. The research must identify feasible interventions and recovery envelopes, validate task thresholds, and report certified bounds or optimization gaps. Near-zero measured elasticity over a few scales does not establish a bounded asymptotic cost.
+
+Before promoting P9 beyond a formal framework: implement and release the benign simulation programme; preregister architecture, task and cost comparisons; publish certificates where possible; measure recovery and partition limits; distinguish authorization, activation and continuing verification costs; compare against task-aware network interdiction and existing multi-robot resilience. No executable research package or measurements currently exist for P9.
+
+T73–T78 are further later extensions with O→F provenance. Preserve T1–T68 and T69–T72, the original P1–P7 manuscripts, and the previous P8 source. P8 receives only the requested related-subsequent-work cross-link.
+
+[Previous release plan v0.2, 15 September 2026](/research/sources/versions/2026-09-15/RELEASE_ORDER.md).

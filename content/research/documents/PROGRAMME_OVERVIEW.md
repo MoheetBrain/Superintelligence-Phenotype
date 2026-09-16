@@ -1,8 +1,8 @@
 # Publication Programme Overview
 
 **Author:** Moheet Khawaja  
-**Version:** v0.2 — 15 September 2026 (original v0.1 retained below and in the version archive)  
-**Scope:** 8 Core Technical Papers: the original seven-paper programme distilled from 68 thesis/proposal records, plus P8 and later extensions T69–T72.
+**Version:** v0.3 — 16 September 2026 (v0.1 and v0.2 retained in the version archive)  
+**Scope:** 9 Core Technical Papers: the original P1–P7 programme from T1–T68, the first embodiment extension P8 / T69–T72, and the further distributed-controllability extension P9 / T73–T78. Current Atlas: 78 entries.
 
 ## Programme design rule
 
@@ -80,3 +80,21 @@ P4 studies strategic control across capability and defender resources. P6 studie
 Original conversation corpus: **68 theses/proposals (T1–T68)**. Later research extensions: **T69–T72**. Current Atlas: **72 entries**. All four additions carry O→F provenance, recording user-originated intuition and subsequent collaborative formalization, not priority over existing literature.
 
 [Original programme v0.1, 14 September 2026](/research/sources/versions/2026-09-14/PROGRAMME_OVERVIEW.md).
+
+## Further distributed-controllability extension — 16 September 2026
+
+**9 Core Technical Papers / 78 Atlas entries.** P9 was developed after P8 and extends the embodiment research programme from persistence/re-embodiment to architecture-level controllability. The dated eight-paper / 72-entry record above describes the previous edition.
+
+### P9 — The Embodiment Control Cut
+
+A network-interdiction framework for physical AI controllability. It defines the minimum-cost intervention required to reduce recoverable embodied capability below a specified threshold and studies when redundancy, local autonomy, adaptive recovery and infrastructure diversification make that control cut scale with system size.
+
+[Read P9: The Embodiment Control Cut](/research/papers/embodiment-control-cut). **Working Paper v0.1 — THEORY / FORMAL FRAMEWORK + PROPOSED EMPIRICAL PROGRAMME.** Its four conditional results comprise three theorems and a corollary. Their elementary graph-cut and counting arguments are attributed to established mathematical traditions; the paper does not claim a new general min-cut theorem. The proposed engineering invariant is to preserve bounded-cost control cuts as embodied AI scales.
+
+| Research object | Primary Atlas records | Relationship to the programme | Evidence still required |
+|---|---|---|---|
+| Capability-aware, minimum-cost physical intervention after admissible recovery | [T73](/research/atlas#T73), [T74](/research/atlas#T74), [T75](/research/atlas#T75), [T76](/research/atlas#T76), [T77](/research/atlas#T77), [T78](/research/atlas#T78) | P4: general conditional control; P6: lineage resilience; P8: controller persistence and re-embodiment; P9: physical intervention cost | Seven proposed experiments; verified feasible controls and recovery envelopes; architecture-dependent cost bounds, scaling and task-specific restoration measurements. No experiment or empirical cost estimate is reported. |
+
+Original conversation corpus: **T1–T68 (68 records)**. First later embodiment extension: **T69–T72 (4 records; 15 September 2026)**. Further distributed-controllability extension: **T73–T78 (6 records; 16 September 2026)**. All ten later records carry O→F provenance. P1–P7 and the original corpus remain unchanged; P8 gains only a short related-work link.
+
+[Previous programme v0.2, 15 September 2026](/research/sources/versions/2026-09-15/PROGRAMME_OVERVIEW.md).

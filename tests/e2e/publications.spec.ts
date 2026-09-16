@@ -25,7 +25,7 @@ for (const { route, title } of routes) {
     ).toBeTruthy();
     await expect(page.locator('.katex-error')).toHaveCount(0);
     await expect(page.locator('.research-nav a')).toHaveCount(6);
-    if (route === '/research/atlas') await expect(page.locator('[data-thesis]')).toHaveCount(72);
+    if (route === '/research/atlas') await expect(page.locator('[data-thesis]')).toHaveCount(78);
     await context.close();
   });
 }
@@ -35,7 +35,7 @@ test('Atlas filters combine, survive reload, reset, and resolve thesis share lin
 }) => {
   await page.goto('/research/atlas');
   const rows = page.locator('[data-thesis]:visible');
-  await expect(rows).toHaveCount(72);
+  await expect(rows).toHaveCount(78);
   await page.getByRole('searchbox', { name: 'Search all fields' }).fill('T16');
   await expect(rows).toHaveCount(1);
   await expect(rows).toHaveAttribute('id', 'T16');
@@ -46,9 +46,9 @@ test('Atlas filters combine, survive reload, reset, and resolve thesis share lin
   await expect(rows).toHaveCount(0);
   await expect(page.locator('#atlas-empty')).toBeVisible();
   await page.getByRole('button', { name: 'Reset filters' }).click();
-  await expect(rows).toHaveCount(72);
+  await expect(rows).toHaveCount(78);
   await page.getByLabel('Provenance', { exact: true }).selectOption('A→U');
-  await expect(rows).not.toHaveCount(72);
+  await expect(rows).not.toHaveCount(78);
   expect(
     await rows.evaluateAll((elements) =>
       elements.every((el) => el.getAttribute('data-provenance') === 'A→U'),
@@ -100,6 +100,7 @@ test('publication templates pass accessibility checks on desktop and mobile', as
       '/research/atlas',
       '/research/papers/hazardous-inference-frontier',
       '/research/papers/embodiment-threshold',
+      '/research/papers/embodiment-control-cut',
       '/research/sources',
       '/research/history/evolution-and-strategy',
     ]) {
@@ -129,9 +130,10 @@ test('later extension filter and theorem link expose P8 assumptions and proof', 
   await page.goto('/research/atlas');
   await page.getByLabel('Corpus', { exact: true }).selectOption('Later research extension');
   const rows = page.locator('[data-thesis]:visible');
-  await expect(rows).toHaveCount(4);
+  await expect(rows).toHaveCount(10);
   await page.reload();
-  await expect(rows).toHaveCount(4);
+  await expect(rows).toHaveCount(10);
+  await page.getByLabel('ID', { exact: true }).selectOption('72');
   await page.getByLabel('Epistemic status', { exact: true }).selectOption('THEOREM');
   await expect(rows).toHaveCount(1);
   await expect(rows).toHaveAttribute('id', 'T72');
@@ -140,4 +142,33 @@ test('later extension filter and theorem link expose P8 assumptions and proof', 
   await expect(page.locator('[id="8-embodiment-only-delay-bound-theorem"]')).toBeInViewport();
   await expect(page.getByRole('heading', { name: 'Proof by cases' })).toBeVisible();
   await expect(page.locator('.document-authorship strong')).toHaveText('Author: Moheet Khawaja');
+});
+
+test('P9 Atlas records lead to the scaling proof and P8 cross-link returns to P9', async ({
+  page,
+}) => {
+  await page.goto('/research/atlas');
+  await page
+    .getByLabel('Primary paper / destination')
+    .selectOption('P9 — The Embodiment Control Cut');
+  await expect(page.locator('[data-thesis]:visible')).toHaveCount(6);
+  await page.getByLabel('Epistemic status', { exact: true }).selectOption('THEOREM');
+  await expect(page.locator('[data-thesis]:visible')).toHaveAttribute('id', 'T75');
+  await page.getByRole('link', { name: 'Read the assumptions and proof.' }).click();
+  await expect(page).toHaveURL(
+    /embodiment-control-cut#53-theorem-3-distributed-fleet-intervention-scaling/,
+  );
+  await expect(
+    page.locator('[id="53-theorem-3-distributed-fleet-intervention-scaling"]'),
+  ).toBeInViewport();
+  await expect(page.locator('.manuscript')).toContainText('A4 — Scope of the bound');
+  await page.goto('/research/papers/embodiment-threshold#related-subsequent-work');
+  await page.locator('.manuscript a[href="/research/papers/embodiment-control-cut"]').click();
+  await expect(page.locator('h1')).toHaveText(
+    'The Embodiment Control Cut: A Min-Cut Theory of Controllability in Distributed AI–Robot Systems',
+  );
+  await expect(page.locator('meta[name="citation_publication_date"]')).toHaveAttribute(
+    'content',
+    '2026/09/16',
+  );
 });

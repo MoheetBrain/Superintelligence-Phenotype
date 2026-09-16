@@ -24,7 +24,7 @@ const pages = new Map(
 const hash = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 
 test('audited originals and dated extensions preserve their separate source hashes', () => {
-  assert.equal(manifest.files.length, 17);
+  assert.equal(manifest.files.length, 18);
   assert.equal(manifest.files.filter((f) => f.mode === 'complete, byte-identical').length, 10);
   for (const f of manifest.files) {
     assert.equal(hash(`content/research/documents/${f.published_source}`), f.published_sha256);
@@ -33,13 +33,17 @@ test('audited originals and dated extensions preserve their separate source hash
       assert.equal(hash(`content/research/${f.original_version_source}`), f.sha256);
       assert.equal(hash(`public/research/sources/${f.original_version_source}`), f.sha256);
     }
+    for (const v of f.previous_versions ?? []) {
+      assert.equal(hash(`content/research/${v.source}`), v.sha256);
+      assert.equal(hash(`public/research/sources/${v.source}`), v.sha256);
+    }
     if (f.mode === 'complete, byte-identical') assert.equal(f.published_sha256, f.sha256);
   }
 });
 
 test('every route has indexable HTML, exact author attribution, and honest canonical metadata', () => {
-  assert.equal(routes.length, 21);
-  assert.equal(new Set(routes.map((r) => r.route)).size, 21);
+  assert.equal(routes.length, 22);
+  assert.equal(new Set(routes.map((r) => r.route)).size, 22);
   for (const { route, title } of routes) {
     const doc = pages.get(route);
     assert.equal(doc.querySelectorAll('h1').length, 1, route);
@@ -58,7 +62,10 @@ test('every route has indexable HTML, exact author attribution, and honest canon
     const schema = JSON.parse(doc.querySelector('script[type="application/ld+json"]').textContent);
     assert.equal(schema.author.name, author);
     assert.equal(schema.url, origin + route);
-    assert.equal(schema.datePublished, '2026-09-15');
+    assert.equal(
+      schema.datePublished,
+      route.endsWith('/embodiment-control-cut') ? '2026-09-16' : '2026-09-15',
+    );
     assert.equal(schema.doi, undefined);
     assert.equal(schema.isPartOf, undefined);
   }
@@ -68,7 +75,10 @@ test('every route has indexable HTML, exact author attribution, and honest canon
     assert.equal(doc.querySelector('h1').textContent, sourceTitle);
     assert.equal(doc.querySelector('meta[name=citation_title]').content, sourceTitle);
     assert.equal(doc.querySelector('meta[name=citation_author]').content, author);
-    assert.equal(doc.querySelector('meta[name=citation_publication_date]').content, '2026/09/15');
+    assert.equal(
+      doc.querySelector('meta[name=citation_publication_date]').content,
+      paper.id === 'P9' ? '2026/09/16' : '2026/09/15',
+    );
     assert.equal(doc.querySelector('meta[name=citation_pdf_url]'), null);
     assert.equal(doc.querySelector('meta[name=citation_doi]'), null);
     assert.equal(doc.querySelector('meta[name=citation_journal_title]'), null);
@@ -105,7 +115,7 @@ test('every Atlas field and all primary/secondary mappings survive in static HTM
   const rows = [...doc.querySelectorAll('[data-thesis]')];
   assert.deepEqual(
     rows.map((r) => r.id),
-    Array.from({ length: 72 }, (_, i) => `T${i + 1}`),
+    Array.from({ length: 78 }, (_, i) => `T${i + 1}`),
   );
   for (const record of atlas) {
     const row = doc.getElementById('T' + record.id);
@@ -117,7 +127,7 @@ test('every Atlas field and all primary/secondary mappings survive in static HTM
       assert.ok(row.textContent.includes(record[key]), `T${record.id} ${key}`);
     const refs = [
       ...new Set(
-        (record.primary_destination + ' ' + record.secondary_links).match(/\bP[1-8]\b/g) ?? [],
+        (record.primary_destination + ' ' + record.secondary_links).match(/\bP[1-9]\b/g) ?? [],
       ),
     ];
     for (const id of refs)
@@ -269,11 +279,11 @@ test('P8 extends rather than rewrites the original corpus and includes a conditi
       assert.equal(hash(`content/research/documents/${p.file}`), originalPaperHashes[i]),
     );
   assert.deepEqual(
-    extensions.map((r) => r.id),
+    extensions.slice(0, 4).map((r) => r.id),
     ['69', '70', '71', '72'],
   );
   assert.deepEqual(
-    extensions.map((r) => r.epistemic_status),
+    extensions.slice(0, 4).map((r) => r.epistemic_status),
     ['MODEL', 'MODEL', 'HYPOTHESIS', 'THEOREM'],
   );
   const atlasPage = pages.get('/research/atlas');
@@ -286,7 +296,7 @@ test('P8 extends rather than rewrites the original corpus and includes a conditi
   assert.ok(atlasPage.body.textContent.includes('68 theses/proposals (T1–T68)'));
   assert.ok(atlasPage.body.textContent.includes('T69–T72'));
   const combined = parse(read('public/research/sources/ATLAS_CURRENT.csv'), { columns: true });
-  assert.equal(combined.length, 72);
+  assert.equal(combined.length, 78);
   originalAtlas.forEach((r, i) =>
     Object.entries(r).forEach(([k, v]) => assert.equal(combined[i][k], v)),
   );
@@ -302,6 +312,86 @@ test('P8 extends rather than rewrites the original corpus and includes a conditi
   assert.ok(p8.querySelector('a[href="/research/papers/control-frontier"]'));
   assert.ok(p8.querySelector('a[href="/research/papers/correlated-lineage-resilience"]'));
   for (const route of ['/research', '/research/papers'])
-    assert.equal(pages.get(route).querySelectorAll('.paper-card').length, 8);
+    assert.equal(pages.get(route).querySelectorAll('.paper-card').length, 9);
   assert.ok(read('public/llms.txt').includes(origin + '/research/papers/embodiment-threshold'));
+});
+
+test('P9 preserves P8 and the first extension, with a separately dated six-record addition', () => {
+  const oldP8 = read('content/research/versions/2026-09-15/P8_embodiment_threshold.md');
+  assert.equal(
+    hash('content/research/versions/2026-09-15/P8_embodiment_threshold.md'),
+    '0f38b06b769e482c62be8efa6774483a1102fff7e5bf0c77f6bf584f13f70fe4',
+  );
+  const addition =
+    '### Related subsequent work\n\nPaper 9, [The Embodiment Control Cut](/research/papers/embodiment-control-cut), develops the controllability question separately by modelling minimum-cost intervention cuts in distributed embodied systems.\n\n';
+  assert.equal(
+    read('content/research/documents/P8_embodiment_threshold.md'),
+    oldP8.replace(
+      '### Publications-page description',
+      addition + '### Publications-page description',
+    ),
+  );
+  assert.deepEqual(
+    extensions.slice(0, 4),
+    JSON.parse(read('content/research/versions/2026-09-15/ATLAS_EXTENSIONS.json')),
+  );
+  assert.deepEqual(
+    extensions.slice(4).map((r) => r.id),
+    ['73', '74', '75', '76', '77', '78'],
+  );
+  assert.deepEqual(
+    extensions.slice(4).map((r) => r.epistemic_status),
+    ['MODEL', 'HYPOTHESIS', 'THEOREM', 'COROLLARY', 'PROPOSED METRIC', 'HYPOTHESIS'],
+  );
+  assert.ok(
+    extensions
+      .slice(4)
+      .every((r) => r.provenance === 'O→F' && r.primary_destination.startsWith('P9 ')),
+  );
+  const p9 = pages.get('/research/papers/embodiment-control-cut');
+  const text = p9.querySelector('.manuscript').textContent;
+  for (const section of [
+    '51-theorem-1-shared-chokepoint-upper-bound',
+    '52-theorem-2-intervention-disjoint-viability-path-lower-bound',
+    '53-theorem-3-distributed-fleet-intervention-scaling',
+    '54-corollary-fixed-defender-capacity-crossover',
+  ]) {
+    const heading = p9.getElementById(section);
+    assert.ok(heading, section);
+    let next = heading.nextElementSibling,
+      body = '';
+    while (next && next.tagName !== 'H3') {
+      body += next.textContent;
+      next = next.nextElementSibling;
+    }
+    assert.match(body, /Assumptions/);
+    assert.match(body, /Proof/);
+  }
+  assert.equal(p9.querySelectorAll('h3[id*="-experiment-"]').length, 7);
+  for (const phrase of [
+    'No empirical elasticity is reported',
+    'Definition, not measured constant',
+    'not a demonstrated robot performance',
+    'intervention-disjoint',
+    'A4',
+    'Joint',
+    'none has been executed',
+  ]) {
+    assert.ok(text.toLowerCase().includes(phrase.toLowerCase()), phrase);
+  }
+  assert.match(text, /Wood/);
+  assert.match(text, /Ford.*Fulkerson/);
+  assert.ok(
+    pages
+      .get('/research/papers/embodiment-threshold')
+      .querySelector('.manuscript a[href="/research/papers/embodiment-control-cut"]'),
+  );
+  assert.ok(p9.querySelector('.manuscript a[href="/research/papers/embodiment-threshold"]'));
+  assert.equal(manifest.atlas_corpora.current_count, 78);
+  const overview = pages.get('/research');
+  assert.match(
+    overview.querySelector('.archive-principle').textContent,
+    /09.*working papers.*78.*Atlas entries/,
+  );
+  assert.ok(read('public/llms.txt').includes(origin + '/research/papers/embodiment-control-cut'));
 });
