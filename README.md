@@ -1,84 +1,110 @@
-# Superintel · Independent AI Research
+# Hamiltonian Recovery website
 
-Six navigation destinations: **Superintelligence Map**, **State Vector Framework**, **AI Safety Timeline**, **Forecasting / Models**, **Research Notes / Preprints**, and **Research**. The interactive atlas remains the default route. The five existing sections retain their `?section=` and legacy hash links. The [research archive](https://superintel.site/research) adds complete static HTML manuscripts, a searchable 78-entry Atlas (68 original records, four P8 extensions and six P9 extensions), provenance, and a source/version record.
+The public website for **Hamiltonian Recovery**, the supplier-account recovery and reconciliation service of
+Hamiltonian Labs Ltd (Companies House No. 17347944). It is served at <https://superintel.site>.
 
-The archive publishes nine v0.1 working papers/protocols and supporting research across 22 indexable routes. It renders mathematics with KaTeX and retains unrun experiments as proposals. See [archive architecture, integrity and verification](docs/RESEARCH_ARCHIVE.md). Research text has its own [attribution and rights notice](content/research/LICENSE.md); the implementation remains MIT-licensed.
+The site is three static pages and a 404 page:
 
-The research question is: **Can catastrophic-risk claims about advanced AI be transformed into explicit mathematical models whose assumptions can be inspected, falsified, and empirically updated?**
+| Route       | Source                                                                     |
+| ----------- | -------------------------------------------------------------------------- |
+| `/`         | `src/pages/HomePage.tsx` with copy from `src/content/site.ts`              |
+| `/privacy/` | `src/pages/LegalPage.tsx` with `privacyPolicy` from `src/content/legal.ts` |
+| `/terms/`   | `src/pages/LegalPage.tsx` with `websiteTerms` from `src/content/legal.ts`  |
+| `404.html`  | `src/pages/NotFoundPage.tsx`                                               |
 
-An explorable portrait of possible superintelligence: its capabilities, limits and forms. Two original industrial humanoid hosts demonstrate migration, copying, forking and remote control. Five discovery groups connect the exhibit to the full capability atlas. Choose a capability, follow a subtopic, try an illustrative scenario or inspect the evidence behind a claim.
+There are no cookies, analytics, trackers, third-party fonts or CDNs. Pages make no requests to any other origin.
+The enquiry form never transmits data: it composes a pre-addressed email in the visitor's own mail application.
 
-![Immersive ASI Atlas](docs/screenshots/reconstruction/final-dual-front.png)
+## How it is built
 
-The state-space framework is a proposal, with no fitted model or empirical claim of sufficiency. The downloadable working note is explicitly preliminary. Forecasting results are separate conditional Monte Carlo outputs from a pinned public calculator revision; they do not validate the framework or establish an arrival date. Original source dates are linked in the timeline. Earlier public writing is marked as an incomplete archive until the original artifacts can be verified. See [research provenance and reproduction](docs/RESEARCH_PORTFOLIO.md).
+React and TypeScript are used only as a **build-time templating language**. Every page is rendered to static HTML,
+so all content is in the document for search engines and readers without JavaScript.
 
-## Run
-
-Node **22.13.0+**; tested with Node 24.18.0 and npm 11.16.0. React, TypeScript, Vite and direct Three.js; no backend, keys, model calls or external visual assets.
-
-```sh
-npm ci
-npm run dev
-# http://127.0.0.1:3016
-npm run check
-npm test
-npm run build
-npm run test:research
-npm run preview
-# http://127.0.0.1:4173
+```
+vite build                                  # browser assets: one stylesheet + a ~2 kB vanilla TS module
+vite build --ssr src/entry-server.tsx       # page templates bundled for Node
+node scripts/prerender.mjs                  # writes dist/**/index.html, 404.html, sitemap.xml, robots.txt
 ```
 
-Both servers bind to loopback and use strict ports. Install Chromium once, then test the built preview:
+The only JavaScript shipped to the browser (`src/client/`) enhances two things: the mobile navigation disclosure
+and the enquiry composer. Without JavaScript the navigation is shown in full (`public/noscript.css`) and the
+`mailto:` link and visible email address remain the contact route.
+
+| Concern                                   | Location                                  |
+| ----------------------------------------- | ----------------------------------------- |
+| Copy, company details, navigation, legal  | `src/content/` (`types.ts` is the schema) |
+| Hero illustration rows (fictional)        | `src/content/illustration.ts`             |
+| Interface microcopy (labels, 404 text)    | `src/lib/ui-text.ts`                      |
+| Document head, header, footer, components | `src/components/`                         |
+| Page templates                            | `src/pages/`                              |
+| Routes, sitemap and robots rendering      | `src/entry-server.tsx`                    |
+| `mailto:` URL builder (pure, unit-tested) | `src/lib/mailto.ts`                       |
+| Styles (plain CSS, custom properties)     | `src/styles/`                             |
+| Static files (favicon, icons, OG image)   | `public/`                                 |
+
+Fonts are self-hosted from Fontsource (Inter and Source Serif 4, Latin subset, SIL Open Font License).
+Icons are Lucide, rendered to inline SVG at build time.
+
+## Requirements
+
+Node.js 22.13 or later (`.nvmrc` pins 24.18.0) and npm.
+
+## Commands
 
 ```sh
-npx playwright install chromium
-npm run test:e2e
-E2E_DEV=1 npm run test:e2e
-npm run size
-node scripts/measure-preview.mjs
+npm ci                 # install exact dependencies
+npm run dev            # development server at http://127.0.0.1:3016 (pages rendered on request)
+npm run check          # TypeScript
+npm test               # unit tests (Vitest)
+npm run build          # check + client build + SSR build + prerender into dist/
+npm run preview        # serve dist/ at http://127.0.0.1:4173 with production headers and 404 handling
+npm run test:e2e       # browser tests against the preview (run `npm run build` first)
+npm run format         # Prettier
 ```
 
-## Explore
+End-to-end tests need Chromium once: `npx playwright install chromium`.
 
-- Drag **Operational State** from Host A into Host B, or use **Migrate A → B**, **Copy A → B**, and **Fork A → B**. Remote control keeps the state on A. Reset begins a new comparison from the same illustrative starting state. **Dual host / Host A / Host B / Transfer view** and **Inspect parts** frame the platform.
-- Choose **Mind**, **Physical capabilities**, **Beyond one body**, **Learning & evolution** or **Resources & control**. The orbs are real Three.js objects; their HTML labels are keyboard-operable and wrap on compact screens.
-- Select robot geometry, a cloud or a result in **Search / List view**. Every route uses the same reducer. The inspector opens beside the scene on desktop and as a bottom sheet on narrow screens.
-- Each of the twelve dossiers has five explorable subtopics, mechanisms, prerequisites, limits, a worked scenario, open questions, source scope and proposed measurement. The overview resets when another capability opens.
-- Try **Strength depends on the body**, step through **Precision is a feedback loop**, or compare **Remote control / Migration / Copying**. These local illustrations highlight context and execution arrangements; they are not validated simulations or external control tools.
-- Use **Back / Escape** one level at a time, or **Reset** to return home with default layers and camera. **Controls** contains camera presets, zoom, conceptual separation, layers and status-accent colours. The graphite and pearl body materials remain distinct.
-- **Share** includes group, capability, profile, subtopic, illustration conditions, layers, filters, finish and camera. Version 3 also restores the chosen host view and completed transfer comparison. Versions 1 and 2 remain readable; in-progress transfers reopen safely at their starting state. Clipboard failure leaves a selectable link.
-- **List view** provides all content without WebGL. Sources and measurements remain HTML. Network and Evolution are explicitly planned future views, available under Controls.
+Other scripts:
 
-## Architecture
+- `npm run images` regenerates `public/og-image.png` (1200×630) and `public/apple-touch-icon.png` (180×180) from
+  the brand and hero headline. Run it after changing either, then commit the PNGs. Needs Node 22.18+.
+- `npm run screenshots` writes full-page screenshots of the running preview to `$TMPDIR/hr-shots`
+  (`SHOTS_EXTRA=1` adds more widths; `SHOTS_SEGMENT=1200` also writes page segments).
 
-| Concern                                                                     | Location                                              |
-| --------------------------------------------------------------------------- | ----------------------------------------------------- |
-| Twelve stable records, evidence and source scope                            | `src/data/capabilities.ts`, `schema.ts`, `sources.ts` |
-| Discovery groups and profile links                                          | `src/data/discovery.ts`, `profile.ts`                 |
-| Main dossier depth and connected subtopics                                  | `src/data/dossiers.ts`                                |
-| Illustration steps and conditional execution state                          | `src/data/illustrations.ts`                           |
-| Arrival scenario and provenance                                             | `src/content/arrival.ts`                              |
-| Unified selection, navigation, URL migration and history                    | `src/state/`                                          |
-| Original body, orbs, hosts, picking, fitting and label placement            | `src/scene/`                                          |
-| Normalized humanoid specification, shells, real joint rig and PBR materials | `src/scene/robot/`                                    |
-| Accessible catalogue, inspector, illustrations and modal controls           | `src/components/`                                     |
+## Tests
 
-The renderer runs on changes and during the finite transfer animation, without automatic orbit or an idle animation loop. Default camera fitting uses visible body bounds, excluding the floor and discovery nodes. Scene and inspector occupy separate layout regions. Geometry, materials, environment textures, shadows, observers, controls and listeners are disposed on unmount. Optional feature-detected WebMCP tools use the same selection reducer.
+- **Unit** (`tests/unit/`): renders every page and checks company identification (legal name, company number,
+  registered office, relationship line), that no prospective client is named, that every `#…` and `/#…` link
+  resolves to an existing id, head metadata, no third-party or inline resources, the sitemap and robots, the
+  footer's jurisdiction rule, and the `mailto:` encoder.
+- **End-to-end** (`tests/e2e/`, Playwright, desktop 1440×900 and mobile 390×844): navigation scrolling, the mobile
+  menu (button, Escape, link selection), the composer's `mailto:` URL, legal pages, the 404 page, the no-JavaScript
+  experience, security headers, and axe accessibility checks (no serious or critical violations). Every test fails
+  on console errors or any request to another origin.
 
-The reconstructed hosts share 144,628-triangle geometry per body. A single H = 1 specification controls the pod head, continuous chest, compact waist, horizontal pelvis, tapered limbs, articulated hands and shoe-shaped feet. Development builds expose six reference views, staged clay/material comparison and normalized landmarks at `?robotDebug=1`; this code is excluded from production.
+## Deployment (Vercel)
 
-## Content and provenance
+`vercel.json` configures the Vite framework preset, `npm ci`, `npm run build` and the `dist` output directory.
+It also sets:
 
-The twelve main dossiers contain **3,444 words**, with **2,431 more across 60 subtopics**: about **3,982 net additional overview/subtopic words** compared with the previous inspector. Main dossiers individually contain 270–306 words; evidence, measurement and fourteen qualitative profiles are additional. See [content-depth.json](docs/content-depth.json) for the counting method.
+- `trailingSlash: true`, so `/privacy` and `/terms` redirect to their canonical `/privacy/` and `/terms/`.
+- Security headers on every route: a strict Content-Security-Policy (`'self'` only; `form-action` also allows
+  `mailto:`), `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Strict-Transport-Security` and
+  `X-Frame-Options`. `npm run preview` applies the same headers so tests catch policy violations.
+- Long-lived immutable caching for hashed files under `/assets/`.
+- Temporary (307) redirects for the former research site: `/research`, `/research/*` and `/llms.txt` go to
+  `https://superintel-research-archive.vercel.app`. Update the host if the archive is deployed elsewhere.
 
-Observed, Extrapolated, Theoretically Plausible and Speculative remain separate. Three narrow observations were rechecked against primary paper abstracts; no experiments or robot records were reproduced. See [source review](docs/SOURCE_REVIEW.md) and the [content guide](docs/CONTENT_GUIDE.md). Memory and Control and Governance remain provisional navigation groupings.
+Vercel serves `dist/404.html` for unknown routes automatically.
 
-All robot, cloud and host geometry is original project code. No stock references, watermarks, purchased model files or generated flat robot images are shipped. The small Human Atlas MIT PointerTap helper retains its attribution; no anatomy assets or upstream history are distributed. See [asset ledger](ASSET_LICENSES.md), [reference inspection](docs/REFERENCE_INSPECTION.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
+## Preserved research website
 
-## Handoff
+This repository previously hosted the Superintel independent AI research website. It is preserved unchanged:
 
-The latest [precision reconstruction report](docs/ROBOT_PRECISION_REPORT.md) contains before/after screenshots, parameters, the staged visual correction loop, triangle counts, file responsibilities, tests and specific remaining mismatches. The [dual-host implementation report](docs/DUAL_HOST_HANDOFF.md), [handoff](docs/HANDOFF.md) and [verification report](docs/VERIFICATION.md) preserve earlier implementation history.
+- Branch: `archive/superintel-original-2026-11`
+- Tag: `superintel-original-2026-11-19`
+- Commit: `980dd3eed7701958257a96b3452b93ba4a14382d`
 
-The atlas is public at **[superintel.site](https://superintel.site)**, with HTTPS and no sign-in required. Public access was explicitly requested on 12 September 2026. The existing static Vite build is hosted by Sites. See [publishing notes](docs/PUBLISHING.md); deployment success and the production URL are reported by Sites. No purchases or plan changes were made.
+## Licence
 
-Physical-device, Safari/Firefox, manual screen-reader and participant testing remain unperformed. The [ten-person usability protocol](docs/USABILITY_TEST.md) contains no invented results. Network/Evolution views and empirical ASI measurements remain deferred. The original research introduction is preserved in [ORIGINAL_README.md](docs/ORIGINAL_README.md).
+See `LICENSE`.

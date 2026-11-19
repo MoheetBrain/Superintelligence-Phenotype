@@ -1,23 +1,36 @@
-import { defineConfig, devices } from '@playwright/test';
-const dev = process.env.E2E_DEV === '1';
+import { defineConfig } from '@playwright/test';
+
+/**
+ * End-to-end tests run against the production preview (built static output), not the dev server.
+ * Build first: `npm run build && npm run test:e2e`.
+ */
+const baseURL = 'http://127.0.0.1:4173';
+
 export default defineConfig({
   testDir: 'tests/e2e',
-  fullyParallel: false,
-  workers: 1,
-  retries: 0,
-  timeout: 30000,
-  reporter: [['list'], ['html', { open: 'never' }]],
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
+  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list']],
   use: {
-    baseURL: dev ? 'http://127.0.0.1:3016' : 'http://127.0.0.1:4173',
-    ...devices['Desktop Chrome'],
-    viewport: { width: 1440, height: 900 },
-    screenshot: 'only-on-failure',
+    baseURL,
+    browserName: 'chromium',
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: dev ? 'npm run dev' : 'npm run preview',
-    url: dev ? 'http://127.0.0.1:3016' : 'http://127.0.0.1:4173',
-    reuseExistingServer: true,
+    command: 'npm run preview',
+    url: baseURL,
+    reuseExistingServer: !process.env.CI,
+    timeout: 60_000,
   },
-  projects: [{ name: 'chromium' }],
+  projects: [
+    {
+      name: 'desktop',
+      use: { viewport: { width: 1440, height: 900 } },
+    },
+    {
+      name: 'mobile',
+      use: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+    },
+  ],
 });

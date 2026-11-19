@@ -1,7 +1,7 @@
-.inspection/
 node_modules/
 dist/
+dist-ssr/
 package-lock.json
 playwright-report/
 test-results/
-docs/screenshots/
+public/*.png

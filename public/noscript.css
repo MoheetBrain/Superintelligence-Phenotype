@@ -1,0 +1,36 @@
+/*
+ * Loaded only when JavaScript is unavailable (inside <noscript>).
+ * Navigation stays visible and the email-based enquiry path remains the primary contact route.
+ */
+
+.nav-toggle {
+  display: none !important;
+}
+
+@media (max-width: 63.99em) {
+  .site-header {
+    position: static;
+  }
+
+  .site-header-inner {
+    flex-wrap: wrap;
+    padding-block: 0.75rem;
+  }
+
+  .site-nav {
+    display: block;
+    position: static;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .site-nav-list li:last-child .site-nav-link {
+    border-bottom: 0;
+  }
+}
+
+[data-composer-panel] {
+  display: none !important;
+}
